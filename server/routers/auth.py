@@ -6,7 +6,7 @@ from flask import (
     Blueprint, flash, redirect, request, session, g, url_for
 )
 
-from database import Student, db
+
 
 
 APP_ID = ''
@@ -15,30 +15,32 @@ AUTHORIZATION_CODE = ''
 WX_API_URL = 'https://api.weixin.qq.com/sns/jscode2session' 
 
 
-auth = Blueprint('auth', __name__, url_prefix='/auth')
+auth_bp = Blueprint('auth_bp', __name__, url_prefix='/auth_bp')
 
 def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None:
-            return redirect(url_for('auth.login'))
+            return redirect(url_for('auth_bp.login'))
         return view(**kwargs)
     return wrapped_view
 
 
-@auth.route('/register', methods=('GET', 'POST'))
+@auth_bp.route('/register', methods=('GET', 'POST'))
 def register():
     return 'register'
 
 
-@auth.route('/login', methods=('GET', 'POST'))
+@auth_bp.route('/login', methods=('GET', 'POST'))
 def login():
     js_code = request.args.get('js_code')
     user_info = get_user_info(js_code)
+
+    
     return user_info
 
 
-@auth.route('/logout')
+@auth_bp.route('/logout')
 @login_required
 def logout():
     return 'logout'

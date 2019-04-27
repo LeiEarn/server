@@ -1,3 +1,5 @@
 {
-    "python.pythonPath": "/usr/local/anaconda/anaconda3/envs/flask_py3/bin/python"
+    "python.pythonPath": "/usr/local/anaconda/anaconda3/envs/flask_py3/bin/python",
+
+    "python.linting.pylintArgs": ["--load-plugins", "pylint_flask"],
 }

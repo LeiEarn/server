@@ -1,4 +1,4 @@
-__all__ = ['Student', 'Company']
+__all__ = ['BasicUser', 'AuthenticatedUser', 'Student', 'Company']
 
 class BasicUser(object):
     """
@@ -8,11 +8,18 @@ class BasicUser(object):
         nickname: user's nickname, the default value is wechat nickname
         phone_number: user's phone number
         sexual: man or female
+        intro: introduction
         create_date: date when this user was created
     """
-    __slots__ = ['wechat_id', 'profile_photo', 'nickname', 'phone_number', 'sexual', 'create_date']
-    def __init__(self):
-        pass
+    __slots__ = ['wechat_id', 'profile_photo', 'nickname', 'phone_number', 'gender', 'intro', 'create_date']
+    def __init__(self, wechat_id, profile_photo, nickname, phone_number, gender, intro, create_date):
+        self.wechat_id = wechat_id
+        self.profile_photo = profile_photo
+        self.nickname = nickname
+        self.phone_number = phone_number
+        self.gender = gender
+        self.intro = intro
+        self.create_date = create_date
 
 
 class AuthenticatedUser(BasicUser):

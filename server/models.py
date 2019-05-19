@@ -1,6 +1,6 @@
 
 from flask_login import  UserMixin, login_user
-from server.database import db
+from server.db import db
 
 # 用户的基本类，分为学生以及组织
 # 组织只允许发布任务，学生可以发布和接受任务

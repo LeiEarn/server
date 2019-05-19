@@ -6,7 +6,7 @@ import uuid
 from flask import (
     Blueprint, flash, redirect, request, session, g, url_for
 )
-from server.models import User
+from server.model import *
 
 APP_ID = ''
 APP_SECRET = ''
@@ -14,14 +14,13 @@ AUTHORIZATION_CODE = ''
 WX_API_URL = 'https://api.weixin.qq.com/sns/jscode2session' 
 
 
-auth_bp = Blueprint('auth_bp', __name__, url_prefix='/auth')
+bp = Blueprint('auth_bp', __name__, url_prefix='/auth')
 
-from server import login_manager
 def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None:
-            return redirect(url_for('auth_bp.login'))
+            return 'redirect to login'
         return view(**kwargs)
     return wrapped_view
 
@@ -30,7 +29,7 @@ def login_required(view):
 #       1. 用户填写信息发送至小程序服务器, 需要附加js_code
 #       2. 验证用户信息，以及js_code信息
 #       3. 若信息无误，发送邮件认证
-@auth_bp.route('/register', methods=('GET', 'POST'))
+@bp.route('/register', methods=('GET', 'POST'))
 def register():
     # 从request中获取js_code
     js_code = request.args.get('js_code')
@@ -79,7 +78,7 @@ def register():
 #               在收到服务器端登录过期或者uuid错误的情况下才发起登录
 #       2. 账号只能与一个小程序id绑定，即不可在第二个微信上登录
 #######################################
-@auth_bp.route('/login', methods=('GET', 'POST'))
+@bp.route('/login', methods=('GET', 'POST'))
 def login():
     # 不进行是否在session期间的判断
     # 从request中获取js_code
@@ -100,7 +99,7 @@ def login():
     session_key = user_info['session_key']
 
     # 验证是否存在该用户
-    user = User.query.filter_by(unionid=unionid).first()
+    #user = User.query.filter_by(unionid=unionid).first()
 
     
     # 用户存在则登录成功， 返回信息，uuid uuid作为用户凭证
@@ -113,10 +112,11 @@ def login():
     else:
         pass
         # 重定向到注册页面
+        return 'redirect to register'
 
 
 
-@auth_bp.route('/logout')
+@bp.route('/logout')
 @login_required
 def logout():
     return 'logout'

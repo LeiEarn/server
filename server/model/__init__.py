@@ -1,3 +1,3 @@
-from User import *
-from Group import *
+from .User import *
+from .Group import *
 __all__ = ['Group', 'Student', 'Company']

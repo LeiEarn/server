@@ -1,4 +1,4 @@
-from  .User import *
+from  User import *
 
 __all__ = ['Group']
 

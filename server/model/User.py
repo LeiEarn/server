@@ -11,16 +11,16 @@ class BasicUser(object):
         intro: introduction
         create_date: date when this user was created
     """
-    __slots__ = ['wechat_id', 'profile_photo', 'nickname', 'phone_number', 'gender', 'intro', 'create_date']
-    def __init__(self, wechat_id, profile_photo, nickname, phone_number, gender, intro, create_date):
+    __slots__ = ['wechat_id', 'nickname', 'phone_number', 'gender', 'profile_photo', 'intro', 'create_date', 'isprove']
+    def __init__(self, wechat_id, profile_photo, nickname, phone_number, gender, intro, create_date, isprove):
         self.wechat_id = wechat_id
-        self.profile_photo = profile_photo
         self.nickname = nickname
         self.phone_number = phone_number
         self.gender = gender
+        self.profile_photo = profile_photo
         self.intro = intro
         self.create_date = create_date
-
+        self.isprove = isprove
 
 class AuthenticatedUser(BasicUser):
     """

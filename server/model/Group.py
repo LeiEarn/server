@@ -1,6 +1,7 @@
-from  .User import *
+from User import *
 
 __all__ = ['Group']
+
 
 class Group(object):
     """
@@ -19,4 +20,3 @@ class Group(object):
         self.members = []
         self.intro = ''
         self.managers = []
-

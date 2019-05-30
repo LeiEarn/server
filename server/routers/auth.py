@@ -7,14 +7,17 @@ from flask import (
     Blueprint, flash, redirect, request, session, g, url_for
 )
 from server.model import *
+from server.UserManagement import UserManagement
 
-APP_ID = ''
-APP_SECRET = ''
-AUTHORIZATION_CODE = ''
+APP_ID = 'wx2e515a1b9f28a15e'
+APP_SECRET = 'ded301bbd914c7a4083d15326be60073'
+AUTHORIZATION_CODE = 'authorization_code'
 WX_API_URL = 'https://api.weixin.qq.com/sns/jscode2session' 
 
 
 bp = Blueprint('auth_bp', __name__, url_prefix='/auth')
+
+user_manager = UserManagement()
 
 def login_required(view):
     @functools.wraps(view)
@@ -84,23 +87,34 @@ def login():
     # 从request中获取js_code
     js_code = request.args.get('js_code')
     # 不存在js_code的错误处理
-    if js_code == None:
+    if js_code is None:
         return "error, no jscode"
-
+    else:
+        print(js_code)
     # 存在js_code则向微信服务器发起获取信息请求
     user_info = get_user_info(js_code)
     # js_code无效的处理
-    if user_info == None:
+    if user_info is None:
         return "error, no user_info"
-
+    else:
+        print(user_info)
     # 从返回信息中获取需要的id，需要异常处理++
-    openid = user_info['openid']
-    unionid = user_info['unionid']
-    session_key = user_info['session_key']
+    try:
+        if  'errcode' in user_info :
+            return 'jscode or wechat server error\n ' + user_info.get('errmsg')
+        else:
+            openid = user_info.get('openid')
+            print(openid)
+            unionid = user_info.get('unionid')
+            session_key = user_info.get('session_key')
 
+            return  openid
+    except Exception as e :
+        print(e)
+    
     # 验证是否存在该用户
     #user = User.query.filter_by(unionid=unionid).first()
-
+    
     
     # 用户存在则登录成功， 返回信息，uuid uuid作为用户凭证
     # 不成功则提示未成功， 转到注册页面

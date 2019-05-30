@@ -3,6 +3,11 @@ import datetime
 import threading
 import pymysql
 from constants import CONST
+
+from .db import Database
+
+db = Database()
+
 class UserManagement(object):
     _instance_lock = threading.Lock()
 
@@ -35,7 +40,9 @@ class UserManagement(object):
             print(row['user_id'], row['wechat_id'], row['nickname'], row['phone_number'], row['name'], row['gender'],
                   row['photo'], row['isprove'], row['intro'], row['create_date'].strftime('%Y-%m-%d %H:%M:%S'))
 
-
+    @db.sql_wrapper
+    def query_user(self, id=None):
+        pass
 
     def create_new_user(self, wechat_id, nickname, phone_number, gender, photo):
 

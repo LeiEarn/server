@@ -37,25 +37,37 @@ def register():
     # 从request中获取js_code
     js_code = request.args.get('js_code')
     # 不存在js_code的错误处理
-    if js_code == None:
+    if js_code is None:
         return "error, no jscode"
-
+    else:
+        print(js_code)
     # 存在js_code则向微信服务器发起获取信息请求
     user_info = get_user_info(js_code)
     # js_code无效的处理
-    if user_info == None:
+    if user_info is None:
         return "error, no user_info"
-
+    else:
+        print(user_info)
     # 从返回信息中获取需要的id，需要异常处理++
-    openid = user_info['openid']
-    unionid = user_info['unionid']
-    session_key = user_info['session_key']
+    try:
+        if  'errcode' in user_info :
+            return 'jscode or wechat server error\n ' + user_info.get('errmsg')
+        else:
+            openid = user_info.get('openid')
+            unionid = user_info.get('unionid')
+            session_key = user_info.get('session_key')
 
+        if unionid is None:
+            return "error, no unionid"
+    except Exception as e :
+        print(e)
     # 验证
     # 微信账号是否已被绑定
     # 学号，邮箱是否重复
     #  判断账号是否已被绑定
-    user = User.query.filter_by(unionid=unionid).first()
+    
+    user = user_manager.query_user(id = unionid)
+    
     # 判断是否有关键字段与已注册账号重复
     
     # 用户存在则注册失败， 返回信息
@@ -104,17 +116,17 @@ def login():
             return 'jscode or wechat server error\n ' + user_info.get('errmsg')
         else:
             openid = user_info.get('openid')
-            print(openid)
             unionid = user_info.get('unionid')
             session_key = user_info.get('session_key')
 
-            return  openid
+        if unionid is None:
+            return "error, no unionid"
+
     except Exception as e :
         print(e)
     
-    # 验证是否存在该用户
-    #user = User.query.filter_by(unionid=unionid).first()
     
+    user  = user_manager.query_user(id = unionid)
     
     # 用户存在则登录成功， 返回信息，uuid uuid作为用户凭证
     # 不成功则提示未成功， 转到注册页面
@@ -122,7 +134,7 @@ def login():
         user_uuid = str(uuid.uuid4()) # 暴露给小程序端的用户标示
         pass
         # 登录成功
-        # return user, uuid
+        return user_uuid
     else:
         pass
         # 重定向到注册页面

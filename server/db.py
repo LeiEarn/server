@@ -1,62 +1,134 @@
 import sqlite3
 
+from .constants import CONST
 import click
 from flask import current_app, g
 from flask.cli import with_appcontext
 import pymysql
 
 
-import pymysql
 
-class Database(object):
-    def __init__(self):
-        self.get_conn()
-    def init_db(self):
-        """Clear existing data and create new tables."""
-        db = self.get_conn()
-        with current_app.open_resource('schema.sql') as f:
-            db.executescript(f.read().decode('utf8'))
-    def get_conn(self):
+class Database: 
+    host=CONST.HOST,
+    user=CONST.USER,
+    password=CONST.PASSWD,
+    db=CONST.DB,
+    charset='utf8',
+    cursorclass = pymysql.cursors.DictCursor 
+    conn = None
+    @classmethod
+    def get_conn(cls):
         try:
-            self.a = 1
-            self.conn = pymysql.connect(host=CONST.HOST,
+            cls.conn = pymysql.connect(host=CONST.HOST,
                                 user=CONST.USER,
                                 password=CONST.PASSWD,
                                 db=CONST.DB,
                                 use_unicode=True,
                                 charset='utf8',
                                 cursorclass=pymysql.cursors.DictCursor)
-            return self.conn
+            return cls.conn
         except pymysql.Error as e:
+            print('get database error')
+            print(repr(e))
             print(e)
         
- 
-    def close_conn(self):
+    @classmethod
+    def close_conn(cls):
         try:
-            if self.conn:
-                self.conn.close()
+            if cls.conn:
+                cls.conn.close()
         except pymysql.Error as e:
+            print('close database error')
+            print(repr(e))
             print(e)
  
-    def sql_wrapper(self, fun):
-        def run(self, *args,**kwargs):
-            db = self.get_conn()
-            cursor = db.cursor()
-            try:
-                cursor.execute(fun(*args,**kwargs))
-                li=cursor.fetchall()
-                db.commit() 
-            except Exception as e: #如果出现错误，回滚事务
-                db.rollback() #打印报错信息
-                print('运行',str(fun),'方法时出现错误，错误代码：',e)
-            finally: #关闭游标和数据库连接
-                cursor.close() 
-                db.close() 
-            try: #返回sql执行信息
-                return list(li) 
-            except: 
-                print('没有得到返回值，请检查代码，该信息出现在ConDb类中的装饰器方法') 
-        return run
+    @classmethod
+    def init_db(cls):
+        """Clear existing data and create new tables."""
+        db = cls.get_conn()
+        cls.close_conn()
+        """
+        with current_app.open_resource('schema.sql') as f:
+            db.executescript(f.read().decode('utf8'))
+        """
+    @classmethod 
+    def query(cls,sql,args=None,fetchone=False): 
+        # 创建连接 
+        connection = pymysql.connect(
+            host=cls.host, 
+            user=cls.user, 
+            password=cls.password, 
+            db=cls.db, 
+            use_unicode=True,
+            charset =cls.charset, 
+            cursorclass = cls.cursorclass) 
+        try: 
+            result = None 
+            # 开启游标 
+            with connection.cursor() as cursor:
+                 # 返回响应结果数
+                effect_row = cursor.execute(cls.sql_args_2_sql(sql, args)) 
+                if fetchone: 
+                    result = cursor.fetchone() 
+                else: 
+                    result = cursor.fetchall() 
+        except Exception as e: 
+            print(e) 
+        finally: 
+            # 关闭连接 
+            connection.close() 
+            
+        return result 
+
+    @classmethod 
+    def execute(cls,sql,args=None,response=False): 
+        connection = pymysql.connect(
+            host=cls.host, 
+            user=cls.user, 
+            password=cls.password, 
+            db=cls.db, 
+            use_unicode=True,
+            charset =cls.charset, 
+            cursorclass = cls.cursorclass) 
+
+        try: 
+            result = None 
+            with connection.cursor() as cursor: 
+                effect_row = cursor.execute(cls.sql_args_2_sql(sql, args)) 
+                if response: 
+                    result = cursor.fetchall() 
+                    
+            # connection is not autocommit by default. So you must commit to save your changes. 
+            connection.commit() 
+        except Exception as e: 
+            print(e) 
+            # error rollback 
+            connection.rollback() 
+        finally: 
+            connection.close() 
+        
+        if response: 
+                return result
+
+    @staticmethod 
+    def sql_args_2_sql(sql,args): 
+        '''
+        fix  issue  %d format: a number is required, not str
+        :param sql: sql语句
+        :param args: 格式化参数
+        :return: 组合之后的sql语句
+        ''' 
+        if args is None:
+            return sql 
+        if sql.find('%') > -1: 
+            return sql % args 
+        elif sql.find('{') > -1: 
+            if type(args) is dict: 
+                return sql.format(**args) 
+            else: 
+                return sql.format(*args) 
+        return sql
+
 
  
 def main():

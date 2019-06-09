@@ -14,7 +14,7 @@ class BasicUser(object):
     """
     __slots__ = ['wechat_id', 'nickname', 'phone_number', 'gender', 'profile_photo', 'intro', 'create_date', 'isprove']
 
-    def __init__(self, wechat_id, profile_photo, nickname, phone_number, gender, intro, create_date, is_proved):
+    def __init__(self, wechat_id, profile_photo, nickname, phone_number, gender, intro, create_date, isprove):
         """
 
         :type is_proved: Datetime
@@ -26,7 +26,7 @@ class BasicUser(object):
         self.profile_photo = profile_photo
         self.intro = intro
         self.create_date = create_date
-        self.isprove = is_proved
+        self.isprove = isprove
 
 
 class AuthenticatedUser(BasicUser):

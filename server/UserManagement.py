@@ -1,12 +1,11 @@
-from model import *
+from .model import *
 import datetime
 import threading
 import pymysql
-from constants import CONST
+from .constants import CONST
 
 from .db import Database
 
-db = Database()
 
 class UserManagement(object):
     _instance_lock = threading.Lock()
@@ -22,21 +21,12 @@ class UserManagement(object):
         return UserManagement._instance
 
     def load_users(self):
-        conn = pymysql.connect(host=CONST.HOST,
-                               user=CONST.USER,
-                               password=CONST.PASSWD,
-                               db=CONST.DB,
-                               use_unicode=True,
-                               charset='utf8',
-                               cursorclass=pymysql.cursors.DictCursor)
-        cursor = conn.cursor()
 
         sql = "SELECT *" \
               "FROM user"
 
-        cursor.execute(sql)
-
-        for row in cursor.fetchall():
+        result = Database.execute(sql=sql)
+        for row in result:
             self.users.append(BasicUser(wechat_id=row['wechat_id'],
                                         phone_number=row['phone_number'],
                                         nickname=row['nickname'],
@@ -55,9 +45,27 @@ class UserManagement(object):
         #           user.create_date,
         #           user.isprove)
         
-    @db.sql_wrapper
+
     def query_user(self, id=None):
-        pass
+        sql = "SELECT * " \
+              "FROM user" \
+                  "WHERE wechat_id = {id}".format({'id': id})
+
+        row = Database.query(sql=sql, fetchone=True)
+        if row is None:
+            return row
+        else:
+            return BasicUser(wechat_id=row['wechat_id'],
+                                        phone_number=row['phone_number'],
+                                        nickname=row['nickname'],
+                                        gender=ord(row['gender']),
+                                        profile_photo=row['photo'],
+                                        intro=row['intro'],
+                                        create_date=row['create_date'].strftime('%Y-%m-%d %H:%M:%S'),
+                                        isprove=row['isprove'])
+        
+            self.users.append(row)
+
     def create_new_user(self, wechat_id, nickname, phone_number, gender, photo):
 
         # create new instance
@@ -73,25 +81,12 @@ class UserManagement(object):
 
         self.users.append(user)
         # write into database
-        conn = pymysql.connect(host=CONST.HOST,
-                               user=CONST.USER,
-                               password=CONST.PASSWD,
-                               db=CONST.DB,
-                               use_unicode=True,
-                               charset='utf8',
-                               cursorclass=pymysql.cursors.DictCursor)
-        cursor = conn.cursor()
+       
         sql = "INSERT INTO user(wechat_id, nickname, phone_number, name ,gender, photo, create_date)" \
               "VALUES ('%s', '%s', '%s', '%s', %d, '%s', '%s')" \
               % (wechat_id, nickname, phone_number, "error_name", gender, photo, create_date)
 
-        cursor.execute(sql)
-
-        conn.commit()
-
-        cursor.close()
-        conn.close()
-
+        Database.execute(sql)
 
 if __name__ == '__main__':
     UserManagement = UserManagement()

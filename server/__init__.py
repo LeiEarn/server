@@ -36,7 +36,7 @@ def create_app(test_config=None):
     # register the database commands
     from server import db
 
-    db.init_app(app)
+    db.Database.init_db()
 
     # apply the blueprints to the app
     from server.routers import auth

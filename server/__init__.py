@@ -39,9 +39,10 @@ def create_app(test_config=None):
     db.Database.init_db()
 
     # apply the blueprints to the app
-    from server.routers import auth
+    from server.routers import auth, img
 
     app.register_blueprint(auth.bp)
+    app.register_blueprint(img.bp)
     #app.register_blueprint(blog.bp)
 
     # make url_for('index') == url_for('blog.index')

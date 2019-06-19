@@ -7,8 +7,8 @@ from flask import (
     Blueprint, flash, redirect, request, session, g, url_for
 )
 from server.model import *
-from server.UserManagement import UserManagement
 
+from ..modules.loginPersistentSystem import PersistentSystem
 APP_ID = 'wx2e515a1b9f28a15e'
 APP_SECRET = 'ded301bbd914c7a4083d15326be60073'
 AUTHORIZATION_CODE = 'authorization_code'
@@ -17,8 +17,8 @@ WX_API_URL = 'https://api.weixin.qq.com/sns/jscode2session'
 
 bp = Blueprint('auth_bp', __name__, url_prefix='/auth')
 
-user_manager = UserManagement()
-
+user_manager = BasicUser.table
+persistent = PersistentSystem()
 def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
@@ -138,7 +138,8 @@ def login():
     else:
         pass
         # 重定向到注册页面
-        return 'redirect to register'
+        return redirect(url_for('.register'))
+        #return 'redirect to register'
 
 
 
@@ -147,6 +148,15 @@ def login():
 def logout():
     return 'logout'
 
+@bp.route('/save')
+def save():
+    persistent.save(1,1)
+    return "rrr"
+
+@bp.route('/all')
+def show():
+    a,b =persistent.query()
+    return str(a+b)
 # 利用js_code向微信服务器端发起请求获取用户信息
 #  返回json格式
 def get_user_info(js_code):

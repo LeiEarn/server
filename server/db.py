@@ -9,11 +9,12 @@ import pymysql
 
 
 class Database: 
-    host=CONST.HOST,
-    user=CONST.USER,
-    password=CONST.PASSWD,
-    db=CONST.DB,
-    charset='utf8',
+    host=CONST.HOST
+    user=CONST.USER
+    password=CONST.PASSWD
+    db=CONST.DB
+    port=CONST.PORT
+    charset='utf8'
     cursorclass = pymysql.cursors.DictCursor 
     conn = None
     @classmethod
@@ -46,6 +47,7 @@ class Database:
     def init_db(cls):
         """Clear existing data and create new tables."""
         db = cls.get_conn()
+        result = cls.query("SELECT * FROM user", fetchone = True)
         cls.close_conn()
         """
         with current_app.open_resource('schema.sql') as f:
@@ -56,6 +58,7 @@ class Database:
         # 创建连接 
         connection = pymysql.connect(
             host=cls.host, 
+            port=cls.port,
             user=cls.user, 
             password=cls.password, 
             db=cls.db, 
@@ -67,7 +70,8 @@ class Database:
             # 开启游标 
             with connection.cursor() as cursor:
                  # 返回响应结果数
-                effect_row = cursor.execute(cls.sql_args_2_sql(sql, args)) 
+                sql_string = cls.sql_args_2_sql(sql, args)
+                effect_row = cursor.execute(sql_string) 
                 if fetchone: 
                     result = cursor.fetchone() 
                 else: 
@@ -85,6 +89,7 @@ class Database:
         connection = pymysql.connect(
             host=cls.host, 
             user=cls.user, 
+            port=cls.port,
             password=cls.password, 
             db=cls.db, 
             use_unicode=True,

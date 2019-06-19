@@ -1,6 +1,108 @@
 __all__ = ['BasicUser', 'AuthenticatedUser', 'Student', 'Company']
 
 
+import datetime
+import threading
+import pymysql
+print(__name__)
+from ..constants import CONST
+
+from ..db import Database
+
+"""
+负责根据不同的身份创建对象？
+"""
+class User(object):
+    def __new__(cls, *args, **kwargs):
+        if kwargs.get('identity') is not None:
+            identity = kwargs.get('identity')
+        
+
+class UserTable(object):
+    _instance_lock = threading.Lock()
+
+    def __init__(self):
+        pass
+
+    def __new__(cls, *args, **kwargs):
+        if not hasattr(UserTable, "_instance"):
+            with UserTable._instance_lock:
+                if not hasattr(UserTable, "_instance"):
+                    UserTable._instance = object.__new__(cls)
+        return UserTable._instance
+   
+    """    
+    def load_users(self):
+
+        sql = "SELECT * " \
+              "FROM user"
+
+        result = Database.query(sql=sql)
+        users = []
+        for row in result:
+            users.append(BasicUser(wechat_id=row['wechat_id'],
+                                        phone_number=row['phone_number'],
+                                        nickname=row['nickname'],
+                                        gender=ord(row['gender']),
+                                        profile_photo=row['photo'],
+                                        intro=row['intro'],
+                                        create_date=row['create_date'].strftime('%Y-%m-%d %H:%M:%S'),
+                                        isprove=row['isprove']))
+        return users
+        # for user in self.users:
+        #     print(user.wechat_id,
+        #           user.nickname,
+        #           user.phone_number,
+        #           user.gender,
+        #           user.profile_photo,
+        #           user.intro,
+        #           user.create_date,
+        #           user.isprove)
+       """ 
+
+    def query_user(self, id=None):
+        sql = "SELECT * " \
+              "FROM user" \
+                  "WHERE wechat_id = {id}".format({'id': id})
+
+        row = Database.query(sql=sql, fetchone=True)
+        if row is None:
+            return row
+        else:
+            return BasicUser(wechat_id=row['wechat_id'],
+                                        phone_number=row['phone_number'],
+                                        nickname=row['nickname'],
+                                        gender=ord(row['gender']),
+                                        profile_photo=row['photo'],
+                                        intro=row['intro'],
+                                        create_date=row['create_date'].strftime('%Y-%m-%d %H:%M:%S'),
+                                        isprove=row['isprove'])
+        
+            
+
+    def create_new_user(self, wechat_id, nickname, phone_number, gender, photo):
+
+        # create new instance
+        create_date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        user = BasicUser(wechat_id=wechat_id,
+                         phone_number=phone_number,
+                         nickname=nickname,
+                         gender=gender,
+                         profile_photo=photo,
+                         intro='-',
+                         create_date=create_date,
+                         isprove=0)
+        # write into database
+       
+        sql = "INSERT INTO user(wechat_id, nickname, phone_number, name ,gender, photo, create_date)" \
+              "VALUES ('%s', '%s', '%s', '%s', %d, '%s', '%s')" \
+              % (wechat_id, nickname, phone_number, "error_name", gender, photo, create_date)
+
+        Database.execute(sql)
+
+
+
+
 class BasicUser(object):
     """
     Attributes:
@@ -13,7 +115,7 @@ class BasicUser(object):
         create_date: date when this user was created
     """
     __slots__ = ['wechat_id', 'nickname', 'phone_number', 'gender', 'profile_photo', 'intro', 'create_date', 'isprove']
-
+    table = UserTable()
     def __init__(self, wechat_id, profile_photo, nickname, phone_number, gender, intro, create_date, isprove):
         """
 
@@ -58,4 +160,5 @@ class Company(AuthenticatedUser):
 
 
 if __name__ == '__main__':
-    b = BasicUser()
+    #b = BasicUser()
+    pass

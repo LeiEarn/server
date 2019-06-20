@@ -15,7 +15,8 @@ class TaskTable(object):
                     TaskTable._instance = object.__new__(cls)
         return TaskTable._instance
 
-    def create_Task(self):
+    def create_Task(self, task):
+        # write into database
         pass
 
     def query_task(self):

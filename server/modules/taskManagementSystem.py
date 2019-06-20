@@ -1,15 +1,33 @@
 from ..model.User import BasicUser as User
+from ..model import Task
 from flask import g, session
+
+from AdminPlatform import AdminPlatform
+
+AdminPlatform = AdminPlatform()
 class taskManagementSystem(object):
     def __init__(self):
         pass
 
     """
-    发布者：发布任务
+    发布者：提交任务 -> 管理员：审核
+    任务状态：待审核
     """
-    def publish_task(self):
-        pass
+    def commit_task(self, publisher_id, task):
+        """
+        :param publisher_id:
+        :param task:
+        :return:
+        """
+        AdminPlatform.commit_new_task(task)
 
+    """
+    任务审核成功-> 进行中
+    管理平台：正式发布任务
+    -> TaskTable 写入database
+    """
+    def publish_task(self, task):
+        task.TaskTable.create_Task(task)
     """
     发布者：增加任务说明
     """
@@ -20,6 +38,7 @@ class taskManagementSystem(object):
     发布者：获取发布的任务
     """
     def get_published_tasks(self):
+        Task.TaskTable.query_task()
         pass
 
     """
@@ -35,13 +54,13 @@ class taskManagementSystem(object):
         pass
 
     """
-    接受者：接受任务
+    用户：接受任务
     """
     def accept_task(self):
         pass
 
     """
-    接受者：放弃任务
+    用户：放弃任务
     """
     def abondon_task(self):
         pass
@@ -49,11 +68,11 @@ class taskManagementSystem(object):
     """
     接受者：提交任务
     """
-    def commit_task(self):
+    def finish_task(self):
         pass
 
     """
     接受者：提交任务执行情况
     """
-    def commit_status(self):
+    def finish_status(self):
         pass

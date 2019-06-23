@@ -5,3 +5,5 @@ def login():
     password = request.args.get('password')
     if account is not 'admin':
         return 'error'
+
+def 

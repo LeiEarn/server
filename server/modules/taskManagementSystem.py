@@ -1,4 +1,4 @@
-from ..model.User import BasicUser as User
+from ..model.User import User as User
 from flask import g, session
 class taskManagementSystem(object):
     def __init__(self):

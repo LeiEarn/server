@@ -24,9 +24,10 @@ class AccessControlSystem(object):
         # 获取身份
         @app.before_request
         def get_identity():
-            identity = g.get('user_type')
+            identity = g.persistent.get('user_type')
             if identity is not None:
-                g.identity = identity
+                accesscontrol = {'identity': identity}
+                g.accesscontrol = accesscontrol
 
     # 登录需求装饰器
     @classmethod
@@ -36,7 +37,20 @@ class AccessControlSystem(object):
         """
         @functools.wraps(view)
         def wrapped_view(**kwargs):
-            if g.get('identity') is None:
+            if g.accesscontrol.get('identity') is None:
+                return redirect_to_login
+            return view(**kwargs)
+        return wrapped_view
+
+    # 拥有者身份需求装饰器
+    @classmethod
+    def owner_required(view, redirect_to_login):
+        """
+            尚未完成
+        """
+        @functools.wraps(view)
+        def wrapped_view(**kwargs):
+            if g.get('user_id') is None or g.user_id is not kwargs.get('user_id'):
                 return redirect_to_login
             return view(**kwargs)
         return wrapped_view

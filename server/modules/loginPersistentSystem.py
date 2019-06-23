@@ -143,17 +143,18 @@ class PersistentSystem(object):
             """
             cls.flash_user_type()
             persistent_info = PersistentSystem.query()
-            g.user_type = persistent_info.get('user_type')
+            g.persistent = persistent_info
             return None
 
     @classmethod
     def save(cls,wechat_server_reply, user):
         """
         persistent_info
-            openid, unionid, session_key, user_type
+            openid, unionid, session_key, user_type, user_id
         """
         persistent_info = wechat_server_reply.copy()
         persistent_info['user_type'] = user.get_type()
+        persistent_info['user_id'] = user.user_id
         session['persistent_info'] = persistent_info
 
     @classmethod
@@ -163,6 +164,7 @@ class PersistentSystem(object):
             'openid': persistent_info.get('openid'),
             'unionid': persistent_info.get('unionid'),
             'session_key': persistent_info.get('session_key'),
+            'user_id': persistent_info.get('user_id'),
             'user_type': persistent_info.get('user_type')
         }
         return  sess

@@ -31,7 +31,7 @@ class ManagementSystem:
         unionid =wechatresult.get('unionid')
         if id is None:
             return None
-        user = User.table.query_user_unionid(unionid=unionid)
+        user = User.table.query_user(unionid=unionid)
         if isinstance(user, User.BasicUser):
             
             """
@@ -54,7 +54,7 @@ class ManagementSystem:
             id: unionid登录时获得
 
         """
-        user = User.table.query_user_unionid(unionid=unionid)
+        user = User.table.query_user(unionid=unionid)
         if user is None:
             user = User.table.create_new_user(id)
             return user
@@ -66,14 +66,14 @@ class ManagementSystem:
         """
             用户发起认证请求
         """
-        user = User.table.query_user_unionid(unionid=unionid)
+        user = User.table.query_user(unionid=unionid)
         
         if user is None:
             return None
         elif user.isprove is 'P':
             return None
         
-        result = User.table.update_detail(unionid = unionid)
+        result = User.table.update_detail(unionid = unionid, identity=g.accesscontrol.get('identity'))
         return result
         pass
 
@@ -82,13 +82,13 @@ class ManagementSystem:
         获取信息模块
     """
     def get_user_info(self, userid):
-        user = User.table.query_user_userid(userid=userid)
+        user = User.table.query_user(user_id=userid)
         if isinstance(User.BasicUser):
             return user
         else:
             return None
 
-    def get_user_detail(self, userid):
-        detail = User.table.load_detail_userid(userid = userid)
+    def get_user_detail(self, user_id):
+        detail = User.table.load_detail_user_id(user_id = user_id)
         return detail
         pass

@@ -10,15 +10,21 @@ class taskManagementSystem(object):
         pass
 
     """
-    发布者：提交任务 -> 管理员：审核
-    任务状态：待审核
+    发布者：提交任务 -> 
+        管理员：审核
+        tMS: 写入db（任务状态：待审核）
     """
-    def commit_task(self, publisher_id, task):
+    def commit_task(self, publisher_id, task_json):
         """
         :param publisher_id:
         :param task:
         :return:
         """
+
+        # create new task and write it to db
+        task = Task.TaskTable.create_Task()
+
+        # admin audit this task
         AdminPlatform.commit_new_task(task)
 
     """

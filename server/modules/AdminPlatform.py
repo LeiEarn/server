@@ -15,4 +15,19 @@ class AdminPlatform():
         return AdminPlatform._instance
 
     def commit_new_task(self, task):
+        """
+        Add task to wait list for audit
+        :param task:
+        :return:
+        """
+        task.TaskTable.updata_status('inreview')
+        self.Task_wait_list.append(task)
+        pass
+
+    def confirm_new_task(self, task):
+        """
+        task Management -> publish task
+        :param task:
+        :return:
+        """
         pass

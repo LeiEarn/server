@@ -31,34 +31,7 @@ class UserTable(object):
                     UserTable._instance = object.__new__(cls)
         return UserTable._instance
    
-    """    
-    def load_users(self):
 
-        sql = "SELECT * " \
-              "FROM user"
-
-        result = Database.query(sql=sql)
-        users = []
-        for row in result:
-            users.append(BasicUser(wechat_id=row['wechat_id'],
-                                        phone_number=row['phone_number'],
-                                        nickname=row['nickname'],
-                                        gender=ord(row['gender']),
-                                        profile_photo=row['photo'],
-                                        intro=row['intro'],
-                                        create_date=row['create_date'].strftime('%Y-%m-%d %H:%M:%S'),
-                                        isprove=row['isprove']))
-        return users
-        # for user in self.users:
-        #     print(user.wechat_id,
-        #           user.nickname,
-        #           user.phone_number,
-        #           user.gender,
-        #           user.profile_photo,
-        #           user.intro,
-        #           user.create_date,
-        #           user.isprove)
-       """ 
 
     def query_user(self, id=None):
         sql = "SELECT * " \

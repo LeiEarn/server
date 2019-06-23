@@ -1,4 +1,4 @@
-
+#encoding=utf-8
 import threading
 
 import uuid
@@ -90,7 +90,7 @@ from redis import Redis
 
 import os
 from flask import session, g, current_app
-from ..model import BasicUser as User
+from ..model import   User
 
 class Md(object):
     def __init__(self, old_wsgi_app):
@@ -132,25 +132,29 @@ class PersistentSystem(object):
         @app.before_request
         def load_user(*args, **kwargs):
             print('load_user')
-            if g.get('user') is not None:
-                return None
-            info = PersistentSystem.query()
+            # if g.get('user') is not None:
+            #    return None
+            # persistent_info = PersistentSystem.query()
             """
             加载用户信息， 可提取模块后用flask_cache另写加速
+            —— 考虑认证系统则易出现冲突
+            ———暂时每次请求都刷新
+            ————可以另起刷新队列
             """
-            unionid = info.get('unionid', None)
-            try:
-                g.user = User.table.query_user(unionid)
-            except Exception as e:
-                print(e)
+            cls.flash_user_type()
+            persistent_info = PersistentSystem.query()
+            g.persistent = persistent_info
             return None
 
     @classmethod
-    def save(cls,persistent_info):
+    def save(cls,wechat_server_reply, user):
         """
         persistent_info
-            openid, unionid, session_key, user_type
+            openid, unionid, session_key, user_type, user_id
         """
+        persistent_info = wechat_server_reply.copy()
+        persistent_info['user_type'] = user.get_type()
+        persistent_info['user_id'] = user.user_id
         session['persistent_info'] = persistent_info
 
     @classmethod
@@ -160,10 +164,21 @@ class PersistentSystem(object):
             'openid': persistent_info.get('openid'),
             'unionid': persistent_info.get('unionid'),
             'session_key': persistent_info.get('session_key'),
+            'user_id': persistent_info.get('user_id'),
             'user_type': persistent_info.get('user_type')
         }
         return  sess
+    
+    #用来刷新用户的状态
+    @classmethod
+    def flash_user_type(cls):
+        persistent_info = session.get('persistent_info')
+        unionid =  persistent_info.get('unionid')
+        persistent_info['user_type'] = User.table.query_user_unionid(unionid)
+
+        session['persistent_info'] = persistent_info
+    
     def get_user(self):
-        return User.table.query_user(session['unionid'])
+        return User.table.query_user_unionid(session['unionid'])
 
 

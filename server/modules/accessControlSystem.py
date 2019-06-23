@@ -24,30 +24,50 @@ class AccessControlSystem(object):
         # 获取身份
         @app.before_request
         def get_identity():
-            user = g.get('user')
-            if user is not None:
-                g.identity = user
+            identity = g.persistent.get('user_type')
+            if identity is not None:
+                accesscontrol = {'identity': identity}
+                g.accesscontrol = accesscontrol
 
     # 登录需求装饰器
     @classmethod
-    def login_required(view):
+    def login_required(view, redirect_to_login):
+        """
+        
+        """
         @functools.wraps(view)
         def wrapped_view(**kwargs):
-            if g.get('user') is None:
-                return 'redirect to login'
+            if g.accesscontrol.get('identity') is None:
+                return redirect_to_login
+            return view(**kwargs)
+        return wrapped_view
+
+    # 拥有者身份需求装饰器
+    @classmethod
+    def owner_required(view, redirect_to_login):
+        """
+            尚未完成
+        """
+        @functools.wraps(view)
+        def wrapped_view(**kwargs):
+            if g.get('user_id') is None or g.user_id is not kwargs.get('user_id'):
+                return redirect_to_login
             return view(**kwargs)
         return wrapped_view
     
     # 身份需求装饰器
     @classmethod
-    def identity_required(view, identity):
+    def identity_required(view, identity_required = set('U'), identity_error='needprove'):
+        """
+        example: identity_required(set('U', 'S'))
+        """
         @functools.wraps(view)
         def wrapped_view(**kwargs):
-            user = g.get('user')
-            if user is None:
-                return 'redirect to login'
-            elif isinstance(user, identity):
+            identity = g.get('identity')
+            if 'U' in  identity_required :
                 return view(**kwargs)
-            else:
-                return 'error'
+            elif identity['isprove'] is 'P' and identity['identity'] in identity_required:
+                return view(**kwargs)
+            
+            return identity_error
         return wrapped_view

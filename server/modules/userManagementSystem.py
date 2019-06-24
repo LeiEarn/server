@@ -74,7 +74,7 @@ class ManagementSystem:
             return user
     
     
-    def prove(self, unionid, *args, **kwargs):
+    def prove(self, *args, **kwargs):
         """
             用户发起认证请求
         """

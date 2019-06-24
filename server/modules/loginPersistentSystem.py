@@ -92,15 +92,7 @@ import os
 from flask import session, g, current_app
 from ..model import   User
 
-class Md(object):
-    def __init__(self, old_wsgi_app):
-        self.old_wsgi_app = old_wsgi_app
 
-    def __call__(self, environ, start_response):
-        print("开始之前")
-        ret = self.old_wsgi_app(environ, start_response)
-        print("结束之后")
-        return ret
 class PersistentSystem(object):
     _instance_lock = threading.Lock()
     app =None
@@ -136,10 +128,10 @@ class PersistentSystem(object):
             #    return None
             # persistent_info = PersistentSystem.query()
             """
-            加载用户信息， 可提取模块后用flask_cache另写加速
-            —— 考虑认证系统则易出现冲突
-            ———暂时每次请求都刷新
-            ————可以另起刷新队列
+                加载用户信息， 可提取模块后用flask_cache另写加速
+                —— 考虑认证系统则易出现冲突
+                ———暂时每次请求都刷新
+                ————可以另起刷新队列
             """
             cls.flash_user_type()
             persistent_info = PersistentSystem.query()
@@ -152,12 +144,14 @@ class PersistentSystem(object):
         persistent_info
             openid, unionid, session_key, user_type, user_id
         """
-        if wechat_server_reply is None:
+        if wechat_server_reply or user is None:
             return None
         persistent_info = wechat_server_reply.copy()
         persistent_info['user_type'] = user.get_type()
         persistent_info['user_id'] = user.user_id
         session['persistent_info'] = persistent_info
+        
+        return persistent_info
 
     @classmethod
     def query(cls):

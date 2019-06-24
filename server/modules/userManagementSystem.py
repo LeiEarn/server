@@ -46,7 +46,7 @@ class ManagementSystem:
                 persistent_info
                 openid, unionid, session_key, user
                 """
-                persistentSystem.save(wechat_server_reply= wechatresult, user = user)
+                persistant_result = persistentSystem.save(wechat_server_reply= wechatresult, user = user)
                 return user
             else:
                 self.register(unionid=unionid)

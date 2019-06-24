@@ -27,7 +27,7 @@ class AccessControlSystem(object):
         def get_identity():
             if g.get('persistent') is None:
                 return None
-            identity = g.persistent.get('user_type')
+            identity = g.get('persistent').get('user_type')
             if identity is not None:
                 accesscontrol = {'identity': identity}
                 g.accesscontrol = accesscontrol

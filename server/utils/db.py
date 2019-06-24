@@ -1,11 +1,5 @@
-import sqlite3
-
-from .constants import CONST
-import click
-from flask import current_app, g
-from flask.cli import with_appcontext
+from ..constants import CONST
 import pymysql
-
 
 
 class Database: 
@@ -17,6 +11,7 @@ class Database:
     charset='utf8'
     cursorclass = pymysql.cursors.DictCursor 
     conn = None
+
     @classmethod
     def get_conn(cls):
         try:

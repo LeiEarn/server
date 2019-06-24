@@ -1,6 +1,6 @@
 import threading
 import datetime
-from ..db import Database
+from ..utils.db import Database
 
 print(__name__)
 
@@ -72,12 +72,12 @@ class TaskTable(object):
 
     @staticmethod
     def task_count(task_type='all'):
-        sql = ''
-        return Database.execute(sql, response=True)
+        sql = 'SELECT COUNT(*) as count FROM task;'
+        return Database.execute(sql, response=True)[0]['count']
 
     @staticmethod
     def get_tasks(task_type='all', begin=0, end=100):
-        sql = ''
+        sql = 'SELECT COUNT(*) as count FROM task;'
         return Database.execute(sql, response=True)
 
 
@@ -118,6 +118,5 @@ class Task(object):
                 self.te_time, self.audit_id, self.publisher_id, self.participants_num]
 
 if __name__ =='__main__':
-    now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    task = Task(1, 'type', now, 'release', now, now, now, 999, 222, 0)
-    print(', '.join(map(str, task.get_info())))
+
+    print(Task.taskTable.task_count())

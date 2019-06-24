@@ -1,16 +1,12 @@
-__all__ = ['User','UnprovedUser',  'Student', 'Company']
+__all__ = ['User', 'UnprovedUser', 'Student', 'Company']
 
 
 import datetime
 import threading
-import pymysql
 print(__name__)
-from ..constants import CONST
 
-from ..db import Database
+from ..utils.db import Database
 
-
-        
 
 class UserTable(object):
     _instance_lock = threading.Lock()
@@ -93,7 +89,7 @@ class UserTable(object):
             """
             return ""
 
-        result =Database.query(sql, fetchone=True)
+        result = Database.query(sql, fetchone=True)
         return result
 
     def create_new_user(self, unionid, nickname=None, phone_number=None, gender=None, photo=None):
@@ -174,8 +170,9 @@ class UserTable(object):
 
     @staticmethod
     def user_count(user_type='all'):
-        sql = ""
-        return Database.execute(sql, response=True)
+        sql = 'SELECT COUNT(*) as count ' \
+              'FROM user'
+        return Database.execute(sql, response=True)[0]['count']
 
 
     @staticmethod

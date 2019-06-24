@@ -1,4 +1,4 @@
-#encoding:utf-8
+# -*- coding: utf-8 -*-
 from werkzeug.utils import secure_filename
 import time
 import os
@@ -6,9 +6,7 @@ import requests
 import json
 import uuid
 import hashlib 
-import bson.binary 
-import bson.objectid 
-import bson.errors 
+
 from PIL import Image
 import flask
 from flask import (

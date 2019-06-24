@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from .User import *
 
 __all__ = ['Group']

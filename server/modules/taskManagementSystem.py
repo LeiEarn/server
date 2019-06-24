@@ -131,10 +131,10 @@ class taskManagementSystem(object):
     """
     @staticmethod
     def get_task_count(user_type='all'):
-        return Task.TaskTable.task_count(user_type)
+        return Task.taskTable.task_count(user_type)
 
     @staticmethod
     def get_tasks(task_type='all', page=0):
-        return Task.TaskTable.get_tasks(task_type=task_type,
+        return Task.taskTable.get_tasks(task_type=task_type,
                                         begin=(page-1)*100,
                                         end=page*100)

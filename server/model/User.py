@@ -5,7 +5,7 @@ import pymysql
 print(__name__)
 from ..constants import CONST
 
-from ..db import Database
+from ..utils.db import Database
 
 
         
@@ -25,7 +25,6 @@ class UserTable(object):
                 if not hasattr(UserTable, "_instance"):
                     UserTable._instance = object.__new__(cls)
         return UserTable._instance
-   
 
     def query_user(self, unionid=None, user_id=None):
         """
@@ -169,6 +168,24 @@ class UserTable(object):
         user = Database.query(query_sql, fetchone=True)
         return user
 
+    @staticmethod
+    def user_count(user_type='all'):
+        if user_type == 'all':
+            sql = 'SELECT COUNT(*) as count FROM user;'
+        elif user_type == 'waiting':
+            sql = 'SELECT COUNT(*) FROM user WHERE user.isprove = FALSE;'
+        else:
+            raise KeyError
+
+        return Database.execute(sql, response=True)[0]['count']
+
+
+    @staticmethod
+    def get_users(user_type='all', begin=0, end=100):
+        sql = 'SELECT * FROM user LIMIT %d OFFSET %d;' % (end - begin, begin)
+
+        return Database.execute(sql, response=True)
+
 
 """
 
@@ -268,6 +285,8 @@ class User(object):
             identity = 'U'
             user = cls.identity_dict[identity](*args, **kwargs)
             return user
+
+
 
 
 UnprovedUser = User.UnprovedUser

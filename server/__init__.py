@@ -2,6 +2,7 @@ import os
 
 from flask import Flask, url_for, redirect
 from .modules.loginPersistentSystem import PersistentSystem
+from .modules.accessControlSystem import AccessControlSystem
 
 def create_app(test_config=None):
     """Create and configure an instance of the Flask application."""
@@ -21,6 +22,7 @@ def create_app(test_config=None):
         app.config.update(test_config)
 
     PersistentSystem(app)
+    AccessControlSystem(app)
     # ensure the instance folder exists
     try:
         os.makedirs(app.instance_path)
@@ -41,11 +43,11 @@ def create_app(test_config=None):
     db.Database.init_db()
 
     # apply the blueprints to the app
-    from server.routers import auth, img, demo
+    from server.routers import  img, demo, test
 
-    app.register_blueprint(auth.bp)
+    #app.register_blueprint(auth.bp)
     app.register_blueprint(img.bp)
-    app.register_blueprint(demo.bp)
+    app.register_blueprint(test.bp)
 
     # make url_for('index') == url_for('blog.index')
     # in another app, you might define a separate main index here with

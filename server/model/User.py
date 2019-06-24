@@ -34,14 +34,14 @@ class UserTable(object):
             query_user by user_id or unionid
 
         """
-        if unionid:
-            sql = "SELECT * " \
-                  "FROM user" \
-                      "WHERE wechat_id = {id}".format(id = unionid)
+        if unionid is not None:
+            sql = "SELECT *  \
+                  FROM user \
+                      WHERE wechat_id = {id}".format(id = unionid)
         else:
-            sql =  "SELECT * " \
-                  "FROM user" \
-                      "WHERE user_id = {id}".format(id = user_id)
+            sql =  "SELECT *  \
+                  FROM user \
+                      WHERE user_id = {id}".format(id = user_id)
         row = Database.query(sql=sql, fetchone=True)
         if row is None:
             return row
@@ -51,7 +51,7 @@ class UserTable(object):
                 wechat_id=row['wechat_id'],
                 nickname=row['nickname'],
                 phone_number=row['phone_number'],
-                profile_photo=row['photo'],
+                photo=row['photo'],
                 identity=row['identity'],
                 intro=row['intro'],
                 create_date=row['create_date'].strftime('%Y-%m-%d %H:%M:%S'),
@@ -210,7 +210,7 @@ class User(object):
             identity:   U S C
         """
 
-        __slots__ = ['wechat_id', 'nickname', 'phone_number', 'profile_photo', 'intro', 'create_date', 'isprove', 'identity']
+        __slots__ = ['user_id', 'wechat_id', 'nickname', 'phone_number', 'photo', 'intro', 'create_date', 'isprove', 'identity']
         table = UserTable()
         def __init__(self, **kwargs):
             """
@@ -222,7 +222,7 @@ class User(object):
                     kwargs.pop(key)
             if self.__getattribute__('isprove') is None:
                 self.isprove = kwargs.get('isprove')
-            if self.__getattribute__('identity') is None:
+            if hasattr(self, 'identity') is None:
                 self.identity = kwargs.get('identity')
         def get_type(self):
             return {'iprove': self.isprove, 'identity': self.identity}
@@ -238,7 +238,7 @@ class User(object):
 
     # 学生
     class Student(BasicUser):
-        __slots__ = ['college', 'stu_num', 'school',  'name', 'phone_number', 'email', 'gender','prove', 'prove_state']
+        __slots__ = ['college', 'user_stu_id', 'school',  'name', 'phone_number', 'email', 'gender','prove', 'state_prove']
 
         def __init__(self,*args, **kwargs):
             super(Student, self).__init__(*args, **kwargs)
@@ -249,7 +249,7 @@ class User(object):
 
     # 公司
     class Company(BasicUser):
-        __slots__ = ['company',  'name', 'phone_number', 'email','prove', 'prove_state']
+        __slots__ = ['company', 'user_com_id', 'job_num','name', 'gender', 'phone_number', 'email','prove', 'state_prove']
 
         def __init__(self,*args, **kwargs):
             super(Company, self).__init__(*args, **kwargs)
@@ -264,6 +264,8 @@ class User(object):
     def __new__(cls, *args, **kwargs):
         if  'identity' in kwargs:
             identity = kwargs.get('identity')
+            if identity not in cls.identity_dict:
+                identity = 'U'
             user = cls.identity_dict[identity](*args, **kwargs)
             return user
         else:

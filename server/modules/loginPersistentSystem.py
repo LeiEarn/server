@@ -117,7 +117,7 @@ class PersistentSystem(object):
         self.app = app
         app.config['SESSION_TYPE'] = 'redis'   #session存储格式为redis
         app.config['SESSION_REDIS'] = Redis(    #redis的服务器参数
-            host='192.168.1.3',                 #服务器地址
+            host='localhost',                 #服务器地址
             port=6379)                           #服务器端口
 
         app.config['SESSION_USE_SIGNER'] = True   #是否强制加盐，混淆session
@@ -152,6 +152,8 @@ class PersistentSystem(object):
         persistent_info
             openid, unionid, session_key, user_type, user_id
         """
+        if wechat_server_reply is None:
+            return None
         persistent_info = wechat_server_reply.copy()
         persistent_info['user_type'] = user.get_type()
         persistent_info['user_id'] = user.user_id
@@ -160,6 +162,8 @@ class PersistentSystem(object):
     @classmethod
     def query(cls):
         persistent_info = session.get('persistent_info')
+        if persistent_info is None:
+            return None
         sess = {
             'openid': persistent_info.get('openid'),
             'unionid': persistent_info.get('unionid'),
@@ -173,12 +177,13 @@ class PersistentSystem(object):
     @classmethod
     def flash_user_type(cls):
         persistent_info = session.get('persistent_info')
-        unionid =  persistent_info.get('unionid')
-        persistent_info['user_type'] = User.table.query_user_unionid(unionid)
-
-        session['persistent_info'] = persistent_info
+        if persistent_info is not None:
+            unionid =  persistent_info.get('unionid')
+            persistent_info['user_type'] = User.table.query_user(unionid= unionid)
+            session['persistent_info'] = persistent_info
     
     def get_user(self):
-        return User.table.query_user_unionid(session['unionid'])
+        if session.get('unionid') is not None:
+            return User.table.query_user(unionid = session['unionid'])
 
 

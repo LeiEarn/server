@@ -24,24 +24,32 @@ class ManagementSystem:
             用户信息 or None
 
         """
-        wechatresult = code2session(js_code)
-        if 'error' in wechatresult:
-            return None
+        """test"""
+        #wechatresult = code2session(js_code)
+        #if 'error' in wechatresult:
+        #   return None
         
+        wechatresult = {'unionid': '12345', 'openid':1, 'session_key':'12345'}
+
         unionid =wechatresult.get('unionid')
-        if id is None:
+
+        if unionid is None:
             return None
-        user = User.table.query_user(unionid=unionid)
-        if isinstance(user, User.BasicUser):
-            
-            """
-            persistent_info
-            openid, unionid, session_key, user
-            """
-            persistentSystem.save(wechat_server_reply= wechatresult, user = user)
-            return user
         else:
-            return None
+            print(unionid)
+            user = User.table.query_user(unionid=unionid)
+            print(user)
+            if isinstance(user, User.BasicUser):
+            
+                """
+                persistent_info
+                openid, unionid, session_key, user
+                """
+                persistentSystem.save(wechat_server_reply= wechatresult, user = user)
+                return user
+            else:
+                self.register(unionid=unionid)
+                return None
         
 
     def register(self, unionid=None):
@@ -54,9 +62,12 @@ class ManagementSystem:
             id: unionid登录时获得
 
         """
+        if unionid is None:
+            return None
         user = User.table.query_user(unionid=unionid)
         if user is None:
-            user = User.table.create_new_user(id)
+            User.table.create_new_user(unionid=unionid)
+            user = User.table.query_user(unionid=unionid)
             return user
         else:
             return user

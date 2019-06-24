@@ -1,7 +1,7 @@
 # -*- encoding:utf-8 -*-
 from flask import session, Flask, jsonify, request, send_from_directory
-from server.server.modules.userManagementSystem import ManagementSystem as UMS
-from server.server.modules.taskManagementSystem import taskManagementSystem as TMS
+from server.modules.userManagementSystem import ManagementSystem as UMS
+from server.modules.taskManagementSystem import taskManagementSystem as TMS
 import os
 import json
 

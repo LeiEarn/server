@@ -1,4 +1,5 @@
-__all__ = ['User','UnprovedUser',  'Student', 'Company']
+#!encodeing=utf-8
+__all__ = ['User', 'UnprovedUser',  'Student', 'Company']
 
 
 import datetime

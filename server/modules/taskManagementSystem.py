@@ -1,8 +1,8 @@
-from ..model.User import BasicUser as User
+from ..model.User import User as User
 from ..model import Task
 from flask import g, session
 
-from AdminPlatform import AdminPlatform
+from .AdminPlatform import AdminPlatform
 
 AdminPlatform = AdminPlatform()
 class taskManagementSystem(object):

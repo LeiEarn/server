@@ -89,6 +89,26 @@ def get_wait_task():
         return ok(data)
     return bad('error')
 
+# Confirm Part
+@app.route('/api/v1/confirm_user', methods=['POST'])
+def confirm_user():
+    if request.method == 'POST':
+        user_id = request.form.get('user_id')
+        confirm = request.form.get('confirm') # bool
+
+        UMS.confirm(user_id, confirm)
+    return bad('error')
+
+
+@app.route('/api/v1/confirm_task', methods=['POST'])
+def confirm_user():
+    if request.method == 'POST':
+        task_id = request.form.get('task_id')
+        confirm = request.form.get('confirm')  # bool
+
+        TMS.confirm(task_id, confirm)
+    return bad('error')
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=60006, threaded=True)

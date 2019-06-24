@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-from ..model.User import BasicUser as User
 from ..model.Task import Task
+from ..model.User import User as User
+
 from flask import g, session
 
-from AdminPlatform import AdminPlatform
+from .AdminPlatform import AdminPlatform
 
 AdminPlatform = AdminPlatform()
 class taskManagementSystem(object):

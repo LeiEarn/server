@@ -165,11 +165,24 @@ class UserTable(object):
 
         sql += "WHERE unionid = {unionid}".format(unionid=unionid)
 
-        result = Database.execute(sql, response = True)
+        result = Database.execute(sql, response=True)
 
         query_sql = "SELECT * FROM user WHERE unionid = {unionid}".format(unionid = unionid)
         user = Database.query(query_sql, fetchone=True)
         return user
+
+
+    @staticmethod
+    def user_count(user_type='all'):
+        sql = ""
+        return Database.execute(sql, response=True)
+
+
+    @staticmethod
+    def get_users(user_type='all', begin=0, end=100):
+        sql = ''
+        return Database.execute(sql, response=True)
+
 
 
 """

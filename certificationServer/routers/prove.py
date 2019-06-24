@@ -35,59 +35,39 @@ def login():
 
 
 # Query Part:
-@app.route('/api/v1/get_all_users', methods=['POST'])
-def get_all_users():
+@app.route('/api/v1/get_users', methods=['POST'])
+def get_users():
     if request.method =='POST':
         # 1 page = 100 record
         page = request.form.get('page')
-        record_num = UMS.get_user_count()
+        user_type = request.form.get('user_type')
+
+        record_num = UMS.get_user_count(user_type)
         if page > record_num // 100 + 1:
             return bad('out of user size')
 
-        data = UMS.get_users(page=page)
+        data = UMS.get_users(user_type=user_type, page=page)
         return ok(data)
     return bad('error')
 
-@app.route('/api/v1/get_wait_user', methods=['POST'])
-def get_wait_user():
+
+
+@app.route('/api/v1/get_task', methods=['POST'])
+def get_task():
     if request.method == 'POST':
         # 1 page = 100 record
         page = request.form.get('page')
-        record_num = UMS.get_wait_user_count()
+        task_type = request.form.get('task_type')
+
+        record_num = TMS.get_task_count(task_type)
         if page > record_num // 100 + 1:
             return bad('out of user size')
 
-        data = UMS.get_wait_users(page=page)
+        data = UMS.get_tasks(task_type=task_type,
+                             page=page)
         return ok(data)
     return bad('error')
 
-
-@app.route('/api/v1/get_all_task', methods=['POST'])
-def get_all_task():
-    if request.method == 'POST':
-        # 1 page = 100 record
-        page = request.form.get('page')
-        record_num = TMS.get_record_num()
-        if page > record_num // 100 + 1:
-            return bad('out of user size')
-
-        data = UMS.get_records(page=page)
-        return ok(data)
-    return bad('error')
-
-
-@app.route('/api/v1/get_wait_task', methods=['POST'])
-def get_wait_task():
-    if request.method == 'POST':
-        # 1 page = 100 record
-        page = request.form.get('page')
-        record_num = TMS.get_wait_record_num()
-        if page > record_num // 100 + 1:
-            return bad('out of user size')
-
-        data = UMS.get_wait_records(page=page)
-        return ok(data)
-    return bad('error')
 
 # Confirm Part
 @app.route('/api/v1/confirm_user', methods=['POST'])

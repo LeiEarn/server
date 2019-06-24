@@ -60,8 +60,7 @@ class ManagementSystem:
             return user
         else:
             return user
-    
-    
+
     def prove(self, unionid, *args, **kwargs):
         """
             用户发起认证请求
@@ -81,14 +80,26 @@ class ManagementSystem:
     """
         获取信息模块
     """
-    def get_user_info(self, userid):
+    @staticmethod
+    def get_user_count(user_type='all'):
+        return User.table.user_count(user_type)
+
+    @staticmethod
+    def get_users(user_type='all', page=0):
+        return User.table.get_users(user_type=user_type,
+                                    begin=(page-1)*100,
+                                    end=page*100)
+
+    @staticmethod
+    def get_user_info(userid):
         user = User.table.query_user_userid(userid=userid)
         if isinstance(User.BasicUser):
             return user
         else:
             return None
 
-    def get_user_detail(self, userid):
+    @staticmethod
+    def get_user_detail(userid):
         detail = User.table.load_detail_userid(userid = userid)
         return detail
         pass

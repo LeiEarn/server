@@ -123,3 +123,16 @@ class taskManagementSystem(object):
         接受者：提交任务执行情况
         """
         pass
+
+    """
+        获取信息模块
+    """
+    @staticmethod
+    def get_task_count(user_type='all'):
+        return Task.TaskTable.task_count(user_type)
+
+    @staticmethod
+    def get_tasks(user_type='all', page=0):
+        return Task.TaskTable.get_tasks(task_type=user_type,
+                                        begin=(page-1)*100,
+                                        end=page*100)

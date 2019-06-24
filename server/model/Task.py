@@ -70,6 +70,17 @@ class TaskTable(object):
     def updata_status(self):
         pass
 
+    @staticmethod
+    def task_count(task_type='all'):
+        sql = ''
+        return Database.execute(sql, response=True)
+
+    @staticmethod
+    def get_tasks(task_type='all', begin=0, end=100):
+        sql = ''
+        return Database.execute(sql, response=True)
+
+
 class Task(object):
     __slots__ = ['task_id', 'type', 'intro', 'release_time', 'ss_time', 'se_time', 'ts_time', 'te_time', 'audit_id',
                  'participants_num', 'publisher_id', 'status']

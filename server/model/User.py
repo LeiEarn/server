@@ -5,7 +5,7 @@ import pymysql
 print(__name__)
 from ..constants import CONST
 
-from ..db import Database
+from ..utils.db import Database
 
 
         

@@ -2,7 +2,6 @@
 from flask import session, Flask, jsonify, request, send_from_directory
 from server.server.modules.userManagementSystem import ManagementSystem as UMS
 from server.server.modules.taskManagementSystem import taskManagementSystem as TMS
-import os
 import json
 
 app = Flask(__name__)
@@ -25,13 +24,14 @@ def bad(msg=""):
 # Login Part:
 @app.route("/api/v1/login", methods=['POST'])
 def login():
-    req = request.get_json()
-    password = req['password']
-    if password != "this_is_password":
-        return bad("密码错误")
-    else:
-        session['user'] = password
-        return ok()
+    if request.method == 'POST':
+        req = request.get_json()
+        password = req['password']
+        if password != "this_is_password":
+            return bad("密码错误")
+        else:
+            session['user'] = password
+            return ok()
 
 
 # Query Part:
@@ -63,7 +63,7 @@ def get_task():
         if page > record_num // 100 + 1:
             return bad('out of user size')
 
-        data = UMS.get_tasks(task_type=task_type,
+        data = TMS.get_tasks(task_type=task_type,
                              page=page)
         return ok(data)
     return bad('error')

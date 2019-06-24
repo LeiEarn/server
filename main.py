@@ -8,8 +8,10 @@ if __name__ == '__main__':
     import server.model.User as user
     import server.model.Task as task
 
-    result = user.UserTable.user_count()
-    print(result)
+    # result = user.UserTable.user_count()
+    # print(result)
+    #
+    # result = task.TaskTable.task_count()
 
-    result = task.TaskTable.task_count()
+    result = user.UserTable.get_users('all')
     print(result)

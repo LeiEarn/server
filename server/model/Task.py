@@ -72,7 +72,13 @@ class TaskTable(object):
 
     @staticmethod
     def task_count(task_type='all'):
-        sql = 'SELECT COUNT(*) as count FROM task;'
+        if task_type == 'all':
+            sql = 'SELECT COUNT(*) as count FROM task;'
+        elif task_type == 'waiting':
+            sql = ''
+        else:
+            raise KeyError
+
         return Database.execute(sql, response=True)[0]['count']
 
     @staticmethod

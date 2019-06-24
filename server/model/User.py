@@ -170,14 +170,20 @@ class UserTable(object):
 
     @staticmethod
     def user_count(user_type='all'):
-        sql = 'SELECT COUNT(*) as count ' \
-              'FROM user'
+        if user_type == 'all':
+            sql = 'SELECT COUNT(*) as count FROM user;'
+        elif user_type == 'waiting':
+            sql = 'SELECT COUNT(*) FROM user WHERE user.isprove = FALSE;'
+        else:
+            raise KeyError
+
         return Database.execute(sql, response=True)[0]['count']
 
 
     @staticmethod
     def get_users(user_type='all', begin=0, end=100):
-        sql = ''
+        sql = 'SELECT * FROM user LIMIT %d OFFSET %d;' % (end - begin, begin)
+
         return Database.execute(sql, response=True)
 
 

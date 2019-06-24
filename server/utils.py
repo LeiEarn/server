@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 import requests
 APP_ID = 'wx2e515a1b9f28a15e'
 APP_SECRET = 'ded301bbd914c7a4083d15326be60073'

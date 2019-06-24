@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from ..model.User import User as User
 from flask import g, session
 from ..utils import code2session

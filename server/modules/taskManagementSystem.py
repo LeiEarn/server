@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from ..model.User import BasicUser as User
 from ..model import Task
 from flask import g, session

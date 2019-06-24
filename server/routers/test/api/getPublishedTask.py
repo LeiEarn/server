@@ -7,9 +7,9 @@ from . import Resource
 from .. import schemas
 
 
-class UserProve(Resource):
+class Getpublishedtask(Resource):
 
-    def post(self):
+    def get(self):
         print(g.args)
 
-        return None, 200, None
+        return [], 200, None

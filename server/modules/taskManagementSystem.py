@@ -1,8 +1,10 @@
-from ..model.User import BasicUser as User
-from ..model import Task
+# -*- coding: utf-8 -*-
+from ..model.Task import Task
+from ..model.User import User as User
+
 from flask import g, session
 
-from AdminPlatform import AdminPlatform
+from .AdminPlatform import AdminPlatform
 
 AdminPlatform = AdminPlatform()
 class taskManagementSystem(object):
@@ -22,7 +24,7 @@ class taskManagementSystem(object):
         """
 
         # create new task and write it to db
-        task = Task.TaskTable.create_Task()
+        task = Task.taskTable.create_task()
 
         # admin audit this task
         AdminPlatform.commit_new_task(task)

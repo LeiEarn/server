@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from flask import session, g
 import threading
 import functools
@@ -12,7 +13,7 @@ class AccessControlSystem(object):
                     AccessControlSystem._instance = object.__new__(cls)  
         return AccessControlSystem._instance
 
-    def __init__(self, app):
+    def __init__(self, app=None):
         if not self.app  is None:
             return 
         self.app = app
@@ -24,23 +25,27 @@ class AccessControlSystem(object):
         # 获取身份
         @app.before_request
         def get_identity():
-            identity = g.persistent.get('user_type')
+            if g.get('persistent') is None:
+                return None
+            identity = g.get('persistent').get('user_type')
             if identity is not None:
                 accesscontrol = {'identity': identity}
                 g.accesscontrol = accesscontrol
 
     # 登录需求装饰器
     @classmethod
-    def login_required(view, redirect_to_login):
+    def login_required(cls, redirect_to_login):
         """
         
         """
-        @functools.wraps(view)
-        def wrapped_view(**kwargs):
-            if g.accesscontrol.get('identity') is None:
-                return redirect_to_login
-            return view(**kwargs)
-        return wrapped_view
+        print(redirect_to_login)
+        def decp(view):
+            def wrapped_view(*args, **kwargs):
+                if g.get('accesscontrol') is  None or  g.get('accesscontrol').get('identity') is None:
+                    return redirect_to_login
+                return view(*args, **kwargs)
+            return wrapped_view
+        return decp
 
     # 拥有者身份需求装饰器
     @classmethod

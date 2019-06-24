@@ -7,8 +7,10 @@ from . import Resource
 from .. import schemas
 
 
-class TaskGettask(Resource):
+class Publishtask(Resource):
 
-    def get(self):
+    def post(self):
+        print(g.json)
+        print(g.args)
 
-        return [], 200, None
+        return None, 200, None

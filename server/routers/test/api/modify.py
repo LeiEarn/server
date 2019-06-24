@@ -7,9 +7,10 @@ from . import Resource
 from .. import schemas
 
 
-class UserModify(Resource):
+class Modify(Resource):
 
     def post(self):
+        print(g.json)
         print(g.args)
 
-        return None, 200, None
+        return {}, 200, None

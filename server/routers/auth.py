@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import functools
 import flask_login
 import requests

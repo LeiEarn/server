@@ -1,0 +1,7 @@
+flask
+flask-session
+redis
+pymysql
+bson
+ flask_restful 
+ jsonschema 

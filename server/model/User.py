@@ -1,12 +1,14 @@
-__all__ = ['User', 'UnprovedUser', 'Student', 'Company']
-
 
 import datetime
 import threading
+import pymysql
 print(__name__)
+from ..constants import CONST
 
-from ..utils.db import Database
+from ..db import Database
 
+
+        
 
 class UserTable(object):
     _instance_lock = threading.Lock()
@@ -30,14 +32,14 @@ class UserTable(object):
             query_user by user_id or unionid
 
         """
-        if unionid:
-            sql = "SELECT * " \
-                  "FROM user" \
-                      "WHERE wechat_id = {id}".format(id = unionid)
+        if unionid is not None:
+            sql = "SELECT *  \
+                  FROM user \
+                      WHERE wechat_id = {id}".format(id = unionid)
         else:
-            sql =  "SELECT * " \
-                  "FROM user" \
-                      "WHERE user_id = {id}".format(id = user_id)
+            sql =  "SELECT *  \
+                  FROM user \
+                      WHERE user_id = {id}".format(id = user_id)
         row = Database.query(sql=sql, fetchone=True)
         if row is None:
             return row
@@ -47,7 +49,7 @@ class UserTable(object):
                 wechat_id=row['wechat_id'],
                 nickname=row['nickname'],
                 phone_number=row['phone_number'],
-                profile_photo=row['photo'],
+                photo=row['photo'],
                 identity=row['identity'],
                 intro=row['intro'],
                 create_date=row['create_date'].strftime('%Y-%m-%d %H:%M:%S'),
@@ -89,7 +91,7 @@ class UserTable(object):
             """
             return ""
 
-        result = Database.query(sql, fetchone=True)
+        result =Database.query(sql, fetchone=True)
         return result
 
     def create_new_user(self, unionid, nickname=None, phone_number=None, gender=None, photo=None):
@@ -161,31 +163,11 @@ class UserTable(object):
 
         sql += "WHERE unionid = {unionid}".format(unionid=unionid)
 
-        result = Database.execute(sql, response=True)
+        result = Database.execute(sql, response = True)
 
         query_sql = "SELECT * FROM user WHERE unionid = {unionid}".format(unionid = unionid)
         user = Database.query(query_sql, fetchone=True)
         return user
-
-
-    @staticmethod
-    def user_count(user_type='all'):
-        if user_type == 'all':
-            sql = 'SELECT COUNT(*) as count FROM user;'
-        elif user_type == 'waiting':
-            sql = 'SELECT COUNT(*) FROM user WHERE user.isprove = FALSE;'
-        else:
-            raise KeyError
-
-        return Database.execute(sql, response=True)[0]['count']
-
-
-    @staticmethod
-    def get_users(user_type='all', begin=0, end=100):
-        sql = 'SELECT * FROM user LIMIT %d OFFSET %d;' % (end - begin, begin)
-
-        return Database.execute(sql, response=True)
-
 
 
 """

@@ -1,4 +1,4 @@
-# At top of file
+# -*- coding: utf-8 -*-
 from flask_mail import Mail, Message
 
 

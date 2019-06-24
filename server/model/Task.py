@@ -1,4 +1,6 @@
+# -*- coding: utf-8 -*-
 import threading
+
 import datetime
 from ..utils.db import Database
 
@@ -26,18 +28,36 @@ class TaskTable(object):
               "VALUES (%s)" % ', '.join(map(str, task.get_info()))
         Database.execute(sql)
 
-        # ??? how to get the task_id?
-        return task
+    def get_task_info(self, task_id):
+        sql = "SELECT * FROM task\
+            WHERE  task.task_id = {task_id} \
+                ".format(task_id=task_id)
+        result = Database.execute(sql)
+        return result
+    def get_published_task(self, user_id):
+        sql = "SELECT * FROM task, publisher\
+            WHERE publisher.user_user_id = {user_id} AND publisher.task_task_id = task.task_id \
+                ".format(user_id=user_id)
+        result = Database.execute(sql)
+        return result
+    
+    def get_accepted_task(self, user_id):
+        sql = "SELECT * FROM user_has_task\
+            WHERE user_id = {user_id}".format(user_id=user_id)
+        result = Database.execute(sql)
+        return result
 
-    def query_task(self):
-        pass
-    def get_task(self, page_id, size):
-        started = (page_id-1)*size
+
+    def get_tasks(self, page_id, size):
+        start = page_id*size
+        end = start + size
         sql = "SELECT * FROM task \
-            WHERE  STARTID< #{started}   \
             ORDER  BY  task_id DESC  \
-            LIMIT  SIZE=#{size}" .format({'started':started, 'size':size})
-        return ""
+            LIMIT  {start}, {end}" .format({'start':start, 'end':end})
+        
+        result = Database.query(sql)
+        return result
+
 
     def abort_task(self, task_id):
         return ""

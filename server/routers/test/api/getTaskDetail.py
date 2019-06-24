@@ -7,9 +7,9 @@ from . import Resource
 from .. import schemas
 
 
-class UserLogin(Resource):
+class Gettaskdetail(Resource):
 
-    def post(self):
+    def get(self):
         print(g.args)
 
         return {}, 200, None

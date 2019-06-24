@@ -24,24 +24,32 @@ class ManagementSystem:
             用户信息 or None
 
         """
-        wechatresult = code2session(js_code)
-        if 'error' in wechatresult:
-            return None
+        """test"""
+        #wechatresult = code2session(js_code)
+        #if 'error' in wechatresult:
+        #   return None
         
+        wechatresult = {'unionid': '12345', 'openid':1, 'session_key':'12345'}
+
         unionid =wechatresult.get('unionid')
-        if id is None:
+
+        if unionid is None:
             return None
-        user = User.table.query_user_unionid(unionid=unionid)
-        if isinstance(user, User.BasicUser):
-            
-            """
-            persistent_info
-            openid, unionid, session_key, user
-            """
-            persistentSystem.save(wechat_server_reply= wechatresult, user = user)
-            return user
         else:
-            return None
+            print(unionid)
+            user = User.table.query_user(unionid=unionid)
+            print(user)
+            if isinstance(user, User.BasicUser):
+            
+                """
+                persistent_info
+                openid, unionid, session_key, user
+                """
+                persistant_result = persistentSystem.save(wechat_server_reply= wechatresult, user = user)
+                return user
+            else:
+                self.register(unionid=unionid)
+                return None
         
 
     def register(self, unionid=None):
@@ -54,25 +62,29 @@ class ManagementSystem:
             id: unionid登录时获得
 
         """
-        user = User.table.query_user_unionid(unionid=unionid)
+        if unionid is None:
+            return None
+        user = User.table.query_user(unionid=unionid)
         if user is None:
-            user = User.table.create_new_user(id)
+            User.table.create_new_user(unionid=unionid)
+            user = User.table.query_user(unionid=unionid)
             return user
         else:
             return user
-
-    def prove(self, unionid, *args, **kwargs):
+    
+    
+    def prove(self, *args, **kwargs):
         """
             用户发起认证请求
         """
-        user = User.table.query_user_unionid(unionid=unionid)
+        user = User.table.query_user(unionid=unionid)
         
         if user is None:
             return None
         elif user.isprove is 'P':
             return None
         
-        result = User.table.update_detail(unionid = unionid)
+        result = User.table.update_detail(unionid = unionid, identity=g.accesscontrol.get('identity'))
         return result
         pass
 
@@ -99,7 +111,7 @@ class ManagementSystem:
             return None
 
     @staticmethod
-    def get_user_detail(userid):
-        detail = User.table.load_detail_userid(userid = userid)
+    def get_user_detail(user_id):
+        detail = User.table.load_detail_user_id(user_id = user_id)
         return detail
         pass

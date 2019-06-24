@@ -1,6 +1,10 @@
 import threading
+
+import datetime
 from ..db import Database
+
 print(__name__)
+
 
 
 class TaskTable(object):
@@ -16,12 +20,19 @@ class TaskTable(object):
                     TaskTable._instance = object.__new__(cls)
         return TaskTable._instance
 
-    def create_task(self, task):
-        # write into database
-        pass
+    def create_Task(self, task):
+        create_date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        sql = "INSERT INTO task(task_id, type, task_intro, participants_num, release_time, sign_start_time, " \
+              "sign_end_time, task_start_time, task_end_time, audit_administrator_audit_id) " \
+              "VALUES (%s)" % ', '.join(map(str, task.get_info()))
+        Database.execute(sql)
 
     def get_task_info(self, task_id):
-        return ""
+        sql = "SELECT * FROM task\
+            WHERE  task.task_id = {task_id} \
+                ".format(task_id=task_id)
+        result = Database.execute(sql)
+        return result
     def get_published_task(self, user_id):
         sql = "SELECT * FROM task, publisher\
             WHERE publisher.user_user_id = {user_id} AND publisher.task_task_id = task.task_id \
@@ -35,7 +46,8 @@ class TaskTable(object):
         result = Database.execute(sql)
         return result
 
-    def get_task(self, page_id, size):
+
+    def get_tasks(self, page_id, size):
         start = page_id*size
         end = start + size
         sql = "SELECT * FROM task \
@@ -44,6 +56,7 @@ class TaskTable(object):
         
         result = Database.query(sql)
         return result
+
 
     def abort_task(self, task_id):
         return ""
@@ -64,7 +77,7 @@ class TaskTable(object):
         for key in kwargs:
             if key in Task.__slots__:
                 sql += " {key} = {value} ".format(key = key, value= kwargs[key])
-        
+
         sql += "WHERE task_id = {task_id}".format(task_id=task_id)
 
     def accept_task(self, user_id, task_id):
@@ -73,9 +86,12 @@ class TaskTable(object):
     def abondon_task(self, user_id, task_id):
         return ""
 
+    def updata_status(self):
+        pass
+
 class Task(object):
     __slots__ = ['task_id', 'type', 'intro', 'release_time', 'ss_time', 'se_time', 'ts_time', 'te_time', 'audit_id',
-                 'participants_num', 'publisher_id']
+                 'participants_num', 'publisher_id', 'status']
     taskTable = TaskTable()
 
     def __init__(self, task_id, type, intro, release_time, ss_time, se_time, ts_time, te_time, audit_id, publisher_id):
@@ -103,3 +119,13 @@ class Task(object):
         self.audit_id = audit_id
         self.publisher_id = publisher_id
         self.participants_num = 0
+        self.status = 'waitreview'
+
+    def get_info(self):
+        return [self.task_id, self.type, self.intro, self.release_time, self.ss_time, self.se_time, self.ts_time,
+                self.te_time, self.audit_id, self.publisher_id, self.participants_num]
+
+if __name__ =='__main__':
+    now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    task = Task(1, 'type', now, 'release', now, now, now, 999, 222, 0)
+    print(', '.join(map(str, task.get_info())))

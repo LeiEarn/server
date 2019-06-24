@@ -28,7 +28,7 @@ class UserTable(object):
                     UserTable._instance = object.__new__(cls)
         return UserTable._instance
    
-    
+
     def query_user(self, unionid=None, user_id=None):
         """
             query_user by user_id or unionid
@@ -92,10 +92,10 @@ class UserTable(object):
             返回未知
             """
             return ""
-        
+
         result =Database.query(sql, fetchone=True)
         return result
-    
+
     def create_new_user(self, unionid, nickname=None, phone_number=None, gender=None, photo=None):
 
         # create new instance
@@ -129,7 +129,7 @@ class UserTable(object):
         for key, value in kwargs.items():
             if key in User.BasicUser.__slots__:
                 sql += " {key} = {value} ".format(key = key, value= value)
-        
+
         sql += "WHERE unionid = {unionid}".format(unionid=unionid)
 
         result = Database.execute(sql, response = True)
@@ -161,8 +161,8 @@ class UserTable(object):
             for key, value in kwargs.items():
                 if key in User.Company.__slots__:
                     sql += " {key} = {value} ".format(key = key, value= value)
-        
-        
+
+
         sql += "WHERE unionid = {unionid}".format(unionid=unionid)
 
         result = Database.execute(sql, response = True)
@@ -209,7 +209,7 @@ class User(object):
             isprove:    N W F P
             identity:   U S C
         """
-        
+
         __slots__ = ['wechat_id', 'nickname', 'phone_number', 'profile_photo', 'intro', 'create_date', 'isprove', 'identity']
         table = UserTable()
         def __init__(self, **kwargs):
@@ -234,7 +234,7 @@ class User(object):
                 if key in self.__slots__:
                     self.__setattr__(key, value)
                     kwargs.pop(key)
-            
+
 
     # 学生
     class Student(BasicUser):
@@ -246,7 +246,7 @@ class User(object):
                 if key in self.__slots__:
                     self.__setattr__(key, value)
                     kwargs.pop(key)
-    
+
     # 公司
     class Company(BasicUser):
         __slots__ = ['company',  'name', 'phone_number', 'email','prove', 'prove_state']
@@ -257,7 +257,7 @@ class User(object):
                 if key in self.__slots__:
                     self.__setattr__(key, value)
                     kwargs.pop(key)
-    
+
 
 
     identity_dict = {'U': UnprovedUser,  'S': Student, 'C': Company}

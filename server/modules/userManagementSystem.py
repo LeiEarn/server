@@ -1,6 +1,6 @@
 from ..model.User import User as User
 from flask import g, session
-from ..utils import code2session
+from ..utils.utils import code2session
 
 from .loginPersistentSystem import PersistentSystem as persistentSystem
 

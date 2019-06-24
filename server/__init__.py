@@ -43,7 +43,7 @@ def create_app(test_config=None):
     db.Database.init_db()
 
     # apply the blueprints to the app
-    from server.routers import  img, demo, test
+    from server.routers import  img, test
 
     #app.register_blueprint(auth.bp)
     app.register_blueprint(img.bp)

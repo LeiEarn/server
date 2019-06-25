@@ -1,0 +1,807 @@
+---
+swagger: "2.0"
+info:
+  description: "This is an example of using OAuth2 Application Flow in a specification\
+    \ to describe security to your API."
+  version: "1.0.0"
+  title: "Sample Application Flow OAuth2 Project"
+host: "www.zhengxianqian.club"
+basePath: "/"
+schemes:
+- "https"
+paths:
+  /user/session:
+    post:
+      tags:
+      - "user"
+      summary: "Users login"
+      description: "Users login"
+      operationId: "user_session_post"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/LoginCode"
+      responses:
+        200:
+          description: "OK, return the user's info and hasAuthenticated."
+          schema:
+            $ref: "#/definitions/UserInfo"
+        400:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.user_controller"
+  /user/proof:
+    get:
+      tags:
+      - "user"
+      summary: "get user's indentity info"
+      operationId: "user_proof_get"
+      parameters:
+      - name: "userId"
+        in: "query"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "OK, return the user indentity info"
+          schema:
+            $ref: "#/definitions/IdenInfoWithCredit"
+        400:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.user_controller"
+    post:
+      tags:
+      - "user"
+      summary: "User provide his prove identity."
+      operationId: "user_proof_post"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/IdenInfo"
+      responses:
+        200:
+          description: "OK, set creditScore 100."
+        400:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.user_controller"
+  /user/info:
+    put:
+      tags:
+      - "user"
+      summary: "User modify his basic info."
+      operationId: "user_info_put"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/UserInfoWithoutId"
+      responses:
+        200:
+          description: "modify success"
+          schema:
+            $ref: "#/definitions/UserInfo"
+        400:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.user_controller"
+  /user/{userId}/proof/state:
+    get:
+      tags:
+      - "user"
+      summary: "User get his authState."
+      operationId: "user_user_id_proof_state_get"
+      parameters:
+      - name: "userId"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "check success"
+          schema:
+            $ref: "#/definitions/ProveState"
+        400:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.user_controller"
+  /user/{userId}/balance:
+    get:
+      tags:
+      - "user"
+      summary: "User get the balance."
+      operationId: "user_user_id_balance_get"
+      parameters:
+      - name: "userId"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "publish success"
+          schema:
+            $ref: "#/definitions/Balance"
+        400:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.user_controller"
+    put:
+      tags:
+      - "user"
+      summary: "User recharge."
+      operationId: "user_user_id_balance_put"
+      parameters:
+      - name: "userId"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "money"
+        in: "query"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "publish success"
+          schema:
+            $ref: "#/definitions/Balance"
+        400:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.user_controller"
+  /groups:
+    get:
+      tags:
+      - "group"
+      summary: "User get the all group."
+      operationId: "groups_get"
+      parameters: []
+      responses:
+        200:
+          description: "create success"
+          schema:
+            $ref: "#/definitions/Groups"
+        400:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.group_controller"
+  /group/{userId}:
+    get:
+      tags:
+      - "group"
+      summary: "User get his join or created group."
+      operationId: "group_user_id_get"
+      parameters:
+      - name: "userId"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "get success"
+          schema:
+            $ref: "#/definitions/MyGroup"
+        400:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.group_controller"
+    post:
+      tags:
+      - "group"
+      summary: "User creates the group."
+      operationId: "group_user_id_post"
+      parameters:
+      - name: "userId"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "groupName"
+        in: "query"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "create success"
+        400:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.group_controller"
+    put:
+      tags:
+      - "group"
+      summary: "User joins the task."
+      operationId: "group_user_id_put"
+      parameters:
+      - name: "userId"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "groupName"
+        in: "query"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "join success"
+        400:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.group_controller"
+    delete:
+      tags:
+      - "group"
+      summary: "User quits the task."
+      operationId: "group_user_id_delete"
+      parameters:
+      - name: "userId"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "groupName"
+        in: "query"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "quit success"
+        400:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.group_controller"
+  /tasks:
+    get:
+      tags:
+      - "task"
+      summary: "Returns all related tasks according to the pageId."
+      description: "Returns the published tasks, the max number is 10. If the page\
+        \ is the last page, the return all left."
+      operationId: "tasks_get"
+      parameters:
+      - name: "pageId"
+        in: "query"
+        description: "Page number"
+        required: true
+        type: "integer"
+        default: 0
+      responses:
+        200:
+          description: "success"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Task"
+        400:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.task_controller"
+  /task/{userId}/publishment:
+    get:
+      tags:
+      - "task"
+      summary: "Returns all his own published tasks in the page."
+      description: "Returns the published tasks, the max number is 10. If the page\
+        \ is the last page, the return all left."
+      operationId: "task_user_id_publishment_get"
+      parameters:
+      - name: "userId"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "success"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Task"
+        400:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.task_controller"
+  /task/{userId}/acceptment:
+    get:
+      tags:
+      - "task"
+      summary: "Returns all his accepted tasks in the page."
+      description: "Returns the published tasks, the max number is 10. If the page\
+        \ is the last page, the return all left."
+      operationId: "task_user_id_acceptment_get"
+      parameters:
+      - name: "userId"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "success"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Task"
+        400:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.task_controller"
+  /task/{taskId}:
+    get:
+      tags:
+      - "task"
+      summary: "Returns one task's detail"
+      description: "Returns one task's detail"
+      operationId: "task_task_id_get"
+      parameters:
+      - name: "taskId"
+        in: "path"
+        description: "The task's id in database."
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "success"
+          schema:
+            $ref: "#/definitions/TaskDetailWithPublisher"
+        400:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.task_controller"
+  /task/{taskId}/publisher:
+    get:
+      tags:
+      - "task"
+      summary: "Publisher get the info of accepters"
+      operationId: "task_task_id_publisher_get"
+      parameters:
+      - name: "taskId"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "userId"
+        in: "query"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "receive success"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/UserInfoWithTel"
+        400:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.task_controller"
+    post:
+      tags:
+      - "task"
+      summary: "User publish the task."
+      operationId: "task_task_id_publisher_post"
+      parameters:
+      - name: "taskId"
+        in: "path"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/TaskDetailWithUserId"
+      responses:
+        200:
+          description: "receive success"
+        400:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.task_controller"
+    put:
+      tags:
+      - "task"
+      summary: "Publisher add the task info."
+      operationId: "task_task_id_publisher_put"
+      parameters:
+      - name: "taskId"
+        in: "path"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/ExtraTaskInfo"
+      responses:
+        200:
+          description: "receive success"
+        400:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.task_controller"
+    delete:
+      tags:
+      - "task"
+      summary: "Publisher abort the task."
+      description: "This operation shows how to override the global security defined\
+        \ above, as we want to open it up for all users."
+      operationId: "task_task_id_publisher_delete"
+      parameters:
+      - name: "taskId"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "userId"
+        in: "query"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "abort success"
+        400:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.task_controller"
+  /task/{taskId}/accepter:
+    post:
+      tags:
+      - "task"
+      summary: "User commit the job."
+      description: "This operation shows how to override the global security defined\
+        \ above, as we want to open it up for all users."
+      operationId: "task_task_id_accepter_post"
+      parameters:
+      - name: "taskId"
+        in: "path"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/Cert"
+      responses:
+        200:
+          description: "complete success"
+        400:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.task_controller"
+    delete:
+      tags:
+      - "task"
+      summary: "Accepter abandon the task."
+      description: "This operation shows how to override the global security defined\
+        \ above, as we want to open it up for all users."
+      operationId: "task_task_id_accepter_delete"
+      parameters:
+      - name: "taskId"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "userId"
+        in: "query"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "abandon success"
+        400:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.task_controller"
+  /image:
+    post:
+      tags:
+      - "System"
+      summary: "upload image"
+      operationId: "image_post"
+      consumes:
+      - "multipart/form-data"
+      parameters:
+      - name: "image"
+        in: "formData"
+        description: "image"
+        required: true
+        type: "file"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Url"
+        400:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.system_controller"
+definitions:
+  ErrorResponse:
+    type: "object"
+    properties:
+      message:
+        type: "string"
+  LoginCode:
+    properties:
+      js_code:
+        type: "string"
+        description: "user's js_code"
+      app_id:
+        type: "string"
+        description: "miniprogram app_id"
+      app_secret:
+        type: "string"
+        description: "miniprogram app_secret"
+      encryptedData:
+        type: "string"
+        description: "user's encryptedData when he/she has authensized getUserInfo"
+  UserInfo:
+    properties:
+      userId:
+        type: "string"
+      nickName:
+        type: "string"
+      avartUrl:
+        type: "string"
+      proveState:
+        type: "string"
+    example:
+      avartUrl: "avartUrl"
+      nickName: "nickName"
+      proveState: "proveState"
+      userId: "userId"
+  UserInfoWithoutId:
+    properties:
+      nickName:
+        type: "string"
+      avartUrl:
+        type: "string"
+  IdenInfo:
+    properties:
+      name:
+        type: "string"
+      sex:
+        type: "string"
+      idenType:
+        type: "string"
+      tel:
+        type: "string"
+      school:
+        type: "string"
+      company:
+        type: "string"
+      id:
+        type: "string"
+        description: "student id or worker id"
+      cert:
+        type: "string"
+        description: "user's cert path"
+    example:
+      idenType: "idenType"
+      school: "school"
+      sex: "sex"
+      name: "name"
+      tel: "tel"
+      company: "company"
+      cert: "cert"
+      id: "id"
+  Balance:
+    properties:
+      balance:
+        type: "number"
+    example:
+      balance: 0.80082819046101150206595775671303272247314453125
+  Groups:
+    type: "array"
+    items:
+      $ref: "#/definitions/Groups_inner"
+  MyGroup:
+    properties:
+      created:
+        $ref: "#/definitions/Groups"
+      joined:
+        $ref: "#/definitions/Groups"
+    example:
+      created: ""
+      joined: ""
+  Task:
+    properties:
+      id:
+        type: "string"
+      icon:
+        type: "string"
+        description: "the issuer's head pic"
+      title:
+        type: "string"
+      desc:
+        type: "string"
+      money:
+        type: "number"
+      maxNum:
+        type: "integer"
+      partNum:
+        type: "integer"
+        description: "the num of participants."
+    example:
+      money: 0.80082819046101150206595775671303272247314453125
+      icon: "icon"
+      id: "id"
+      title: "title"
+      maxNum: 6
+      desc: "desc"
+      partNum: 1
+  TaskDetail:
+    properties:
+      type:
+        type: "string"
+      wjxId:
+        type: "string"
+        description: "if the type is '问卷星', return wjxId."
+      title:
+        type: "string"
+      desc:
+        type: "string"
+      money:
+        type: "number"
+      maxNum:
+        type: "integer"
+      partNum:
+        type: "integer"
+        description: "the num of participants."
+      condition:
+        $ref: "#/definitions/Condition"
+    example:
+      condition:
+        creditScore: 5
+        sex: "sex"
+        groups:
+        - "groups"
+        - "groups"
+      money: 0.80082819046101150206595775671303272247314453125
+      type: "type"
+      title: "title"
+      maxNum: 6
+      wjxId: "wjxId"
+      desc: "desc"
+      partNum: 1
+  TaskDetailWithUserId:
+    properties:
+      userId:
+        type: "string"
+      content:
+        $ref: "#/definitions/TaskDetail"
+  ExtraTaskInfo:
+    properties:
+      userId:
+        type: "string"
+      content:
+        type: "string"
+  UserInfoWithTel:
+    properties:
+      avartUrl:
+        type: "string"
+      nickName:
+        type: "string"
+      tel:
+        type: "string"
+    example:
+      avartUrl: "avartUrl"
+      nickName: "nickName"
+      tel: "tel"
+  Cert:
+    type: "object"
+    properties:
+      userId:
+        type: "string"
+      files:
+        type: "array"
+        items:
+          type: "string"
+      remarks:
+        type: "string"
+  Condition:
+    properties:
+      groups:
+        type: "array"
+        items:
+          type: "string"
+      sex:
+        type: "string"
+      creditScore:
+        type: "integer"
+    example:
+      creditScore: 5
+      sex: "sex"
+      groups:
+      - "groups"
+      - "groups"
+  IdenInfoWithCredit:
+    properties:
+      idenInfo:
+        $ref: "#/definitions/IdenInfo"
+      creditScore:
+        type: "integer"
+    example:
+      creditScore: 0
+      idenInfo:
+        idenType: "idenType"
+        school: "school"
+        sex: "sex"
+        name: "name"
+        tel: "tel"
+        company: "company"
+        cert: "cert"
+        id: "id"
+  ProveState:
+    properties:
+      proveState:
+        type: "string"
+    example:
+      proveState: "proveState"
+  TaskDetailWithPublisher:
+    properties:
+      user:
+        $ref: "#/definitions/UserInfoWithTel"
+      content:
+        $ref: "#/definitions/TaskDetail"
+      isPublisher:
+        type: "boolean"
+      hasReceived:
+        type: "integer"
+        description: "0 stands for hasn't, 1 stands for has received, 2 stands for\
+          \ under review, 3 stands for has completed"
+    example:
+      isPublisher: true
+      hasReceived: 5
+      user:
+        avartUrl: "avartUrl"
+        nickName: "nickName"
+        tel: "tel"
+      content:
+        condition:
+          creditScore: 5
+          sex: "sex"
+          groups:
+          - "groups"
+          - "groups"
+        money: 0.80082819046101150206595775671303272247314453125
+        type: "type"
+        title: "title"
+        maxNum: 6
+        wjxId: "wjxId"
+        desc: "desc"
+        partNum: 1
+  Url:
+    type: "object"
+    properties:
+      url:
+        type: "string"
+    example:
+      url: "url"
+  Groups_inner:
+    properties:
+      groupId:
+        type: "string"
+      groupName:
+        type: "string"

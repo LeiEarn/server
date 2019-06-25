@@ -30,14 +30,18 @@ def bad(msg=""):
 def login():
     if request.method == 'POST':
         data = request.get_data()
-        print('data', data)
         json_data = json.loads(data.decode('utf-8'))
+        print(json_data)
+
         account = json_data.get('account', None)
         password = json_data.get('password', None)
 
-        admin = AP.get_admin()[0]
-        if account == admin['account']:
-            if password == admin['password']:
+        admin = AP.get_admin()
+        if admin is None:
+           return bad('no admin in db')
+        print(admin[0])
+        if account == admin[0]['account']:
+            if password == admin[0]['password']:
                 session['account'] = account
                 return ok()
             else:

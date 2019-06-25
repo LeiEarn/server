@@ -62,6 +62,9 @@ def get_users():
         page      = json_data.get('page', None)
         user_type = json_data.get('user_type', None)
 
+        if page is None or user_type is None:
+            return bad('key error')
+
         record_num = UMS.get_user_count(user_type)
 
         if page > record_num // 100 + 1:
@@ -81,6 +84,9 @@ def get_user_count():
         print('data', json_data)
 
         user_type = json_data.get('user_type', None)
+        if user_type is None:
+            return bad('key error')
+
         record_num = UMS.get_user_count(user_type)
 
         print('record_num', record_num)
@@ -99,6 +105,9 @@ def get_task():
         page      = json_data.get('page', None)
         task_type = json_data.get('task_type', None)
 
+        if page is None or task_type is None:
+            return bad('key error')
+
         record_num = TMS.get_task_count(task_type)
         if page > record_num // 100 + 1:
             return bad('out of user size')
@@ -116,6 +125,9 @@ def get_task_count():
         print('data', json_data)
 
         task_type = json_data.get('task_type', None)
+        if task_type is None:
+            return bad('key error')
+
         record_num = TMS.get_task_count(task_type)
 
         print('record_num', record_num)
@@ -133,6 +145,10 @@ def get_user_info():
 
         user_id      = json_data.get('user_id', None)
         identity = json_data.get('identity', None)
+
+        if user_id is None or identity is None:
+            return bad('key error')
+
 
         data = UMS.get_indentity_info(user_id, identity)
         if data is None:

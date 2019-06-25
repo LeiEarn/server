@@ -226,7 +226,7 @@ class UserTable(object):
         if user_type == 'all':
             sql = 'SELECT COUNT(*) as count FROM user;'
         elif user_type == 'waiting':
-            sql = 'SELECT COUNT(*) FROM user WHERE user.isprove = FALSE;'
+            sql = 'SELECT COUNT(*) as count FROM user WHERE user.isprove = FALSE;'
         else:
             raise KeyError
 
@@ -238,7 +238,7 @@ class UserTable(object):
         if user_type == 'all':
             sql = 'SELECT * FROM user LIMIT %d OFFSET %d;' % (end - begin, begin)
         elif user_type == 'waiting':
-            sql = 'SELECT * FROM user WHERE user.isprove=FALSE LIMIT %d OFFSET %d;' % (end - begin, begin)
+            sql = 'SELECT * FROM user WHERE user.isprove=\'W\' LIMIT %d OFFSET %d;' % (end - begin, begin)
         else:
             raise KeyError('wrong user type %s' % user_type)
         result = Database.execute(sql, response=True)

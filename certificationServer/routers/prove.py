@@ -72,6 +72,21 @@ def get_users():
         return ok(json.dumps(data))
     return bad('error')
 
+@app.route('/api/v1/get_user_count', methods=['POST'])
+def get_user_count():
+    if request.method == 'POST':
+        data = request.get_data()
+        json_data = json.loads(data.decode('utf-8'))
+        print('data', json_data)
+
+        user_type = json_data.get('user_type', None)
+        record_num = UMS.get_user_count(user_type)
+
+        print('record_num', record_num)
+
+        return ok(json.dumps({'count': record_num}))
+    return bad('please user POST!')
+
 
 @app.route('/api/v1/get_task', methods=['POST'])
 def get_task():
@@ -91,6 +106,22 @@ def get_task():
         print(data)
         return ok(json.dumps(data))
     return bad('error')
+
+@app.route('/api/v1/get_user_count', methods=['POST'])
+def get_user_count():
+    if request.method == 'POST':
+        data = request.get_data()
+        json_data = json.loads(data.decode('utf-8'))
+        print('data', json_data)
+
+        task_type = json_data.get('task_type', None)
+        record_num = TMS.get_task_count(task_type)
+
+        print('record_num', record_num)
+
+        return ok(json.dumps({'count': record_num}))
+    return bad('please user POST!')
+
 
 @app.route('/api/v1/get_user_info', methods=['POST'])
 def get_user_info():

@@ -99,8 +99,8 @@ class ManagementSystem:
     @staticmethod
     def get_users(user_type='all', page=0):
         return User.table.get_users(user_type=user_type,
-                                    begin=(page-1)*100,
-                                    end=page*100)
+                                    begin=page*100,
+                                    end=(page+1)*100)
 
     @staticmethod
     def get_user_info(userid):

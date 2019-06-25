@@ -175,6 +175,7 @@ class UserTable(object):
         elif user_type == 'waiting':
             sql = 'SELECT COUNT(*) FROM user WHERE user.isprove = FALSE;'
         else:
+            print(user_type)
             raise KeyError
 
         return Database.execute(sql, response=True)[0]['count']
@@ -183,9 +184,10 @@ class UserTable(object):
     @staticmethod
     def get_users(user_type='all', begin=0, end=100):
         sql = 'SELECT * FROM user LIMIT %d OFFSET %d;' % (end - begin, begin)
-
-        return Database.execute(sql, response=True)
-
+        result = Database.execute(sql, response=True)
+        for user in result:
+            user['create_date'] = str(user['create_date'])
+        return result
 
 """
 

@@ -1,10 +1,13 @@
 # -*- encoding:utf-8 -*-
+import json
 from flask import session, Flask, jsonify, request, send_from_directory
+from flask_cors import CORS
 from server.modules.userManagementSystem import ManagementSystem as UMS
 from server.modules.taskManagementSystem import taskManagementSystem as TMS
-
 app = Flask(__name__)
 app.secret_key = "nQnk2n8moN=GLNmE.wL6PTZD"
+
+CORS(app, supports_credentials=True)
 
 
 def ok(data=None):
@@ -38,15 +41,19 @@ def login():
 def get_users():
     if request.method =='POST':
         # 1 page = 100 record
-        page = request.form.get('page')
-        user_type = request.form.get('user_type')
+        data = request.get_data()
+        print('data', data)
+        json_data = json.loads(data.decode('utf-8'))
+        page = json_data.get('page', None)
+        user_type = json_data.get('user_type', None)
 
         record_num = UMS.get_user_count(user_type)
         if page > record_num // 100 + 1:
             return bad('out of user size')
 
         data = UMS.get_users(page=page)
-        return ok(data)
+        print(data)
+        return ok(json.dumps(data))
     return bad('error')
 
 
@@ -54,8 +61,8 @@ def get_users():
 def get_task():
     if request.method == 'POST':
         # 1 page = 100 record
-        page = request.form.get('page')
-        task_type = request.form.get('task_type')
+        page = request.form[0].get('page')
+        task_type = request.form[0].get('task_type')
 
         record_num = TMS.get_task_count(task_type)
         if page > record_num // 100 + 1:

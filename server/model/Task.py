@@ -104,6 +104,7 @@ class TaskTable(object):
     @staticmethod
     def get_tasks(task_type='all', begin=0, end=100):
         sql = 'SELECT COUNT(*) as count FROM task;'
+        print(sql)
         return Database.execute(sql, response=True)
 
 

@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
-__all__ = ['Adminstrator']
+from ..utils.db import Database
+
 class Adminstrator(object):
-    __slots__ = ['admin_num', 'pwd']
+
+    @staticmethod
+    def get_admin():
+        sql = 'SELECT * FROM audit_administrator;'
+        return Database.execute(sql)

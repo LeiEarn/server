@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-__all__ = ['AdminPlatform']
 import threading
+from ..utils.db import Database
 
 class AdminPlatform():
     _instance_lock = threading.Lock()
@@ -32,3 +32,8 @@ class AdminPlatform():
         :return:
         """
         pass
+
+    @staticmethod
+    def get_admin():
+        sql = 'SELECT * FROM audit_administrator;'
+        return Database.execute(sql)

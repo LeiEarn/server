@@ -2,8 +2,10 @@
 import json
 from flask import session, Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
+
 from server.modules.userManagementSystem import ManagementSystem as UMS
 from server.modules.taskManagementSystem import taskManagementSystem as TMS
+from server.modules.AdminPlatform import AdminPlatform as AP
 app = Flask(__name__)
 app.secret_key = "nQnk2n8moN=GLNmE.wL6PTZD"
 
@@ -27,13 +29,23 @@ def bad(msg=""):
 @app.route("/api/v1/login", methods=['POST'])
 def login():
     if request.method == 'POST':
-        req = request.get_json()
-        password = req['password']
-        if password != "this_is_password":
-            return bad("密码错误")
+        data = request.get_data()
+        print('data', data)
+        json_data = json.loads(data.decode('utf-8'))
+        account = json_data.get('account', None)
+        password = json_data.get('password', None)
+
+        admin = AP.get_admin()[0]
+        if account == admin['account']:
+            if password == admin['password']:
+                session['account'] = account
+                return ok()
+            else:
+                return bad('wrong password')
         else:
-            session['user'] = password
-            return ok()
+            return bad('wrong account')
+
+    return bad('please POST')
 
 
 # Query Part:

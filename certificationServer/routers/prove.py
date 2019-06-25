@@ -108,8 +108,8 @@ def get_task():
         return ok(json.dumps(data))
     return bad('error')
 
-@app.route('/api/v1/get_user_count', methods=['POST'])
-def get_user_count():
+@app.route('/api/v1/get_task_count', methods=['POST'])
+def get_task_count():
     if request.method == 'POST':
         data = request.get_data()
         json_data = json.loads(data.decode('utf-8'))

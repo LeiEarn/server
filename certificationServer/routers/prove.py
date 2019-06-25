@@ -37,7 +37,8 @@ def login():
         password = json_data.get('password', None)
 
         admin = AP.get_admin(account) # search for admin by account
-        if admin is None:
+        
+        if len(admin) != 1:
             return bad('wrong account')
         print(admin[0])
 

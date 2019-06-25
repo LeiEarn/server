@@ -5,3 +5,4 @@ pymysql
 bson
  flask_restful 
  jsonschema 
+flask_cors

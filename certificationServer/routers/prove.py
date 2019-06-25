@@ -3,9 +3,9 @@ import json
 from flask import session, Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
 
-from server.modules.userManagementSystem import ManagementSystem as UMS
-from server.modules.taskManagementSystem import taskManagementSystem as TMS
-from server.modules.AdminPlatform import AdminPlatform as AP
+from swagger_server.modules.userManagementSystem import ManagementSystem as UMS
+from swagger_server.modules.taskManagementSystem import taskManagementSystem as TMS
+from swagger_server.modules.AdminPlatform import AdminPlatform as AP
 app = Flask(__name__)
 app.secret_key = "nQnk2n8moN=GLNmE.wL6PTZD"
 

@@ -73,9 +73,7 @@ class UserTable(object):
             身份为学生
             查询student_identity
             """
-            sql =  "SELECT *  \
-              FROM stu_identity \
-                  WHERE user_user_id = '{id}'".format(id = user_id)
+            sql =  "SELECT * FROM stu_identity WHERE user_user_id = '{id}'".format(id = user_id)
 
         elif identity is 'C' :
             """
@@ -83,9 +81,7 @@ class UserTable(object):
             查询company_identity
 
             """
-            sql =  "SELECT *  \
-              FROM com_identity \
-                  WHERE user_user_id = '{id}'".format(id = user_id)
+            sql =  "SELECT * FROM com_identity WHERE user_user_id = '{id}'".format(id = user_id)
         else:
             """
             身份未知时

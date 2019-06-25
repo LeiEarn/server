@@ -147,6 +147,6 @@ class taskManagementSystem(object):
     @staticmethod
     def get_tasks(task_type='all', page=0):
         return Task.taskTable.get_tasks(task_type=task_type,
-                                        begin=(page-1)*100,
-                                        end=page*100)
+                                        begin=page*100,
+                                        end=(page+1)*100)
 

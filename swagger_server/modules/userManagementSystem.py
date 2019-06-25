@@ -162,7 +162,19 @@ class ManagementSystem:
             return user
         else:
             return None
-    
+
+    @staticmethod
+    def get_indentity_info(user_id, identity):
+        """
+
+        :param user_id:
+        :param indentity: S or C, count be U
+        :return:
+        """
+        if identity == 'S' or identity == 'C':
+            return User.table.load_detail_user_id(user_id, identity)
+        else:
+            raise KeyError('Wrong identity %s' % identity)
 
 
     def get_user_detail(self, user_id):

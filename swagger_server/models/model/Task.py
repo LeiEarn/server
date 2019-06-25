@@ -25,37 +25,42 @@ class TaskTable(object):
     def create_task(**kwargs):
         """
         :param kwargs: {
-        "title":,
-        "type":
-        "wjx_id":
-        "task_intro":
-        "participants_num":
-        "sign_start_time":
-        "sign_end_time":
+                 'title',
+                 'type',
+                 'publish_id',
+                 'wjx_id',
+                 'task_intro',
+                 'max_num',
+                 'participants_num',
+                 'money',
+                 'sign_start_time',
+                 'sign_end_time',
+                 'audit_administrator_audit_id'
         }
         """
-        values = kwargs.update({"release_time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                       "state": "W",# waiting
-                       "audit_administrator_audit_id": '00227'
-                       })
+        values = kwargs.update(
+            {"release_time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+             "state": "W",  # waiting
+             "audit_administrator_audit_id": '00227'
+             })
 
-        sql = "INSERT INTO task(title, type, state, wjx_id, task_intro, participants_num, release_time, sign_start_time, " \
-              "sign_end_time, audit_administrator_audit_id) " \
-              "VALUES ({title}, {type}, {state}, {wjx_id}, {task_intro}, {participants_num}, {release_time}," \
-              " {sign_start_time}, {sign_end_time}, {audit_administrator_audit_id});"\
+        sql = "INSERT INTO task(title, type, publish_id, state, wjx_id, task_intro, max_num, participants_num, money," \
+              "release_time, sign_start_time, sign_end_time, audit_administrator_audit_id)" \
+              "VALUES ({title}, {type}, {publish_id}, {state}, {wjx_id}, {task_intro}, {max_num}, {participants_num}, " \
+              "{money}, {release_time}, {sign_start_time}, {sign_end_time}, {audit_administrator_audit_id});"\
             .format(values)
         Database.execute(sql)
 
     @staticmethod
     def get_task_info(task_id):
         sql = 'SELECT * FROM task WHERE task.task_id=%d;' % (task_id)
-        result = Database.execute(sql)
+        result = Database.execute(sql, response=True)
         return result
 
-    def get_accepted_task(self, user_id):
-        sql = "SELECT * FROM user_has_task\
-            WHERE user_id = {user_id}".format(user_id=user_id)
-        result = Database.execute(sql)
+    @staticmethod
+    def get_accepted_task(user_id):
+        sql = "SELECT * FROM user_has_task WHERE user_id = {user_id}".format(user_id=user_id)
+        result = Database.execute(sql, response=True)
         return result
 
 
@@ -64,25 +69,26 @@ class TaskTable(object):
 
     def add_task_info(self):
         pass
+
     def commit_job(self, user_id, task_id):
         return ""
-    ####
+
     def update_task(self, task_id,  **kwargs):
         """
         根据参数的属性，更改 task_id 对应的task 的属性
         example:
             update_task(task_id=1, audit_id=1, type = 1)
         """
-        sql = "UPDATE task \
-            SET "
+        sql = "UPDATE task SET "
         for key in kwargs:
             if key in Task.__slots__:
                 sql += " {key} = {value} ".format(key = key, value= kwargs[key])
 
         sql += "WHERE task_id = {task_id}".format(task_id=task_id)
 
-    def accept_task(self, user_id, task_id):
+        Database.execute(sql)
 
+    def accept_task(self, user_id, task_id):
         return ""
 
     def abondon_task(self, user_id, task_id):
@@ -126,44 +132,56 @@ class Task(object):
     B - begin
     E - end
     """
-    __slots__ = ['task_id', 'type_', 'intro', 'release_time', 'ss_time', 'se_time', 'ts_time', 'te_time', 'audit_id',
-                 'participants_num', 'publisher_id', 'status']
+    __slots__ = ['task_id',
+                 'title',
+                 'type',
+                 'publish_id',
+                 'state',
+                 'wjx_id',
+                 'task_intro',
+                 'max_num',
+                 'participants_num',
+                 'money',
+                 'release_time',
+                 'sign_start_time',
+                 'sign_end_time',
+                 'audit_administrator_audit_id'
+                 ]
     taskTable = TaskTable()
 
-    def __init__(self, task_id, type_, intro, release_time, ss_time, se_time, ts_time, te_time, audit_id, publisher_id):
+    def __init__(self, task_id, title, type, publish_id, state, wjx_id, task_intro, max_num, participants_num, money,
+                 release_time, sign_start_time, sign_end_time, audit_administrator_audit_id):
         """
-        :param task_id: Task id, auto_increase
-        :param title: title
-        :param type_: Task type_(...)
-        :param state: task tate
-        :param wjx_id: 
-        :param intro: introduction
-        :param max_num: max number of participants
-        :param participants_num: number of participants
-        :param money
-        :param release_time: Release time
-        :param ss_time: sign start time
-        :param se_time: sign end time
-        :param ts_time: task start time
-        :param te_time: task end time
-        :param audit_id: Audit adminstrator id
+        :param task_id:
+        :param title:
+        :param type:
+        :param publish_id:
+        :param state:
+        :param wjx_id:
+        :param task_intro:
+        :param max_num:
+        :param participants_num:
+        :param money:
+        :param release_time:
+        :param sign_start_time:
+        :param sign_end_time:
+        :param audit_administrator_audit_id:
         """
         self.task_id = task_id
-        self.type_ = type_
-        self.intro = intro
+        self.title = title
+        self.type = type
+        self.publish_id = publish_id
+        self.state = state
+        self.wjx_id = wjx_id
+        self.task_intro = task_intro
+        self.max_num = max_num
+        self.participants_num = participants_num
+        self.money = money
         self.release_time = release_time
-        self.ss_time = ss_time
-        self.se_time = se_time
-        self.ts_time = ts_time
-        self.te_time = te_time
-        self.audit_id = audit_id
-        self.publisher_id = publisher_id
-        self.participants_num = 0
-        self.status = 'waitreview'
+        self.sign_start_time = sign_start_time
+        self.sign_end_time = sign_end_time
+        self.audit_administrator_audit_id = audit_administrator_audit_id
 
-    def get_info(self):
-        return [self.task_id, self.type, self.intro, self.release_time, self.ss_time, self.se_time, self.ts_time,
-                self.te_time, self.audit_id, self.publisher_id, self.participants_num]
 
 if __name__ =='__main__':
 

@@ -73,9 +73,7 @@ class UserTable(object):
             身份为学生
             查询student_identity
             """
-            sql =  "SELECT *  \
-              FROM stu_identity \
-                  WHERE user_user_id = '{id}'".format(id = user_id)
+            sql =  "SELECT * FROM stu_identity WHERE user_user_id = '{id}'".format(id = user_id)
 
         elif identity is 'C' :
             """
@@ -83,9 +81,7 @@ class UserTable(object):
             查询company_identity
 
             """
-            sql =  "SELECT *  \
-              FROM com_identity \
-                  WHERE user_user_id = '{id}'".format(id = user_id)
+            sql =  "SELECT * FROM com_identity WHERE user_user_id = '{id}'".format(id = user_id)
         else:
             """
             身份未知时
@@ -230,7 +226,7 @@ class UserTable(object):
         if user_type == 'all':
             sql = 'SELECT COUNT(*) as count FROM user;'
         elif user_type == 'waiting':
-            sql = 'SELECT COUNT(*) FROM user WHERE user.isprove = FALSE;'
+            sql = 'SELECT COUNT(*) as count FROM user WHERE user.isprove=\'W\';'
         else:
             raise KeyError
 
@@ -239,7 +235,12 @@ class UserTable(object):
 
     @staticmethod
     def get_users(user_type='all', begin=0, end=100):
-        sql = 'SELECT * FROM user LIMIT %d OFFSET %d;' % (end - begin, begin)
+        if user_type == 'all':
+            sql = 'SELECT * FROM user LIMIT %d OFFSET %d;' % (end - begin, begin)
+        elif user_type == 'waiting':
+            sql = 'SELECT * FROM user WHERE user.isprove=\'W\' LIMIT %d OFFSET %d;' % (end - begin, begin)
+        else:
+            raise KeyError('wrong user type %s' % user_type)
         result = Database.execute(sql, response=True)
         for user in result:
             user['create_date'] = str(user['create_date'])

@@ -175,7 +175,6 @@ class UserTable(object):
         elif user_type == 'waiting':
             sql = 'SELECT COUNT(*) FROM user WHERE user.isprove = FALSE;'
         else:
-            print(user_type)
             raise KeyError
 
         return Database.execute(sql, response=True)[0]['count']

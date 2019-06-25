@@ -21,41 +21,41 @@ class TaskTable(object):
                     TaskTable._instance = object.__new__(cls)
         return TaskTable._instance
 
-    def create_Task(self, task):
-        create_date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        sql = "INSERT INTO task(task_id, type, task_intro, participants_num, release_time, sign_start_time, " \
-              "sign_end_time, task_start_time, task_end_time, audit_administrator_audit_id) " \
-              "VALUES (%s)" % ', '.join(map(str, task.get_info()))
+    @staticmethod
+    def create_Task(**kwargs):
+        """
+        :param kwargs: {
+        "title":,
+        "type":
+        "wjx_id":
+        "task_intro":
+        "participants_num":
+        "sign_start_time":
+        "sign_end_time":
+        }
+        """
+        values = kwargs.update({"release_time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                       "state": "W",# waiting
+                       "audit_administrator_audit_id": '00227'
+                       })
+
+        sql = "INSERT INTO task(title, type, state, wjx_id, task_intro, participants_num, release_time, sign_start_time, " \
+              "sign_end_time, audit_administrator_audit_id) " \
+              "VALUES ({title}, {type}, {state}, {wjx_id}, {task_intro}, {participants_num}, {release_time}," \
+              " {sign_start_time}, {sign_end_time}, {audit_administrator_audit_id});"\
+            .format(values)
         Database.execute(sql)
 
-    def get_task_info(self, task_id):
-        sql = "SELECT * FROM task\
-            WHERE  task.task_id = {task_id} \
-                ".format(task_id=task_id)
+    @staticmethod
+    def get_task_info(task_id):
+        sql = 'SELECT * FROM task WHERE task.task_id=%d;' % (task_id)
         result = Database.execute(sql)
         return result
-    def get_published_task(self, user_id):
-        sql = "SELECT * FROM task, publisher\
-            WHERE publisher.user_user_id = {user_id} AND publisher.task_task_id = task.task_id \
-                ".format(user_id=user_id)
-        result = Database.execute(sql)
-        return result
-    
+
     def get_accepted_task(self, user_id):
         sql = "SELECT * FROM user_has_task\
             WHERE user_id = {user_id}".format(user_id=user_id)
         result = Database.execute(sql)
-        return result
-
-
-    def get_tasks(self, page_id, size):
-        start = page_id*size
-        end = start + size
-        sql = "SELECT * FROM task \
-            ORDER  BY  task_id DESC  \
-            LIMIT  {start}, {end}" .format({'start':start, 'end':end})
-        
-        result = Database.query(sql)
         return result
 
 
@@ -82,6 +82,7 @@ class TaskTable(object):
         sql += "WHERE task_id = {task_id}".format(task_id=task_id)
 
     def accept_task(self, user_id, task_id):
+
         return ""
 
     def abondon_task(self, user_id, task_id):
@@ -95,20 +96,36 @@ class TaskTable(object):
         if task_type == 'all':
             sql = 'SELECT COUNT(*) as count FROM task;'
         elif task_type == 'waiting':
-            sql = ''
+            sql = 'SELECT COUNT(*) as count FROM task WHERE task.state=W;'
         else:
-            raise KeyError
+            raise KeyError('task type error')
 
         return Database.execute(sql, response=True)[0]['count']
 
     @staticmethod
     def get_tasks(task_type='all', begin=0, end=100):
-        sql = 'SELECT COUNT(*) as count FROM task;'
-        print(sql)
-        return Database.execute(sql, response=True)
+        if task_type == 'all':
+            sql = 'SELECT * FROM task LIMIT %d OFFSET %d;' % (end - begin, begin)
+        elif task_type == 'waiting':
+            sql = 'SELECT * FROM task WHERE task.state=W LIMIT %d OFFSET %d;' % (end - begin, begin)
+        else:
+            raise KeyError('task type error')
+
+        result = Database.execute(sql, response=True)
+        for user in result:
+            user['create_data'] = str(user['create_data'])
+
+        return result
 
 
 class Task(object):
+    """
+    W - waiting
+    F - failed
+    S - succeed
+    B - begin
+    E - end
+    """
     __slots__ = ['task_id', 'type', 'intro', 'release_time', 'ss_time', 'se_time', 'ts_time', 'te_time', 'audit_id',
                  'participants_num', 'publisher_id', 'status']
     taskTable = TaskTable()

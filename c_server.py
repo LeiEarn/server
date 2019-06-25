@@ -1,2 +1,12 @@
-from certificationServer.routers import prove
-prove.app.run(host='0.0.0.0', port=60006, threaded=True)
+# from certificationServer.routers import prove
+# prove.app.run(host='0.0.0.0', port=60006, threaded=True)
+
+from server.model.User import User
+if __name__ == '__main__':
+    from flask import jsonify
+    import json
+    data = User.table.get_users()
+    print(type(data))
+    print(data)
+    # data[0]
+    print(json.dumps(data))

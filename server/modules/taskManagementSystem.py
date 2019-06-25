@@ -138,3 +138,4 @@ class taskManagementSystem(object):
         return Task.taskTable.get_tasks(task_type=task_type,
                                         begin=(page-1)*100,
                                         end=page*100)
+

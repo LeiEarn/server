@@ -235,7 +235,12 @@ class UserTable(object):
 
     @staticmethod
     def get_users(user_type='all', begin=0, end=100):
-        sql = 'SELECT * FROM user LIMIT %d OFFSET %d;' % (end - begin, begin)
+        if user_type == 'all':
+            sql = 'SELECT * FROM user LIMIT %d OFFSET %d;' % (end - begin, begin)
+        elif user_type == 'waiting':
+            sql = 'SELECT * FROM user WHERE user.isprove=FALSE LIMIT %d OFFSET %d;' % (end - begin, begin)
+        else:
+            raise KeyError('wrong user type %s' % user_type)
         result = Database.execute(sql, response=True)
         for user in result:
             user['create_date'] = str(user['create_date'])

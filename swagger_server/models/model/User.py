@@ -226,7 +226,7 @@ class UserTable(object):
         if user_type == 'all':
             sql = 'SELECT COUNT(*) as count FROM user;'
         elif user_type == 'waiting':
-            sql = 'SELECT COUNT(*) as count FROM user WHERE user.isprove = FALSE;'
+            sql = 'SELECT COUNT(*) as count FROM user WHERE user.isprove=\'W\';'
         else:
             raise KeyError
 

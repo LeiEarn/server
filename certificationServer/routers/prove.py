@@ -30,20 +30,22 @@ def bad(msg=""):
 def login():
     if request.method == 'POST':
         data = request.get_data()
-        print('data', data)
         json_data = json.loads(data.decode('utf-8'))
+        print(json_data)
+
         account = json_data.get('account', None)
         password = json_data.get('password', None)
 
-        admin = AP.get_admin()[0]
-        if account == admin['account']:
-            if password == admin['password']:
-                session['account'] = account
-                return ok()
-            else:
-                return bad('wrong password')
-        else:
+        admin = AP.get_admin(account) # search for admin by account
+        if admin is None:
             return bad('wrong account')
+        print(admin[0])
+
+        if password == admin[0]['password']:
+            session['account'] = account
+            return ok(json.dumps(admin[0]))
+        else:
+            return bad('wrong password')
 
     return bad('please POST')
 

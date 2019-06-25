@@ -27,7 +27,7 @@ class ManagementSystem:
         pass
     
 
-    def login(self, js_code):
+    def login(self, js_code,app_id, app_secret ):
         """
             登录模块， 小程序启动即刻调用
             数据库获取【用户简单信息】，并返回
@@ -41,15 +41,15 @@ class ManagementSystem:
             用户信息 or None
 
         """
-        """test"""
-        #wechatresult = code2session(js_code)
-        #if 'error' in wechatresult:
-        #   return None
         
-        wechatresult = {'unionid': js_code, 'openid':1, 'session_key':'12345'}
+        wechatresult = code2session(js_code=js_code, app_id=app_id, app_secret=app_secret)
+        print(wechatresult)
+        if 'error' in wechatresult:
+           return None
+        
 
         unionid =wechatresult.get('unionid')
-
+        print(unionid)
         if unionid is None:
             return None
         else:
@@ -135,10 +135,10 @@ class ManagementSystem:
         else:
             return ('error', 'no such user')
 
-    def modify(self, nick_name, avart_url):
+    def modify(self, nick_name, avatar_url):
         unionid = g.get('persistent').get('unionid')
         user_id = g.get('persistent').get('user_id')
-        User.table.update_info(unionid = unionid, nickname=nick_name, photo = avart_url )
+        User.table.update_info(unionid = unionid, nickname=nick_name, photo = avatar_url )
         userinfo = User.table.query_user(unionid=unionid)
         return userinfo
 

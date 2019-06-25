@@ -126,26 +126,30 @@ class Task(object):
     B - begin
     E - end
     """
-    __slots__ = ['task_id', 'type', 'intro', 'release_time', 'ss_time', 'se_time', 'ts_time', 'te_time', 'audit_id',
+    __slots__ = ['task_id', 'type_', 'intro', 'release_time', 'ss_time', 'se_time', 'ts_time', 'te_time', 'audit_id',
                  'participants_num', 'publisher_id', 'status']
     taskTable = TaskTable()
 
-    def __init__(self, task_id, type, intro, release_time, ss_time, se_time, ts_time, te_time, audit_id, publisher_id):
+    def __init__(self, task_id, type_, intro, release_time, ss_time, se_time, ts_time, te_time, audit_id, publisher_id):
         """
         :param task_id: Task id, auto_increase
-        :param type: Task type(...)
+        :param title: title
+        :param type_: Task type_(...)
+        :param state: task tate
+        :param wjx_id: 
         :param intro: introduction
+        :param max_num: max number of participants
+        :param participants_num: number of participants
+        :param money
         :param release_time: Release time
         :param ss_time: sign start time
         :param se_time: sign end time
         :param ts_time: task start time
         :param te_time: task end time
         :param audit_id: Audit adminstrator id
-        :param participants_num: number of participants
-        :param publisher_id: ..
         """
         self.task_id = task_id
-        self.type = type
+        self.type_ = type_
         self.intro = intro
         self.release_time = release_time
         self.ss_time = ss_time

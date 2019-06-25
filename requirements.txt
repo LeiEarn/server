@@ -6,3 +6,4 @@ bson
  flask_restful 
  jsonschema 
 flask_cors
+flask_uploads

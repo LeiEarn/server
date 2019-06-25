@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 import os
 
-from flask import Flask, url_for, redirect
+from flask import Flask, url_for, redirect, Response
 from .modules.loginPersistentSystem import PersistentSystem
 from .modules.accessControlSystem import AccessControlSystem
+from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class
 
 def init_app(app,test_config=None):
     """Create and configure an instance of the Flask application."""
@@ -32,6 +33,10 @@ def init_app(app,test_config=None):
     from .utils import db
     db.Database.init_db()
 
+
+    #
+    uploaded_photos = UploadSet('photos')
+    configure_uploads(app, uploaded_photos)
     try:
         os.makedirs(app.instance_path)
     except OSError:
@@ -48,7 +53,7 @@ def init_app(app,test_config=None):
         return redirect(login_url)
 
     # apply the blueprints to the app
-    from .routers import  img, test
+    from .routers import  img
 
     #app.register_blueprint(auth.bp)
     app.register_blueprint(img.bp)

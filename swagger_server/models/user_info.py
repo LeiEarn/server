@@ -15,35 +15,35 @@ class UserInfo(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, user_id: str=None, nick_name: str=None, avart_url: str=None, prove_state: str=None):  # noqa: E501
+    def __init__(self, user_id: str=None, nick_name: str=None, avatar_url: str=None, prove_state: str=None):  # noqa: E501
         """UserInfo - a model defined in Swagger
 
         :param user_id: The user_id of this UserInfo.  # noqa: E501
         :type user_id: str
         :param nick_name: The nick_name of this UserInfo.  # noqa: E501
         :type nick_name: str
-        :param avart_url: The avart_url of this UserInfo.  # noqa: E501
-        :type avart_url: str
+        :param avatar_url: The avatar_url of this UserInfo.  # noqa: E501
+        :type avatar_url: str
         :param prove_state: The prove_state of this UserInfo.  # noqa: E501
         :type prove_state: str
         """
         self.swagger_types = {
             'user_id': str,
             'nick_name': str,
-            'avart_url': str,
+            'avatar_url': str,
             'prove_state': str
         }
 
         self.attribute_map = {
             'user_id': 'userId',
             'nick_name': 'nickName',
-            'avart_url': 'avartUrl',
+            'avatar_url': 'avatarUrl',
             'prove_state': 'proveState'
         }
 
         self._user_id = user_id
         self._nick_name = nick_name
-        self._avart_url = avart_url
+        self._avatar_url = avatar_url
         self._prove_state = prove_state
 
     @classmethod
@@ -100,25 +100,25 @@ class UserInfo(Model):
         self._nick_name = nick_name
 
     @property
-    def avart_url(self) -> str:
-        """Gets the avart_url of this UserInfo.
+    def avatar_url(self) -> str:
+        """Gets the avatar_url of this UserInfo.
 
 
-        :return: The avart_url of this UserInfo.
+        :return: The avatar_url of this UserInfo.
         :rtype: str
         """
-        return self._avart_url
+        return self._avatar_url
 
-    @avart_url.setter
-    def avart_url(self, avart_url: str):
-        """Sets the avart_url of this UserInfo.
+    @avatar_url.setter
+    def avatar_url(self, avatar_url: str):
+        """Sets the avatar_url of this UserInfo.
 
 
-        :param avart_url: The avart_url of this UserInfo.
-        :type avart_url: str
+        :param avatar_url: The avatar_url of this UserInfo.
+        :type avatar_url: str
         """
 
-        self._avart_url = avart_url
+        self._avatar_url = avatar_url
 
     @property
     def prove_state(self) -> str:

@@ -562,12 +562,12 @@ definitions:
         type: "string"
       nickName:
         type: "string"
-      avartUrl:
+      avatarUrl:
         type: "string"
       proveState:
         type: "string"
     example:
-      avartUrl: "avartUrl"
+      avatarUrl: "avatarUrl"
       nickName: "nickName"
       proveState: "proveState"
       userId: "userId"
@@ -575,7 +575,7 @@ definitions:
     properties:
       nickName:
         type: "string"
-      avartUrl:
+      avatarUrl:
         type: "string"
   IdenInfo:
     properties:
@@ -699,14 +699,14 @@ definitions:
         type: "string"
   UserInfoWithTel:
     properties:
-      avartUrl:
+      avatarUrl:
         type: "string"
       nickName:
         type: "string"
       tel:
         type: "string"
     example:
-      avartUrl: "avartUrl"
+      avatarUrl: "avatarUrl"
       nickName: "nickName"
       tel: "tel"
   Cert:
@@ -775,7 +775,7 @@ definitions:
       isPublisher: true
       hasReceived: 5
       user:
-        avartUrl: "avartUrl"
+        avatarUrl: "avatarUrl"
         nickName: "nickName"
         tel: "tel"
       content:

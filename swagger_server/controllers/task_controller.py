@@ -160,9 +160,9 @@ def tasks_get(pageId):  # noqa: E501
 
     :rtype: List[Task]
     """
-    results = task_mangager.get_task_list(page_id = pageId)
-    if results is None:
+    tasks = task_mangager.get_task_list(page_id = pageId)
+    if tasks is None:
         return ErrorResponse("error")
     else:
-        return [ Task.from_dict(item) for item in results]
+        return ""
     return 'do some magic!'

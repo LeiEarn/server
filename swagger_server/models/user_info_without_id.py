@@ -15,26 +15,26 @@ class UserInfoWithoutId(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, nick_name: str=None, avart_url: str=None):  # noqa: E501
+    def __init__(self, nick_name: str=None, avatar_url: str=None):  # noqa: E501
         """UserInfoWithoutId - a model defined in Swagger
 
         :param nick_name: The nick_name of this UserInfoWithoutId.  # noqa: E501
         :type nick_name: str
-        :param avart_url: The avart_url of this UserInfoWithoutId.  # noqa: E501
-        :type avart_url: str
+        :param avatar_url: The avatar_url of this UserInfoWithoutId.  # noqa: E501
+        :type avatar_url: str
         """
         self.swagger_types = {
             'nick_name': str,
-            'avart_url': str
+            'avatar_url': str
         }
 
         self.attribute_map = {
             'nick_name': 'nickName',
-            'avart_url': 'avartUrl'
+            'avatar_url': 'avatarUrl'
         }
 
         self._nick_name = nick_name
-        self._avart_url = avart_url
+        self._avatar_url = avatar_url
 
     @classmethod
     def from_dict(cls, dikt) -> 'UserInfoWithoutId':
@@ -69,22 +69,22 @@ class UserInfoWithoutId(Model):
         self._nick_name = nick_name
 
     @property
-    def avart_url(self) -> str:
-        """Gets the avart_url of this UserInfoWithoutId.
+    def avatar_url(self) -> str:
+        """Gets the avatar_url of this UserInfoWithoutId.
 
 
-        :return: The avart_url of this UserInfoWithoutId.
+        :return: The avatar_url of this UserInfoWithoutId.
         :rtype: str
         """
-        return self._avart_url
+        return self._avatar_url
 
-    @avart_url.setter
-    def avart_url(self, avart_url: str):
-        """Sets the avart_url of this UserInfoWithoutId.
+    @avatar_url.setter
+    def avatar_url(self, avatar_url: str):
+        """Sets the avatar_url of this UserInfoWithoutId.
 
 
-        :param avart_url: The avart_url of this UserInfoWithoutId.
-        :type avart_url: str
+        :param avatar_url: The avatar_url of this UserInfoWithoutId.
+        :type avatar_url: str
         """
 
-        self._avart_url = avart_url
+        self._avatar_url = avatar_url

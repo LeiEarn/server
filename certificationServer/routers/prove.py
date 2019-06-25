@@ -89,7 +89,7 @@ def get_task():
 
         data = TMS.get_tasks(task_type=task_type, page=page)
         print(data)
-        return ok(data)
+        return ok(json.dumps(data))
     return bad('error')
 
 @app.route('/api/v1/get_user_info', methods=['POST'])
@@ -105,7 +105,8 @@ def get_user_info():
         data = UMS.get_indentity_info(user_id, identity)
         if data is None:
             return bad('nothing found')
-        return ok(data)
+        print(data)
+        return ok(json.dumps(data))
     return bad('error')
 
 

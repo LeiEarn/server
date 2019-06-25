@@ -36,18 +36,16 @@ def login():
         account = json_data.get('account', None)
         password = json_data.get('password', None)
 
-        admin = AP.get_admin()
+        admin = AP.get_admin(account) # search for admin by account
         if admin is None:
-           return bad('no admin in db')
-        print(admin[0])
-        if account == admin[0]['account']:
-            if password == admin[0]['password']:
-                session['account'] = account
-                return ok()
-            else:
-                return bad('wrong password')
-        else:
             return bad('wrong account')
+        print(admin[0])
+
+        if password == admin[0]['password']:
+            session['account'] = account
+            return ok(json.dumps(admin[0]))
+        else:
+            return bad('wrong password')
 
     return bad('please POST')
 

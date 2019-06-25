@@ -34,6 +34,6 @@ class AdminPlatform():
         pass
 
     @staticmethod
-    def get_admin():
-        sql = 'SELECT * FROM audit_administrator;'
+    def get_admin(account):
+        sql = 'SELECT * FROM audit_administrator a WHERE a.account=\'%s\';' % (account)
         return Database.execute(sql, response=True)

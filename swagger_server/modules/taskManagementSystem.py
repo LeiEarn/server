@@ -17,12 +17,14 @@ class taskManagementSystem(object):
         tMS: 写入db（任务状态：待审`核）
     """
     def commit_task(self,
-            publisher_id,
+            publish_id,
             title,
-            type,
+            task_type,
             wjx_id,
             task_intro,
+            max_num,
             participants_num,
+            money,
             sign_start_time,
             sign_end_time):
         """
@@ -33,9 +35,16 @@ class taskManagementSystem(object):
 
         # create new task and write it to db
         task = Task.taskTable.create_task(
-            publisher_id = g.get('persistent').get('user_id'),
+            publish_id = g.get('persistent').get('user_id'),
             title = title,
-            type =type)
+            type_ =task_type,
+            wjx_id=wjx_id,
+            task_intro=task_intro,
+            max_num=max_num,
+            participants_num=participants_num,
+            money=money,
+            sign_start_time=sign_start_time,
+            sign_end_time=sign_end_time)
 
         # admin audit this task
         AdminPlatform.commit_new_task(task)
@@ -46,7 +55,7 @@ class taskManagementSystem(object):
             管理平台：正式发布任务
             -> TaskTable 写入database
         """
-        task.taskTable.create_task(task)
+        #task.taskTable.create_task(task)
 
 
 

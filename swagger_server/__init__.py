@@ -34,7 +34,7 @@ def init_app(app,test_config=None):
     db.Database.init_db()
 
 
-    #
+    #配置图片上传
     uploaded_photos = UploadSet('photos')
     configure_uploads(app, uploaded_photos)
     try:

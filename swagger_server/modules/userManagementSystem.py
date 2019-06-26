@@ -97,9 +97,15 @@ class ManagementSystem:
         unionid = g.get('persistent').get('unionid')
         if user is None:
             return  ('error', 'no such user')
-        #elif user.isprove is 'P':
-        #    return ('error', 'hasproved')
-        
+        elif user.isprove is 'P':
+            return ('error', 'hasproved')
+        elif user.isprove is 'W':
+            return ('error', 'in auditing')
+        elif user.isprove is 'F' and user.isprove is not ident_info.iden_type :
+            return ('error', 'identity type error, please certificaate another type ')
+
+        print(user_id) 
+        print(ident_info.iden_type)
         if ident_info.iden_type is 'S':
             result = User.table.prove(
                 user_id = user_id, 
@@ -116,7 +122,7 @@ class ManagementSystem:
                 isprove='W' )
             if result is None:
                 return ('success', "changed")
-        elif ident_info.iden_type is 'P':
+        elif ident_info.iden_type is 'C':
             result = User.table.prove(
                 user_id = user_id, 
                 name=ident_info.name,
@@ -181,6 +187,7 @@ class ManagementSystem:
         """
         获取认证信息模块
         """
+        print(g.get('persistent').get('user_type'))
         detail = User.table.load_detail_user_id(user_id = user_id, identity=g.get('persistent').get('user_type').get('identity'))
         if detail is None:
             detail = {}

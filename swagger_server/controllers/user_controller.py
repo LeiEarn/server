@@ -55,6 +55,7 @@ def user_proof_get(userId):  # noqa: E501
     :rtype: IdenInfoWithCredit
     """
     info = user_manager.get_user_detail(userId)
+    print(info)
     return IdenInfoWithCredit(
         iden_info= IdenInfo(
                 name=info.get('name'),

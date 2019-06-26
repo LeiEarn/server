@@ -65,7 +65,6 @@ class ManagementSystem:
                 user= self.register(unionid=unionid)
                 persistant_result = persistentSystem.save(wechat_server_reply= wechatresult, user = user)
                 return user
-        
 
     def register(self, unionid=None):
         """
@@ -86,8 +85,7 @@ class ManagementSystem:
             return user
         else:
             return user
-    
-    
+
     def prove(self, ident_info):
         """
             用户发起认证请求
@@ -157,7 +155,6 @@ class ManagementSystem:
         return User.table.get_users(user_type=user_type,
                                     begin=page*100,
                                     end=(page+1)*100)
-
     @staticmethod
     def get_user_info(user_id):
         """
@@ -177,11 +174,10 @@ class ManagementSystem:
         :param indentity: S or C, count be U
         :return:
         """
-        if identity == 'S' or identity == 'C':
+        if identity in ['S', 'C']:
             return User.table.load_detail_user_id(user_id, identity)
         else:
             raise KeyError('Wrong identity %s' % identity)
-
 
     def get_user_detail(self, user_id):
         """
@@ -197,3 +193,8 @@ class ManagementSystem:
         elif detail['identity'] is 'C':
             detail['id'] = detail.get('job_num')
         return detail
+
+
+    @staticmethod
+    def audit_user(user_id, identity, audit):
+        return User.table.audit(user_id, identity, audit)

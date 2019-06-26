@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-__all__ = ['User','UnprovedUser',  'Student', 'Company']
+__all__ = ['User', 'UnprovedUser',  'Student', 'Company']
 
 
 
@@ -97,7 +97,7 @@ class UserTable(object):
             """
             return {}
         print(sql)
-        result =Database.query(sql, fetchone=True)
+        result = Database.query(sql, fetchone=True)
         return result
 
     def create_new_user(self, unionid, nickname='nick', photo=''):
@@ -240,7 +240,6 @@ class UserTable(object):
 
         return Database.execute(sql, response=True)[0]['count']
 
-
     @staticmethod
     def get_users(user_type='all', begin=0, end=100):
         if user_type == 'all':
@@ -253,6 +252,28 @@ class UserTable(object):
         for user in result:
             user['create_date'] = str(user['create_date'])
         return result
+
+    @staticmethod
+    def audit(user_id, identity, audit):
+        audit = 'P' if audit else 'F'
+        sql = 'UPDATE user SET user.isprove=\'%s\' WHERE user.user_id = %d;' % (audit, user_id)
+        sql_ = 'UPDATE %s SET state_prove=\'%s\' WHERE user_user_id = %d;' % \
+               ('com_identity' if identity == 'C' else 'stu_identity', audit, user_id)
+        print(sql,sql_)
+        try:
+            connect = Database.get_conn()
+            with connect.cursor() as cursor:
+                cursor.execute(sql)
+                cursor.execute(sql_)
+            connect.commit()
+
+            return (True, 'success audit')
+        except Exception as e:
+            print(e)
+            connect.rollback()
+            return (False, 'Database execute error : %s' %e)
+
+
 
 """
 
@@ -305,8 +326,14 @@ class User(object):
                 self.isprove = kwargs.get('isprove')
             if not hasattr(self, 'identity') :
                 self.identity = kwargs.get('identity')
+
         def get_type(self):
             return {'isprove': self.isprove, 'identity': self.identity}
+
+        def info_dict(self):
+            return {key:self[key] for key in self.__slot__}
+
+
     # 未认证
     class UnprovedUser(BasicUser):
         def __init__(self, *args, **kwargs):
@@ -315,8 +342,6 @@ class User(object):
                 if key in User.UnprovedUser.__slots__:
                     self.__setattr__(key, value)
                     kwargs.pop(key)
-        
-
 
     # 学生
     class Student(BasicUser):
@@ -328,7 +353,6 @@ class User(object):
                 if key in User.Student.__slots__:
                     self.__setattr__(key, value)
                     kwargs.pop(key)
-            
 
     # 公司
     class Company(BasicUser):
@@ -344,6 +368,7 @@ class User(object):
 
     isprove_list = ['N','W','F','P' ]
     identity_dict = {'U': UnprovedUser,  'S': Student, 'C': Company}
+
     def __new__(cls, *args, **kwargs):
         if 'isprove' in kwargs:
             if kwargs.get('isprove') not in cls.isprove_list:

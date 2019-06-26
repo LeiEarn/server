@@ -143,15 +143,21 @@ def get_user_info():
         print('data', json_data)
 
         user_id      = json_data.get('user_id', None)
+        if user_id is None:
+            return bad('user id is None')
+        user = UMS.get_user_info(user_id)
         identity = json_data.get('identity', None)
 
-        if user_id is None or identity is None:
-            return bad('key error')
-
+        if identity is not None:
+            if identity != user['identity']:
+                return bad('wrong identity')
+        else:
+            identity = user['identity']
 
         data = UMS.get_indentity_info(user_id, identity)
         if data is None:
             return bad('nothing found')
+        data.update(user.info_dict())
         print(data)
         return ok(json.dumps(data))
     return bad('error')
@@ -172,14 +178,22 @@ def audit_user():
         print('data', json_data)
 
         user_id = json_data.get('user_id', None)
-        isprove = UMS.get_user_info(user_id)['isprove']
-
-        if  isprove != 'W':
-            return bad('this use is not in the waiting list')
-
+        identity = json_data.get('identity', None)
         audit = json_data.get('audit', None)
 
+        if not (user_id and identity and audit is not None):
+            print(user_id, identity, audit)
+            return bad('wrong data value')
 
+        resutl = AP.audit_user(user_id, identity, audit)
+
+        if isinstance(resutl, tuple) and resutl[0]:
+            if resutl[0]:
+                return ok(resutl[1])
+            else:
+                return bad('Unknown error: %s' % resutl[1])
+        else:
+            return bad(resutl)
     else:
         return bad('please use POST')
 

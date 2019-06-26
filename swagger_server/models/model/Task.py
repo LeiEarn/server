@@ -143,7 +143,9 @@ class TaskTable(object):
 
         result = Database.query(sql)
         for user in result:
-            user['create_data'] = str(user['create_data'])
+            user['release_time'] = str(user['release_time'])
+            user['sign_start_time'] = str(user['sign_start_time'])
+            user['sign_end_time'] = str(user['sign_end_time'])
 
         return result
 

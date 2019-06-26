@@ -295,7 +295,7 @@ class UserTable(object):
 
     @staticmethod
     def get_company_count():
-        sql = 'SELECT name, COUNT(*) as count FROM com_identity GROUP BY name;'
+        sql = 'SELECT company, COUNT(*) as count FROM com_identity GROUP BY company;'
         print(sql)
         return Database.query(sql)
 

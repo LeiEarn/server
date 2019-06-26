@@ -323,7 +323,7 @@ class User(object):
             return {'isprove': self.isprove, 'identity': self.identity}
 
         def info_dict(self):
-            return {key:self[key] for key in self.__slot__}
+            return { key:self.__getattribute__(key) for key in self.__slots__}
 
 
     # 未认证

@@ -58,10 +58,10 @@ class AdminPlatform():
 
         user = UMS.get_indentity_info(user_id, identity)
 
-        if len(user) != 1:
+        if user is None:
             return 'cannot fount this user in %s' %identity
 
-        if user[0]['state_prove'] != 'W':
+        if user['state_prove'] != 'W':
             return 'this user is not in the %s waiting list' % identity
 
 

@@ -200,4 +200,4 @@ class ManagementSystem:
 
     @staticmethod
     def audit_user(user_id, identity, audit):
-        return User.table.audit_user(user_id, identity, audit)
+        return User.table.audit(user_id, identity, audit)

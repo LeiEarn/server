@@ -89,7 +89,7 @@ class UserTable(object):
             """
             return {}
         print(sql)
-        result =Database.query(sql, fetchone=True)
+        result = Database.query(sql, fetchone=True)
         return result
 
     def create_new_user(self, unionid, nickname='nick', photo=''):
@@ -257,10 +257,14 @@ class UserTable(object):
 
         print(sql)
         try:
-            Database.execute(sql)
+            connect = Database.get_conn()
+            with connect.cursor() as cursor:
+                cursor.executemany(sql)
             return 'success audit'
-        except:
-            return 'Database execute error'
+        except Exception as e:
+            connect.rollback()
+            return 'Database execute error : %s' %e
+
 
 
 """

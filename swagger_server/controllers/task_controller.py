@@ -202,6 +202,7 @@ def tasks_get(pageId):  # noqa: E501
             Task(
                 id = item['task_id'],
                 money= item['money'],
+                icon= item['icon'],
                 title=item['title'],
                 max_num=item['max_num'],
                 desc=item['task_intro'],

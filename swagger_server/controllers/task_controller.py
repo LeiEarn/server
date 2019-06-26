@@ -169,7 +169,7 @@ def task_task_id_job_post(taskId, body):  # noqa: E501
     return 'do some magic!'
 
 
-def task_task_id_job_put(taskId, userId):  # noqa: E501
+def task_task_id_job_put(taskId, userId, state):  # noqa: E501
     """Publisher agree the job of the user.
 
     This operation shows how to override the global security defined above, as we want to open it up for all users. # noqa: E501
@@ -178,6 +178,8 @@ def task_task_id_job_put(taskId, userId):  # noqa: E501
     :type taskId: str
     :param userId: 
     :type userId: str
+    :param state: agree, reject
+    :type state: str
 
     :rtype: None
     """

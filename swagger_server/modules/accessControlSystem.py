@@ -53,16 +53,16 @@ class AccessControlSystem(object):
 
     # 拥有者身份需求装饰器
     @classmethod
-    def owner_required(view, redirect_to_login):
+    def owner_required(view, user_args='user_id', identity_error=('error', 400)):
         """
             尚未完成
         """
-        @functools.wraps(view)
-        def wrapped_view(**kwargs):
-            if g.get('user_id') is None or g.user_id is not kwargs.get('user_id'):
-                return redirect_to_login
-            return view(**kwargs)
-        return wrapped_view
+        def dec(view):
+            def wrapped_view(**kwargs):
+                if g.get('user_id') is None or g.user.user_id is not kwargs.get(user_args):
+                    return identity_error
+                return view(**kwargs)
+        return dec
     
     # 身份需求装饰器
     @classmethod

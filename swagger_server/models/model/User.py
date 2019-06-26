@@ -104,6 +104,8 @@ class UserTable(object):
         identity='U'
         isprove='N'
         intro = '-'
+        credit=100
+        balance=0
         # create new instance
         create_date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         user = User(wechat_id=unionid,
@@ -115,8 +117,8 @@ class UserTable(object):
                          isprove=isprove)
         # write into database
        
-        sql = "INSERT INTO user(wechat_id, nickname ,identity, isprove, photo,intro, create_date) \
-              VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s')" % (unionid, nickname,identity, isprove, photo, intro, create_date)
+        sql = "INSERT INTO user(wechat_id, nickname ,identity, isprove, photo,intro, create_date, credit, balance) \
+              VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')" % (unionid, nickname,identity, isprove, photo, intro, create_date, credit, balance)
 
         Database.execute(sql)
         return user
@@ -312,7 +314,7 @@ class User(object):
             identity:   U S C
         """
 
-        __slots__ = ['user_id', 'wechat_id', 'nickname', 'photo', 'intro', 'create_date', 'isprove', 'identity']
+        __slots__ = ['user_id', 'wechat_id', 'nickname', 'photo', 'intro', 'create_date', 'isprove', 'identity', 'balance', 'credit']
         table = UserTable()
         def __init__(self, **kwargs):
             """

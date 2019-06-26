@@ -26,7 +26,7 @@ class TaskTable(object):
         """
         :param kwargs: {
                  'title',
-                 'type',
+                 'type_',
                  'publish_id',
                  'wjx_id',
                  'task_intro',
@@ -44,9 +44,9 @@ class TaskTable(object):
              "audit_administrator_audit_id": '00227'
              })
 
-        sql = "INSERT INTO task(title, type, publish_id, state, wjx_id, task_intro, max_num, participants_num, money," \
+        sql = "INSERT INTO task(title, type_, publish_id, state, wjx_id, task_intro, max_num, participants_num, money," \
               "release_time, sign_start_time, sign_end_time, audit_administrator_audit_id)" \
-              "VALUES ({title}, {type}, {publish_id}, {state}, {wjx_id}, {task_intro}, {max_num}, {participants_num}, " \
+              "VALUES ({title}, {type_}, {publish_id}, {state}, {wjx_id}, {task_intro}, {max_num}, {participants_num}, " \
               "{money}, {release_time}, {sign_start_time}, {sign_end_time}, {audit_administrator_audit_id});"\
             .format(values)
         Database.execute(sql)
@@ -117,12 +117,28 @@ class TaskTable(object):
         else:
             raise KeyError('task type error')
 
-        result = Database.execute(sql, response=True)
+        result = Database.query(sql)
         for user in result:
             user['release_time'] = str(user['release_time'])
             user['sign_start_time'] = str(user['sign_start_time'])
             user['sign_end_time'] = str(user['sign_end_time'])
         return result
+
+    def get_task_basic_inverse(self, page_id, size):
+        start = page_id * size
+        end = start + size
+        
+        sql = " SELECT task.money,task.task_id,task.title, task_intro,task.max_num, participants_num, user.photo as icon "\
+            " FROM task,user "\
+            " WHERE  user.user_id = task.publish_id ORDER BY task.task_id DESC limit {start}, {end} "\
+                .format(start = start, end=end)
+        
+        result = Database.query(sql)
+        for user in result:
+            user['create_data'] = str(user['create_data'])
+
+        return result
+
 
 
 class Task(object):
@@ -135,7 +151,7 @@ class Task(object):
     """
     __slots__ = ['task_id',
                  'title',
-                 'type',
+                 'type_',
                  'publish_id',
                  'state',
                  'wjx_id',
@@ -150,12 +166,12 @@ class Task(object):
                  ]
     taskTable = TaskTable()
 
-    def __init__(self, task_id, title, type, publish_id, state, wjx_id, task_intro, max_num, participants_num, money,
+    def __init__(self, task_id, title, type_, publish_id, state, wjx_id, task_intro, max_num, participants_num, money,
                  release_time, sign_start_time, sign_end_time, audit_administrator_audit_id):
         """
         :param task_id:
         :param title:
-        :param type:
+        :param type_:
         :param publish_id:
         :param state:
         :param wjx_id:
@@ -170,7 +186,7 @@ class Task(object):
         """
         self.task_id = task_id
         self.title = title
-        self.type = type
+        self.type_ = type_
         self.publish_id = publish_id
         self.state = state
         self.wjx_id = wjx_id

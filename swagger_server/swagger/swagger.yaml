@@ -25,7 +25,29 @@ paths:
           $ref: "#/definitions/LoginCode"
       responses:
         200:
-          description: "OK, return the user's info and hasAuthenticated."
+          description: "OK, return the user's info and proveState."
+          schema:
+            $ref: "#/definitions/UserInfo"
+        400:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.user_controller"
+  /user/info:
+    put:
+      tags:
+      - "user"
+      summary: "User modify his basic info."
+      operationId: "user_info_put"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/UserInfoWithoutId"
+      responses:
+        200:
+          description: "modify success"
           schema:
             $ref: "#/definitions/UserInfo"
         400:
@@ -39,11 +61,7 @@ paths:
       - "user"
       summary: "get user's indentity info"
       operationId: "user_proof_get"
-      parameters:
-      - name: "userId"
-        in: "query"
-        required: true
-        type: "string"
+      parameters: []
       responses:
         200:
           description: "OK, return the user indentity info"
@@ -73,33 +91,11 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
       x-swagger-router-controller: "swagger_server.controllers.user_controller"
-  /user/info:
-    put:
-      tags:
-      - "user"
-      summary: "User modify his basic info."
-      operationId: "user_info_put"
-      parameters:
-      - in: "body"
-        name: "body"
-        required: true
-        schema:
-          $ref: "#/definitions/UserInfoWithoutId"
-      responses:
-        200:
-          description: "modify success"
-          schema:
-            $ref: "#/definitions/UserInfo"
-        400:
-          description: "Error"
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-      x-swagger-router-controller: "swagger_server.controllers.user_controller"
   /user/{userId}/proof/state:
     get:
       tags:
       - "user"
-      summary: "User get his authState."
+      summary: "User get his proveState."
       operationId: "user_user_id_proof_state_get"
       parameters:
       - name: "userId"
@@ -153,7 +149,7 @@ paths:
         type: "string"
       responses:
         200:
-          description: "publish success"
+          description: "recharge success"
           schema:
             $ref: "#/definitions/Balance"
         400:
@@ -292,17 +288,22 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
       x-swagger-router-controller: "swagger_server.controllers.task_controller"
-  /task/{userId}/publishment:
+  /task/{userId}:
     get:
       tags:
       - "task"
-      summary: "Returns all his own published tasks in the page."
+      summary: "Returns all his own published or accepted tasks in the page."
       description: "Returns the published tasks, the max number is 10. If the page\
         \ is the last page, the return all left."
-      operationId: "task_user_id_publishment_get"
+      operationId: "task_user_id_get"
       parameters:
       - name: "userId"
         in: "path"
+        required: true
+        type: "string"
+      - name: "type"
+        in: "query"
+        description: "acceptment or publishment"
         required: true
         type: "string"
       responses:
@@ -317,38 +318,36 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
       x-swagger-router-controller: "swagger_server.controllers.task_controller"
-  /task/{userId}/acceptment:
-    get:
+    post:
       tags:
       - "task"
-      summary: "Returns all his accepted tasks in the page."
-      description: "Returns the published tasks, the max number is 10. If the page\
-        \ is the last page, the return all left."
-      operationId: "task_user_id_acceptment_get"
+      summary: "User publish the task."
+      operationId: "task_user_id_post"
       parameters:
       - name: "userId"
         in: "path"
         required: true
         type: "string"
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/TaskDetail"
       responses:
         200:
-          description: "success"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Task"
+          description: "receive success"
         400:
           description: "Error"
           schema:
             $ref: "#/definitions/ErrorResponse"
       x-swagger-router-controller: "swagger_server.controllers.task_controller"
-  /task/{taskId}:
+  /task/{taskId}/info:
     get:
       tags:
       - "task"
       summary: "Returns one task's detail"
       description: "Returns one task's detail"
-      operationId: "task_task_id_get"
+      operationId: "task_task_id_info_get"
       parameters:
       - name: "taskId"
         in: "path"
@@ -365,61 +364,11 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
       x-swagger-router-controller: "swagger_server.controllers.task_controller"
-  /task/{taskId}/publisher:
-    get:
-      tags:
-      - "task"
-      summary: "Publisher get the info of accepters"
-      operationId: "task_task_id_publisher_get"
-      parameters:
-      - name: "taskId"
-        in: "path"
-        required: true
-        type: "string"
-      - name: "userId"
-        in: "query"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "receive success"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/UserInfoWithTel"
-        400:
-          description: "Error"
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-      x-swagger-router-controller: "swagger_server.controllers.task_controller"
-    post:
-      tags:
-      - "task"
-      summary: "User publish the task."
-      operationId: "task_task_id_publisher_post"
-      parameters:
-      - name: "taskId"
-        in: "path"
-        required: true
-        type: "string"
-      - in: "body"
-        name: "body"
-        required: true
-        schema:
-          $ref: "#/definitions/TaskDetailWithUserId"
-      responses:
-        200:
-          description: "receive success"
-        400:
-          description: "Error"
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-      x-swagger-router-controller: "swagger_server.controllers.task_controller"
     put:
       tags:
       - "task"
       summary: "Publisher add the task info."
-      operationId: "task_task_id_publisher_put"
+      operationId: "task_task_id_info_put"
       parameters:
       - name: "taskId"
         in: "path"
@@ -432,7 +381,7 @@ paths:
           $ref: "#/definitions/ExtraTaskInfo"
       responses:
         200:
-          description: "receive success"
+          description: "add success"
         400:
           description: "Error"
           schema:
@@ -444,7 +393,7 @@ paths:
       summary: "Publisher abort the task."
       description: "This operation shows how to override the global security defined\
         \ above, as we want to open it up for all users."
-      operationId: "task_task_id_publisher_delete"
+      operationId: "task_task_id_info_delete"
       parameters:
       - name: "taskId"
         in: "path"
@@ -463,10 +412,37 @@ paths:
             $ref: "#/definitions/ErrorResponse"
       x-swagger-router-controller: "swagger_server.controllers.task_controller"
   /task/{taskId}/accepter:
+    get:
+      tags:
+      - "task"
+      summary: "Publisher get the info of accepters"
+      operationId: "task_task_id_accepter_get"
+      parameters:
+      - name: "taskId"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "userId"
+        in: "query"
+        description: "the userId of publisher"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "receive success"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/UserInfoWithTel"
+        400:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.task_controller"
     post:
       tags:
       - "task"
-      summary: "User commit the job."
+      summary: "User accept the task."
       description: "This operation shows how to override the global security defined\
         \ above, as we want to open it up for all users."
       operationId: "task_task_id_accepter_post"
@@ -475,14 +451,14 @@ paths:
         in: "path"
         required: true
         type: "string"
-      - in: "body"
-        name: "body"
+      - name: "userId"
+        in: "query"
+        description: "the userId of user ready to accept"
         required: true
-        schema:
-          $ref: "#/definitions/Cert"
+        type: "string"
       responses:
         200:
-          description: "complete success"
+          description: "accept success"
         400:
           description: "Error"
           schema:
@@ -502,11 +478,86 @@ paths:
         type: "string"
       - name: "userId"
         in: "query"
+        description: "the userId of accepter"
         required: true
         type: "string"
       responses:
         200:
           description: "abandon success"
+        400:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.task_controller"
+  /task/{taskId}/job:
+    get:
+      tags:
+      - "task"
+      summary: "User get all the Job."
+      operationId: "task_task_id_job_get"
+      parameters:
+      - name: "taskId"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "userId"
+        in: "query"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "complete success"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Cert"
+        400:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.task_controller"
+    post:
+      tags:
+      - "task"
+      summary: "User commit the job."
+      operationId: "task_task_id_job_post"
+      parameters:
+      - name: "taskId"
+        in: "path"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/Cert"
+      responses:
+        200:
+          description: "complete success"
+        400:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.task_controller"
+    put:
+      tags:
+      - "task"
+      summary: "Publisher agree the job of the user."
+      description: "This operation shows how to override the global security defined\
+        \ above, as we want to open it up for all users."
+      operationId: "task_task_id_job_put"
+      parameters:
+      - name: "taskId"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "userId"
+        in: "query"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "success"
         400:
           description: "Error"
           schema:
@@ -562,12 +613,12 @@ definitions:
         type: "string"
       nickName:
         type: "string"
-      avartUrl:
+      avatarUrl:
         type: "string"
       proveState:
         type: "string"
     example:
-      avartUrl: "avartUrl"
+      avatarUrl: "avatarUrl"
       nickName: "nickName"
       proveState: "proveState"
       userId: "userId"
@@ -575,7 +626,7 @@ definitions:
     properties:
       nickName:
         type: "string"
-      avartUrl:
+      avatarUrl:
         type: "string"
   IdenInfo:
     properties:
@@ -657,7 +708,7 @@ definitions:
         type: "string"
       wjxId:
         type: "string"
-        description: "if the type is '问卷星', return wjxId."
+        description: "if the type is '闂嵎鏄�', return wjxId."
       title:
         type: "string"
       desc:
@@ -685,12 +736,6 @@ definitions:
       wjxId: "wjxId"
       desc: "desc"
       partNum: 1
-  TaskDetailWithUserId:
-    properties:
-      userId:
-        type: "string"
-      content:
-        $ref: "#/definitions/TaskDetail"
   ExtraTaskInfo:
     properties:
       userId:
@@ -699,14 +744,14 @@ definitions:
         type: "string"
   UserInfoWithTel:
     properties:
-      avartUrl:
+      avatarUrl:
         type: "string"
       nickName:
         type: "string"
       tel:
         type: "string"
     example:
-      avartUrl: "avartUrl"
+      avatarUrl: "avatarUrl"
       nickName: "nickName"
       tel: "tel"
   Cert:
@@ -720,6 +765,12 @@ definitions:
           type: "string"
       remarks:
         type: "string"
+    example:
+      files:
+      - "files"
+      - "files"
+      userId: "userId"
+      remarks: "remarks"
   Condition:
     properties:
       groups:
@@ -775,7 +826,7 @@ definitions:
       isPublisher: true
       hasReceived: 5
       user:
-        avartUrl: "avartUrl"
+        avatarUrl: "avatarUrl"
         nickName: "nickName"
         tel: "tel"
       content:

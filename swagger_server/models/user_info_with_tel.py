@@ -15,29 +15,29 @@ class UserInfoWithTel(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, avart_url: str=None, nick_name: str=None, tel: str=None):  # noqa: E501
+    def __init__(self, avatar_url: str=None, nick_name: str=None, tel: str=None):  # noqa: E501
         """UserInfoWithTel - a model defined in Swagger
 
-        :param avart_url: The avart_url of this UserInfoWithTel.  # noqa: E501
-        :type avart_url: str
+        :param avatar_url: The avatar_url of this UserInfoWithTel.  # noqa: E501
+        :type avatar_url: str
         :param nick_name: The nick_name of this UserInfoWithTel.  # noqa: E501
         :type nick_name: str
         :param tel: The tel of this UserInfoWithTel.  # noqa: E501
         :type tel: str
         """
         self.swagger_types = {
-            'avart_url': str,
+            'avatar_url': str,
             'nick_name': str,
             'tel': str
         }
 
         self.attribute_map = {
-            'avart_url': 'avartUrl',
+            'avatar_url': 'avatarUrl',
             'nick_name': 'nickName',
             'tel': 'tel'
         }
 
-        self._avart_url = avart_url
+        self._avatar_url = avatar_url
         self._nick_name = nick_name
         self._tel = tel
 
@@ -53,25 +53,25 @@ class UserInfoWithTel(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def avart_url(self) -> str:
-        """Gets the avart_url of this UserInfoWithTel.
+    def avatar_url(self) -> str:
+        """Gets the avatar_url of this UserInfoWithTel.
 
 
-        :return: The avart_url of this UserInfoWithTel.
+        :return: The avatar_url of this UserInfoWithTel.
         :rtype: str
         """
-        return self._avart_url
+        return self._avatar_url
 
-    @avart_url.setter
-    def avart_url(self, avart_url: str):
-        """Sets the avart_url of this UserInfoWithTel.
+    @avatar_url.setter
+    def avatar_url(self, avatar_url: str):
+        """Sets the avatar_url of this UserInfoWithTel.
 
 
-        :param avart_url: The avart_url of this UserInfoWithTel.
-        :type avart_url: str
+        :param avatar_url: The avatar_url of this UserInfoWithTel.
+        :type avatar_url: str
         """
 
-        self._avart_url = avart_url
+        self._avatar_url = avatar_url
 
     @property
     def nick_name(self) -> str:

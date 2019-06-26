@@ -38,11 +38,9 @@ class TestUserController(BaseTestCase):
 
         get user's indentity info
         """
-        query_string = [('userId', 'userId_example')]
         response = self.client.open(
             '//user/proof',
-            method='GET',
-            query_string=query_string)
+            method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
@@ -101,7 +99,7 @@ class TestUserController(BaseTestCase):
     def test_user_user_id_proof_state_get(self):
         """Test case for user_user_id_proof_state_get
 
-        User get his authState.
+        User get his proveState.
         """
         response = self.client.open(
             '//user/{userId}/proof/state'.format(userId='userId_example'),

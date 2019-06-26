@@ -36,13 +36,13 @@ class UserTable(object):
 
         """
         if unionid is not None:
-            sql = "SELECT *  \
-                  FROM user \
-                      WHERE wechat_id = '{id}'".format(id = unionid)
+            sql = "SELECT * " \
+                    "FROM user "\
+                    "WHERE wechat_id = '{id}'".format(id = unionid)
         else:
-            sql =  "SELECT *  \
-                  FROM user \
-                      WHERE user_id = '{id}'".format(id = user_id)
+            sql =  "SELECT * " \
+                    " FROM user "\
+                    " WHERE user_id = '{id}'".format(id = user_id)
         row = Database.query(sql=sql, fetchone=True)
         if row is None:
             return row

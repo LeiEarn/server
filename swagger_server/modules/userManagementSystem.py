@@ -27,7 +27,7 @@ class ManagementSystem:
         pass
     
 
-    def login(self, js_code):
+    def login(self, js_code,app_id, app_secret ):
         """
             登录模块， 小程序启动即刻调用
             数据库获取【用户简单信息】，并返回
@@ -41,15 +41,15 @@ class ManagementSystem:
             用户信息 or None
 
         """
-        """test"""
-        #wechatresult = code2session(js_code)
-        #if 'error' in wechatresult:
-        #   return None
         
-        wechatresult = {'unionid': js_code, 'openid':1, 'session_key':'12345'}
+        wechatresult = code2session(js_code=js_code, app_id=app_id, app_secret=app_secret)
+        print(wechatresult)
+        if 'error' in wechatresult:
+           return None
+        
 
         unionid =wechatresult.get('unionid')
-
+        print(unionid)
         if unionid is None:
             return None
         else:
@@ -97,9 +97,15 @@ class ManagementSystem:
         unionid = g.get('persistent').get('unionid')
         if user is None:
             return  ('error', 'no such user')
-        #elif user.isprove is 'P':
-        #    return ('error', 'hasproved')
-        
+        elif user.isprove is 'P':
+            return ('error', 'hasproved')
+        elif user.isprove is 'W':
+            return ('error', 'in auditing')
+        elif user.isprove is 'F' and user.isprove is not ident_info.iden_type :
+            return ('error', 'identity type error, please certificaate another type ')
+
+        print(user_id) 
+        print(ident_info.iden_type)
         if ident_info.iden_type is 'S':
             result = User.table.prove(
                 user_id = user_id, 
@@ -116,7 +122,7 @@ class ManagementSystem:
                 isprove='W' )
             if result is None:
                 return ('success', "changed")
-        elif ident_info.iden_type is 'P':
+        elif ident_info.iden_type is 'C':
             result = User.table.prove(
                 user_id = user_id, 
                 name=ident_info.name,
@@ -135,10 +141,10 @@ class ManagementSystem:
         else:
             return ('error', 'no such user')
 
-    def modify(self, nick_name, avart_url):
+    def modify(self, nick_name, avatar_url):
         unionid = g.get('persistent').get('unionid')
         user_id = g.get('persistent').get('user_id')
-        User.table.update_info(unionid = unionid, nickname=nick_name, photo = avart_url )
+        User.table.update_info(unionid = unionid, nickname=nick_name, photo = avatar_url )
         userinfo = User.table.query_user(unionid=unionid)
         return userinfo
 
@@ -181,6 +187,7 @@ class ManagementSystem:
         """
         获取认证信息模块
         """
+        print(g.get('persistent').get('user_type'))
         detail = User.table.load_detail_user_id(user_id = user_id, identity=g.get('persistent').get('user_type').get('identity'))
         if detail is None:
             detail = {}

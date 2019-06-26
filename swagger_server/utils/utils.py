@@ -1,22 +1,26 @@
 # -*- coding: utf-8 -*-
 import requests
-APP_ID = 'wx2e515a1b9f28a15e'
-APP_SECRET = 'ded301bbd914c7a4083d15326be60073'
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+APP_ID = 'wx72ce1b28ca748994'
+APP_SECRET = '8a0807fa2c5abe9db6473cba7b1eb600'
 AUTHORIZATION_CODE = 'authorization_code'
 WX_API_URL = 'https://api.weixin.qq.com/sns/jscode2session' 
 
-def code2session(js_code):
+
+def code2session(js_code, app_id, app_secret):
     # 不存在js_code的错误处理
     if js_code is None:
         return {'error': 'no js_code'}
     # 存在js_code则向微信服务器发起获取信息请求
-    user_info = get_user_info(js_code)
+    user_info = get_user_info(js_code,app_id, app_secret)
     # js_code无效的处理
     if user_info is None:
         return {'error': 'js_code invalid'}
 
     # 从返回信息中获取需要的id，需要异常处理++
     try:
+        print(user_info)
         if  'errcode' in user_info :
             return 'jscode or wechat server error\n ' + user_info.get('errmsg')
         else:
@@ -24,12 +28,12 @@ def code2session(js_code):
             unionid = user_info.get('unionid')
             session_key = user_info.get('session_key')
 
-        if unionid is None:
+        if openid is None:
             return {'error': 'no unionid'}
 
         return {
             'openid': openid,
-            'unionid': unionid,
+            'unionid': openid,
             'session_key': session_key
         }
     except Exception as e :
@@ -37,10 +41,10 @@ def code2session(js_code):
 
 # 利用js_code向微信服务器端发起请求获取用户信息
 #  返回json格式
-def get_user_info(js_code):
+def get_user_info(js_code, app_id, app_secret ):
     req_params = {
-        "appid": APP_ID,  # 小程序的 ID
-        "secret": APP_SECRET,  # 小程序的 secret
+        "appid": app_id,  # 小程序的 ID
+        "secret": app_secret,  # 小程序的 secret
         "js_code": js_code,
         "grant_type": AUTHORIZATION_CODE
     }

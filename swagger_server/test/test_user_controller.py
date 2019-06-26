@@ -38,9 +38,11 @@ class TestUserController(BaseTestCase):
 
         get user's indentity info
         """
+        query_string = [('userId', 'userId_example')]
         response = self.client.open(
             '//user/proof',
-            method='GET')
+            method='GET',
+            query_string=query_string)
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 

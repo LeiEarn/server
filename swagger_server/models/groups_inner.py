@@ -15,26 +15,36 @@ class GroupsInner(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, group_id: str=None, group_name: str=None):  # noqa: E501
+    def __init__(self, group_id: str=None, group_name: str=None, group_desc: str=None, group_icon: str=None):  # noqa: E501
         """GroupsInner - a model defined in Swagger
 
         :param group_id: The group_id of this GroupsInner.  # noqa: E501
         :type group_id: str
         :param group_name: The group_name of this GroupsInner.  # noqa: E501
         :type group_name: str
+        :param group_desc: The group_desc of this GroupsInner.  # noqa: E501
+        :type group_desc: str
+        :param group_icon: The group_icon of this GroupsInner.  # noqa: E501
+        :type group_icon: str
         """
         self.swagger_types = {
             'group_id': str,
-            'group_name': str
+            'group_name': str,
+            'group_desc': str,
+            'group_icon': str
         }
 
         self.attribute_map = {
             'group_id': 'groupId',
-            'group_name': 'groupName'
+            'group_name': 'groupName',
+            'group_desc': 'groupDesc',
+            'group_icon': 'groupIcon'
         }
 
         self._group_id = group_id
         self._group_name = group_name
+        self._group_desc = group_desc
+        self._group_icon = group_icon
 
     @classmethod
     def from_dict(cls, dikt) -> 'GroupsInner':
@@ -88,3 +98,45 @@ class GroupsInner(Model):
         """
 
         self._group_name = group_name
+
+    @property
+    def group_desc(self) -> str:
+        """Gets the group_desc of this GroupsInner.
+
+
+        :return: The group_desc of this GroupsInner.
+        :rtype: str
+        """
+        return self._group_desc
+
+    @group_desc.setter
+    def group_desc(self, group_desc: str):
+        """Sets the group_desc of this GroupsInner.
+
+
+        :param group_desc: The group_desc of this GroupsInner.
+        :type group_desc: str
+        """
+
+        self._group_desc = group_desc
+
+    @property
+    def group_icon(self) -> str:
+        """Gets the group_icon of this GroupsInner.
+
+
+        :return: The group_icon of this GroupsInner.
+        :rtype: str
+        """
+        return self._group_icon
+
+    @group_icon.setter
+    def group_icon(self, group_icon: str):
+        """Sets the group_icon of this GroupsInner.
+
+
+        :param group_icon: The group_icon of this GroupsInner.
+        :type group_icon: str
+        """
+
+        self._group_icon = group_icon

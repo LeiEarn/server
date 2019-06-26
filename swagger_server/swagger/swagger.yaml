@@ -61,7 +61,11 @@ paths:
       - "user"
       summary: "get user's indentity info"
       operationId: "user_proof_get"
-      parameters: []
+      parameters:
+      - name: "userId"
+        in: "query"
+        required: true
+        type: "string"
       responses:
         200:
           description: "OK, return the user indentity info"
@@ -276,6 +280,12 @@ paths:
         required: true
         type: "integer"
         default: 0
+      - name: "type"
+        in: "query"
+        description: "default, recommend, easy"
+        required: false
+        type: "string"
+        default: "default"
       responses:
         200:
           description: "success"
@@ -694,7 +704,10 @@ definitions:
       partNum:
         type: "integer"
         description: "the num of participants."
+      isCommited:
+        type: "boolean"
     example:
+      isCommited: true
       money: 0.80082819046101150206595775671303272247314453125
       icon: "icon"
       id: "id"
@@ -708,10 +721,12 @@ definitions:
         type: "string"
       wjxId:
         type: "string"
-        description: "if the type is '闂嵎鏄�', return wjxId."
+        description: "if the type is 'wjx', return wjxId."
       title:
         type: "string"
       desc:
+        type: "string"
+      time:
         type: "string"
       money:
         type: "number"
@@ -730,6 +745,7 @@ definitions:
         - "groups"
         - "groups"
       money: 0.80082819046101150206595775671303272247314453125
+      time: "time"
       type: "type"
       title: "title"
       maxNum: 6
@@ -744,6 +760,8 @@ definitions:
         type: "string"
   UserInfoWithTel:
     properties:
+      userId:
+        type: "string"
       avatarUrl:
         type: "string"
       nickName:
@@ -754,6 +772,7 @@ definitions:
       avatarUrl: "avatarUrl"
       nickName: "nickName"
       tel: "tel"
+      userId: "userId"
   Cert:
     type: "object"
     properties:
@@ -816,19 +835,17 @@ definitions:
         $ref: "#/definitions/UserInfoWithTel"
       content:
         $ref: "#/definitions/TaskDetail"
-      isPublisher:
-        type: "boolean"
       hasReceived:
         type: "integer"
         description: "0 stands for hasn't, 1 stands for has received, 2 stands for\
           \ under review, 3 stands for has completed"
     example:
-      isPublisher: true
       hasReceived: 5
       user:
         avatarUrl: "avatarUrl"
         nickName: "nickName"
         tel: "tel"
+        userId: "userId"
       content:
         condition:
           creditScore: 5
@@ -837,6 +854,7 @@ definitions:
           - "groups"
           - "groups"
         money: 0.80082819046101150206595775671303272247314453125
+        time: "time"
         type: "type"
         title: "title"
         maxNum: 6
@@ -855,4 +873,8 @@ definitions:
       groupId:
         type: "string"
       groupName:
+        type: "string"
+      groupDesc:
+        type: "string"
+      groupIcon:
         type: "string"

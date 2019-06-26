@@ -167,7 +167,8 @@ class TestTaskController(BaseTestCase):
 
         Returns all related tasks according to the pageId.
         """
-        query_string = [('pageId', 0)]
+        query_string = [('pageId', 0),
+                        ('type', 'default')]
         response = self.client.open(
             '//tasks',
             method='GET',

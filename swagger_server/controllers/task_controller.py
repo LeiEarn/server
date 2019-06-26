@@ -145,7 +145,6 @@ def task_task_id_job_get(taskId, userId):  # noqa: E501
     :rtype: List[Cert]
     """
     result = task_mangager.get_task_jobs(task_id=taskId)
-
     return 'do some magic!'
 
 
@@ -165,6 +164,7 @@ def task_task_id_job_post(taskId, body):  # noqa: E501
         body = Cert.from_dict(connexion.request.get_json())  # noqa: E501
     
     result = task_mangager.commit_job(user_id=body.user_id,task_id=taskId,job =body )
+    
     
     return 'do some magic!'
 
@@ -236,13 +236,15 @@ def task_user_id_post(userId, body):  # noqa: E501
         return 'success', 200
 
 
-def tasks_get(pageId):  # noqa: E501
+def tasks_get(pageId, type=None):  # noqa: E501
     """Returns all related tasks according to the pageId.
 
     Returns the published tasks, the max number is 10. If the page is the last page, the return all left. # noqa: E501
 
     :param pageId: Page number
     :type pageId: int
+    :param type: default, recommend, easy
+    :type type: str
 
     :rtype: List[Task]
     """

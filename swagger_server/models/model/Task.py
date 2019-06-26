@@ -60,6 +60,13 @@ class TaskTable(object):
         result = Database.query(sql, fetchone=True)
         return result
 
+    #
+    def get_task_detail(task_id):
+        """
+        获取任务的基本信息task表　以及其创建者的photo, nickname, phone, userid
+
+        """
+
     @staticmethod
     def get_accepted_task(user_id):
         """
@@ -87,7 +94,7 @@ class TaskTable(object):
     #
     def get_task_participants(self, task_id):
         """
-        获取某任务的参加用户
+        获取某任务的参加用户的信息包括　photo, nickname, phone, userid
         """
         sql="SELECT user.user_id, user.photo, user.nickname, "\
             "stu_identity.phone_number, com_identity.phone_number "\
@@ -116,17 +123,18 @@ class TaskTable(object):
         return result
 
     #
-    def commit_job(self, user_id, task_id, files):
+    def commit_job(self, user_id, task_id, file):
         """
-            任务参与者上传其工作证明
-            user_task_jobs 表
+            任务参与者上传其工作证明 file xml
+           
+            
         """
         return ""
     
     #
-    def agree_job(self, publisher_id, participant_id, task_id)
+    def agree_job(self, publisher_id, participant_id, task_id, agree=True)
     """
-        任务发布者接受任务参与者的任务证明
+        任务发布者接受或者拒绝任务参与者的任务证明
     """
 
     def update_task(self, task_id,  **kwargs):

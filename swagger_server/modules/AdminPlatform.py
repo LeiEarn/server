@@ -65,4 +65,4 @@ class AdminPlatform():
             return 'this user is not in the %s waiting list' % identity
 
 
-        return (True, UMS.audit_user(user_id, identity, audit))
+        return UMS.audit_user(user_id, identity, audit)

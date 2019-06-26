@@ -65,7 +65,6 @@ class ManagementSystem:
                 user= self.register(unionid=unionid)
                 persistant_result = persistentSystem.save(wechat_server_reply= wechatresult, user = user)
                 return user
-        
 
     def register(self, unionid=None):
         """
@@ -86,8 +85,7 @@ class ManagementSystem:
             return user
         else:
             return user
-    
-    
+
     def prove(self, ident_info):
         """
             用户发起认证请求
@@ -157,7 +155,6 @@ class ManagementSystem:
         return User.table.get_users(user_type=user_type,
                                     begin=page*100,
                                     end=(page+1)*100)
-
     @staticmethod
     def get_user_info(user_id):
         """

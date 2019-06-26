@@ -257,10 +257,13 @@ class UserTable(object):
             with connect.cursor() as cursor:
                 cursor.execute(sql)
                 cursor.execute(sql_)
-            return 'success audit'
+            connect.commit()
+
+            return (True, 'success audit')
         except Exception as e:
+            print(e)
             connect.rollback()
-            return 'Database execute error : %s' %e
+            return (False, 'Database execute error : %s' %e)
 
 
 
@@ -315,8 +318,14 @@ class User(object):
                 self.isprove = kwargs.get('isprove')
             if not hasattr(self, 'identity') :
                 self.identity = kwargs.get('identity')
+
         def get_type(self):
             return {'isprove': self.isprove, 'identity': self.identity}
+
+        def info_dict(self):
+            return {key:self[key] for key in self.__slot__}
+
+
     # 未认证
     class UnprovedUser(BasicUser):
         def __init__(self, *args, **kwargs):
@@ -325,8 +334,6 @@ class User(object):
                 if key in User.UnprovedUser.__slots__:
                     self.__setattr__(key, value)
                     kwargs.pop(key)
-        
-
 
     # 学生
     class Student(BasicUser):
@@ -338,7 +345,6 @@ class User(object):
                 if key in User.Student.__slots__:
                     self.__setattr__(key, value)
                     kwargs.pop(key)
-            
 
     # 公司
     class Company(BasicUser):
@@ -354,6 +360,7 @@ class User(object):
 
     isprove_list = ['N','W','F','P' ]
     identity_dict = {'U': UnprovedUser,  'S': Student, 'C': Company}
+
     def __new__(cls, *args, **kwargs):
         if 'isprove' in kwargs:
             if kwargs.get('isprove') not in cls.isprove_list:

@@ -6,25 +6,30 @@ import requests
 import json
 import uuid
 import hashlib 
-
+import random
+import string
 from PIL import Image
 import flask
 from flask import (
-    Blueprint, flash, redirect, request, session, g, url_for,
+    Blueprint, flash, redirect, request, session, g, url_for,Response,
     Flask, render_template, jsonify, request, make_response, send_from_directory, abort
 )
+from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class
 import datetime
 import base64
 from io import StringIO
 from flask import current_app
+
+import swagger_server.config as config
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 ALLOWED_EXTENSIONS = set(['jpeg', 'png', 'gif']) 
 
 
  
-bp = Blueprint('img_bp', __name__, url_prefix='/img')
+bp = Blueprint('img_bp', __name__, url_prefix='/')
 
+uploaded_photos = UploadSet('photos')
 
 def save_file(f): 
     file_dir = os.path.join(basedir, current_app.config['UPLOAD_FOLDER'])
@@ -38,6 +43,43 @@ def save_file(f):
             f.save(os.path.join(file_dir, new_filename))
     except IOError: 
         print("error")
+
+
+
+def gen_code():
+    code = ''.join(random.sample(string.ascii_letters + string.digits, 8))
+    return code
+
+@bp.route("/images", methods=['POST']) 
+def upload_temp_image():
+    if request.method == 'POST':
+        # check if the post request has the photo part
+        if 'photo' not in request.files:
+            return jsonify({'code': -1, 'photoname': '', 'msg': 'No photo part'})
+        photo = request.files['photo']
+        # if user does not select photo, browser also submit a empty part without photoname
+        if photo.filename == '':
+            return jsonify({'code': -1, 'photoname': '', 'msg': 'No selected photo'})
+        else:
+            try:
+                photo.filename = gen_code() + '.png'
+                photoname = uploaded_photos.save(photo)
+                return jsonify({'code': 0, 'photoname': photoname, 'msg': uploaded_photos.url(photoname)})
+            except Exception as e:
+                print(e)
+                return jsonify({'code': -1, 'photoname': '', 'msg': 'Error occurred'})
+    else:
+        return jsonify({'code': -1, 'photoname': '', 'msg': 'Method not allowed'})
+
+@bp.route("/_uploads/photos/<image_path>")
+def show_image(image_path):
+    '''
+    利用图片url用于显示
+    '''
+    with open(config.UPLOADED_PHOTOS_DEST + image_path, 'rb') as f:
+        image = f.read()
+    pic_url = Response(image, mimetype="image/jpeg")
+    return pic_url
 
 
 @bp.route('/upload')

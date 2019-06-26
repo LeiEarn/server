@@ -171,7 +171,8 @@ class PersistentSystem(object):
         persistent_info = session.get('persistent_info')
         if persistent_info is not None:
             unionid =  persistent_info.get('unionid')
-            persistent_info['user_type'] = User.table.query_user(unionid= unionid).get_type()
+            g.user = User.table.query_user(unionid= unionid)
+            persistent_info['user_type'] =g. user.get_type()
             session['persistent_info'] = persistent_info
         
             g.persistent = persistent_info

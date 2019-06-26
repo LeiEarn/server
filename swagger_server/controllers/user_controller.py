@@ -31,14 +31,14 @@ def user_info_put(body):  # noqa: E501
         body = UserInfoWithoutId.from_dict(connexion.request.get_json())  # noqa: E501
     
     nickName = body.nick_name
-    avartUrl = body.avart_url
+    avatarUrl = body.avatar_url
 
-    result = user_manager.modify(nick_name =nickName, avart_url = avartUrl)
+    result = user_manager.modify(nick_name =nickName, avatar_url = avatarUrl)
     if result is not None:
          return UserInfo(
             user_id=result.user_id, 
             nick_name=result.nickname,
-            avart_url=result.photo,
+            avatar_url=result.photo,
             prove_state=result.isprove)
     else:
         return ErrorResponse(message="error")
@@ -55,6 +55,7 @@ def user_proof_get(userId):  # noqa: E501
     :rtype: IdenInfoWithCredit
     """
     info = user_manager.get_user_detail(userId)
+    print(info)
     return IdenInfoWithCredit(
         iden_info= IdenInfo(
                 name=info.get('name'),
@@ -101,15 +102,17 @@ def user_session_post(body):  # noqa: E501
     if connexion.request.is_json:
         body = LoginCode.from_dict(connexion.request.get_json())  # noqa: E501
     js_code = body.js_code
-    result = user_manager.login(js_code)
+    app_id = body.app_id
+    app_secret = body.app_secret
+    result = user_manager.login(js_code=js_code, app_id=app_id, app_secret=app_secret)
     if result is not None:
         return UserInfo(
             user_id=result.user_id, 
             nick_name=result.nickname,
-            avart_url=result.photo,
+            avatar_url=result.photo,
             prove_state=result.isprove)
     else:
-        return ErrorResponse(message="登录失败")
+        return ErrorResponse(message="登录失败"), 400
     return 'do some magic!'
 
 
@@ -158,4 +161,4 @@ def user_user_id_proof_state_get(userId):  # noqa: E501
     if info is not None:
         return ProveState(prove_state=info.isprove)
     else:
-        return ErrorResponse(message="error")
+        return ErrorResponse(message="error"), 400

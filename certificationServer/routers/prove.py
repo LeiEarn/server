@@ -152,11 +152,12 @@ def get_user_info():
             if identity != user['identity']:
                 return bad('wrong identity')
         else:
-            identity = user['identity']
+            identity = user.identity
 
         data = UMS.get_indentity_info(user_id, identity)
         if data is None:
             return bad('nothing found')
+
         data.update(user.info_dict())
         print(data)
         return ok(json.dumps(data))

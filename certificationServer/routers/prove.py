@@ -128,7 +128,7 @@ def get_task_count():
         if task_type is None or task_state is None:
             return bad('task type/state error')
 
-        record_num = TMS.get_task_count(task_type, task_state)
+        record_num = TMS.get_task_count(state=task_state, type=task_type)
 
         print('record_num', record_num)
 

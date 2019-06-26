@@ -249,17 +249,14 @@ class UserTable(object):
     def audit(user_id, identity, audit):
         audit = 'P' if audit else 'F'
         sql = 'UPDATE user SET user.isprove=\'%s\' WHERE user.user_id = %d;' % (audit, user_id)
-
-        if identity == 'C':
-            sql += 'UPDATE com_identity SET state_prove=\'%s\' WHERE user_user_id = %d;' % (audit, user_id)
-        else:
-            sql += 'UPDATE stu_identity SET state_prove=\'%s\' WHERE user_user_id = %d;' % (audit, user_id)
-
-        print(sql)
+        sql_ = 'UPDATE %s SET state_prove=\'%s\' WHERE user_user_id = %d;' % \
+               ('com_identity' if identity == 'C' else 'stu_identity', audit, user_id)
+        print(sql,sql_)
         try:
             connect = Database.get_conn()
             with connect.cursor() as cursor:
-                cursor.executemany(sql)
+                cursor.execute(sql)
+                cursor.execute(sql_)
             return 'success audit'
         except Exception as e:
             connect.rollback()

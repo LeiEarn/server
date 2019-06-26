@@ -287,6 +287,19 @@ class UserTable(object):
             connect.rollback()
             return (False, 'Database execute error : %s' %e)
 
+    @staticmethod
+    def get_school_count():
+        sql = 'SELECT school, COUNT(*) as count'\
+              'FROM stu_identity'\
+               'GROUP BY school'
+        return Database.query(sql)
+
+    @staticmethod
+    def get_company_count():
+        sql = 'SELECT name, COUNT(*) as count'\
+              'FROM com_identity'\
+              'GROUP BY name'
+        return Database.query(sql)
 
 
 """

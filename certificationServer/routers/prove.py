@@ -117,6 +117,21 @@ def specific_user_count():
     else:
         return bad('use POST')
 
+@app.route('/api/v1/get_company_count', ['POST'])
+def get_company_count():
+    if request.method == 'POST':
+        data = request.get_data()
+        json_data = json.loads(data.decode('utf-8'))
+        print('data', json_data)
+
+        type = json_data.get('tyoe', None)
+        if type not in ['company', 'college']:
+            return bad('wrong type')
+
+        return UMS.get_company_count(type)
+    else:
+        return bad('use POST')
+
 @app.route('/api/v1/get_task', methods=['POST'])
 def get_task():
     if request.method == 'POST':

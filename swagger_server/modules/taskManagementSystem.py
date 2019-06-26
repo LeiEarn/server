@@ -185,8 +185,8 @@ class taskManagementSystem(object):
         接受者：提交工作
         """
         files = job.files
-        result = Task.taskTable.commit_job(user_id=user_id, task_id,=task_id files=files )
-         if isinstance(result, Exception):
+        result = Task.taskTable.commit_job(user_id=user_id, task_id=task_id, file=files )
+        if isinstance(result, Exception):
             return 'error', "提交工作失败"
         else:
             return 'success', "提交工作"

@@ -126,7 +126,7 @@ def low_credit_count():
 
         credit = json_data.get('credit', None)
 
-        if isinstance(credit, int):
+        if not isinstance(credit, int):
             return bad('bad credit')
 
         return ok(json.dumps({'count': UMS.low_credit_count(credit)}))

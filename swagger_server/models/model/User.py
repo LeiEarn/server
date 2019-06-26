@@ -330,8 +330,8 @@ class User(object):
         def get_type(self):
             return {'isprove': self.isprove, 'identity': self.identity}
 
-        def info_dict(self):
-            return { key:self.__getattribute__(key) for key in self.__slots__}
+        def info_basic_dict(self):
+            return { key:self.__getattribute__(key) for key in User.BasicUser.__slots__}
 
 
     # 未认证
@@ -370,6 +370,7 @@ class User(object):
     identity_dict = {'U': UnprovedUser,  'S': Student, 'C': Company}
 
     def __new__(cls, *args, **kwargs):
+
         if 'isprove' in kwargs:
             if kwargs.get('isprove') not in cls.isprove_list:
                 kwargs['isprove'] = 'N'

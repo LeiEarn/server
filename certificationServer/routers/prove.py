@@ -128,7 +128,7 @@ def get_company_count():
         if type not in ['company', 'college']:
             return bad('wrong type')
 
-        return UMS.get_company_count(type)
+        return ok(json.dumps(UMS.get_company_count(type)))
     else:
         return bad('use POST')
 

@@ -171,7 +171,7 @@ class taskManagementSystem(object):
         接受者：提交任务
         """
         files = job.files
-        result = Task.taskTable.commit_job(user_id=user_id, task_id,=task_id files=files )
+        result = Task.taskTable.commit_job(user_id=user_id, task_id=task_id ,files=files )
         pass
 
 

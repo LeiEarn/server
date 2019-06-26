@@ -42,6 +42,14 @@ def task_task_id_accepter_get(taskId, userId):  # noqa: E501
 
     :rtype: List[UserInfoWithTel]
     """
+    results = task_mangager.get_task_accepter(task_id=taskId, user_id = userId)
+    return [
+            UserInfoWithTel(
+                avatar_url= results['photo'],
+                nick_name=results['nickname'],
+                tel=results['phone_number']) 
+            for item in results
+        ]
     return 'do some magic!'
 
 
@@ -72,6 +80,11 @@ def task_task_id_info_delete(taskId, userId):  # noqa: E501
 
     :rtype: None
     """
+    result = task_mangager.abort_task(task_id=taskId, user_id = userId)
+    if result is None or 'error' in result:
+        return ErrorResponse(result[1])
+    else:
+        return 'success', 200
     return 'do some magic!'
 
 
@@ -85,6 +98,10 @@ def task_task_id_info_get(taskId):  # noqa: E501
 
     :rtype: TaskDetailWithPublisher
     """
+    task = task_mangager.get_task_detail(task_id=taskId)
+    if task is not None:
+        return TaskDetailWithPublisher(
+        )
     return 'do some magic!'
 
 
@@ -102,6 +119,11 @@ def task_task_id_info_put(taskId, body):  # noqa: E501
     """
     if connexion.request.is_json:
         body = ExtraTaskInfo.from_dict(connexion.request.get_json())  # noqa: E501
+    result= task_mangager.add_info(task_id=taskId, content = body.content)
+    if result is  None or 'error' in result:
+        return ErrorResponse('add fail')
+    else:
+        return 'success', 200
     return 'do some magic!'
 
 
@@ -164,6 +186,22 @@ def task_user_id_get(userId, type):  # noqa: E501
 
     :rtype: List[Task]
     """
+    tasks = task_mangager.get_related_tasks(userId=userId, Type=type)
+    if tasks is None:
+        return ErrorResponse("error")
+    else:
+        return [ 
+            Task(
+                id = item['task_id'],
+                money= item['money'],
+                icon= item['icon'],
+                title=item['title'],
+                max_num=item['max_num'],
+                desc=item['task_intro'],
+                part_num=item['participants_num']
+            )
+            for item in tasks
+         ]   
     return 'do some magic!'
 
 
@@ -181,7 +219,11 @@ def task_user_id_post(userId, body):  # noqa: E501
     """
     if connexion.request.is_json:
         body = TaskDetail.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+    result = task_mangager.commit_task(body)
+    if 'error' in result:
+        return ErrorResponse(result[1])
+    else:
+        return 'success', 200
 
 
 def tasks_get(pageId):  # noqa: E501
@@ -202,6 +244,7 @@ def tasks_get(pageId):  # noqa: E501
             Task(
                 id = item['task_id'],
                 money= item['money'],
+                icon= item['icon'],
                 title=item['title'],
                 max_num=item['max_num'],
                 desc=item['task_intro'],

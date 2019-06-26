@@ -107,6 +107,7 @@ class Database:
             print(e) 
             # error rollback 
             connection.rollback() 
+            result =e
         finally: 
             connection.close() 
         

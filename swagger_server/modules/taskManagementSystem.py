@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from ..models.model.Task import Task
 from ..models.model.User import User as User
-
+import datetime
 from flask import g, session
 
 from .AdminPlatform import AdminPlatform
@@ -12,43 +12,37 @@ class taskManagementSystem(object):
         pass
 
     """
-    发布者：提交任务 -> 
+    
+    """
+    def commit_task(self, task):
+        """
+        发布者：提交任务 -> 
         管理员：审核
         tMS: 写入db（任务状态：待审`核）
-    """
-    def commit_task(self,
-            publish_id,
-            title,
-            task_type,
-            wjx_id,
-            task_intro,
-            max_num,
-            participants_num,
-            money,
-            sign_start_time,
-            sign_end_time):
-        """
+
         :param publisher_id:
         :param task:
         :return:
         """
-
+        start_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         # create new task and write it to db
-        task = Task.taskTable.create_task(
+        result = Task.taskTable.create_task(
             publish_id = g.get('persistent').get('user_id'),
-            title = title,
-            type_ =task_type,
-            wjx_id=wjx_id,
-            task_intro=task_intro,
-            max_num=max_num,
-            participants_num=participants_num,
-            money=money,
-            sign_start_time=sign_start_time,
-            sign_end_time=sign_end_time)
-
+            title = task.title,
+            type_ =task.task_type,
+            wjx_id=task.wjx_id,
+            task_intro=task.task_intro,
+            max_num=task.max_num,
+            participants_num=task.participants_num,
+            money=task.money,
+            sign_start_time=start_time,
+            sign_end_time=task.sign_end_time)
+        if  isinstance(result, Exception):
+            return ('error', "create fail")
         # admin audit this task
         AdminPlatform.commit_new_task(task)
 
+    
 
     def publish_task(self, task):
         """任务审核成功-> 进行中
@@ -58,12 +52,19 @@ class taskManagementSystem(object):
         #task.taskTable.create_task(task)
 
 
-
-    def add_info(self):
+    def add_info(self, task_id, content):
         """
         发布者：增加任务说明
         """
-        pass
+        old_intro = Task.taskTable.get_task_intro(task_id=task_id)
+        if 'task_intro' in old_intro:
+            result = Task.taskTable.update_task_intro(task_id, content+old_intro.get('task_intro'))
+            if not  isinstance(result, Exception):
+                return result
+            else:
+                return ('error', "fail")
+        else:
+            return ('error', 'no such task')
 
 
     def get_published_tasks(self, user_id):
@@ -78,25 +79,57 @@ class taskManagementSystem(object):
         pass
 
 
-    def abort_task(self, user_id):
+    def abort_task(self, task_id, user_id):
         """
         发布者：终止任务
         """
         if user_id is not g.user_id:
-            return None
+            return ('error', 'user identity error')
         else:
-            task = Task.taskTable.get_published_task(user_id)
-        pass
+            task = Task.taskTable.get_task_info(task_id=task_id)
+            
+            if task is not None and 'participants_num' in task:
+                number = task['participants_num']
+                if number ==0:
+                    result = Task.taskTable.abort_task(task['task_id'])
+                    if not isinstance(result, Exception):
+                        return ('success')
+                    else:
+                        return ('error', 'unknown error')
+                else:
+                    return ('error', 'participants is not zero')
+            else:
+                return ('error', 'task not exist')
+
+    def get_task_accepter(self, task_id, user_id):
+        if user_id ==  g.get('persistent').get('user_id'):
+            return ('error', 'identity error')
+        task = Task.taskTable.get_task_info(task_id = task_id)
+        if task is None:
+            return ('error', 'no such task')
+        accepters = Task.taskTable.get_task_participants(task_id = task_id)
+        return accepters
 
 
     def get_task_detail(self, task_id):
         """
-        获取任务信息
+        获取任务信息以及发布者信息
         """
 
         task = Task.taskTable.get_task_info(task_id)
-        return task
-        pass
+        if task is None:
+            return ('error', 'no such task')
+        user = User.table.get_user_info(user_id=task['publish_id'])
+
+        return task, user
+
+    def get_related_tasks(self, userId, Type):
+        if Type =="acceptment":
+            result = Task.taskTable.get_accepted_task(user_id=userId)
+        elif Type == "publishment":
+            result = Task.taskTable.get_accepted_task(user_id = userId)
+        return result
+
 
 
     def get_task_list(self, page_id):

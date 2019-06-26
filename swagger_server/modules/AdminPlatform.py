@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import threading
 from ..utils.db import Database
+from swagger_server.modules.userManagementSystem import ManagementSystem as UMS
+
 
 class AdminPlatform():
     _instance_lock = threading.Lock()
@@ -37,3 +39,30 @@ class AdminPlatform():
     def get_admin(account):
         sql = 'SELECT * FROM audit_administrator a WHERE a.account=\'%s\';' % (account)
         return Database.execute(sql, response=True)
+
+    @staticmethod
+    def audit_user(user_id, identity, audit):
+        """
+        state_prove : U W F S
+        :param user_id:  user id
+        :param identity: 'S' or 'C'
+        :param audit: True or False
+        :return:
+        """
+        user = UMS.get_user_info(user_id)
+        if user['isprove'] != 'W':
+            return 'this use is not in the waiting list'
+
+        if identity not in ['S', 'C']:
+            return 'identity is wrong or None'
+
+        user = UMS.get_indentity_info(user_id, identity)
+
+        if len(user) != 1:
+            return 'cannot fount this user in %s' %identity
+
+        if user[0]['state_prove'] != 'W':
+            return 'this user is not in the %s waiting list' % identity
+
+
+        return (True, UMS.audit_user(user_id, identity, audit))

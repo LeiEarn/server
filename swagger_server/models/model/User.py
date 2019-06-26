@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-__all__ = ['User','UnprovedUser',  'Student', 'Company']
+__all__ = ['User', 'UnprovedUser',  'Student', 'Company']
 
 
 
@@ -232,7 +232,6 @@ class UserTable(object):
 
         return Database.execute(sql, response=True)[0]['count']
 
-
     @staticmethod
     def get_users(user_type='all', begin=0, end=100):
         if user_type == 'all':
@@ -245,6 +244,24 @@ class UserTable(object):
         for user in result:
             user['create_date'] = str(user['create_date'])
         return result
+
+    @staticmethod
+    def audit(user_id, identity, audit):
+        audit = 'P' if audit else 'F'
+        sql = 'UPDATE user SET user.isprove=\'%s\' WHERE user.user_id = %d;' % (audit, user_id)
+
+        if identity == 'C':
+            sql += 'UPDATE com_identity SET state_prove=\'%s\' WHERE user_user_id = %d;' % (audit, user_id)
+        else:
+            sql += 'UPDATE stu_identity SET state_prove=\'%s\' WHERE user_user_id = %d;' % (audit, user_id)
+
+        print(sql)
+        try:
+            Database.execute(sql)
+            return 'success audit'
+        except:
+            return 'Database execute error'
+
 
 """
 

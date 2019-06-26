@@ -172,13 +172,18 @@ def audit_user():
         print('data', json_data)
 
         user_id = json_data.get('user_id', None)
-        isprove = UMS.get_user_info(user_id)['isprove']
-
-        if  isprove != 'W':
-            return bad('this use is not in the waiting list')
-
+        identity = json_data.get('identity', None)
         audit = json_data.get('audit', None)
 
+        if not (user_id and identity and audit):
+            return bad('wrong data value')
+
+        resutl = AP.audit_user(user_id, identity, audit)
+
+        if isinstance(resutl, tuple) and resutl[0]:
+            return ok(resutl[1])
+        else:
+            return bad('Unknown error')
 
     else:
         return bad('please use POST')

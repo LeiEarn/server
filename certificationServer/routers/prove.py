@@ -156,7 +156,11 @@ def get_task_count():
 
         print('record_num', record_num)
 
-        return ok(json.dumps({'count': record_num}))
+        if record_num[0]:
+            return ok(json.dumps({'count': record_num[1]}))
+        else:
+            return bad(json.dumps(record_num[1]))
+
     return bad('please user POST!')
 
 

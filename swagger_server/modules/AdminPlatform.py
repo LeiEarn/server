@@ -50,7 +50,7 @@ class AdminPlatform():
         :return:
         """
         user = UMS.get_user_info(user_id)
-        if user['isprove'] != 'W':
+        if user.isprove != 'W':
             return 'this use is not in the waiting list'
 
         if identity not in ['S', 'C']:

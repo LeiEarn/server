@@ -181,10 +181,12 @@ def audit_user():
         resutl = AP.audit_user(user_id, identity, audit)
 
         if isinstance(resutl, tuple) and resutl[0]:
-            return ok(resutl[1])
+            if resutl[0]:
+                return ok(resutl[1])
+            else:
+                return bad('Unknown error')
         else:
-            return bad('Unknown error')
-
+            return bad(resutl)
     else:
         return bad('please use POST')
 

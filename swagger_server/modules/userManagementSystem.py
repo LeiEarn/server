@@ -151,6 +151,9 @@ class ManagementSystem:
         return User.table.user_count(user_type)
 
     @staticmethod
+    def specific_user_count(gender='all', identity='U'):
+        return User.table.specific_user_count(gender, identity)
+    @staticmethod
     def get_users(user_type='all', page=0):
         return User.table.get_users(user_type=user_type,
                                     begin=page*100,

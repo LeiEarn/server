@@ -243,6 +243,18 @@ class UserTable(object):
         return Database.execute(sql, response=True)[0]['count']
 
     @staticmethod
+    def specific_user_count(gender='all', identity='S'):
+        sql = 'SELECT COUNT(*) as count '\
+            + 'FROM {} as user '.format('stu_identity' if identity=='S' else 'com_identity') \
+            + 'WHERE user.gender=\'{}\''.format(gender)
+        print(sql)
+
+        data = Database.query(sql)
+        if isinstance(data, Exception):
+            return False, data
+        else:
+            return True, data[0]['count']
+    @staticmethod
     def get_users(user_type='all', begin=0, end=100):
         if user_type == 'all':
             sql = 'SELECT * FROM user LIMIT %d OFFSET %d;' % (end - begin, begin)

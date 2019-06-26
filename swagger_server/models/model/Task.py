@@ -226,9 +226,14 @@ class TaskTable(object):
 
 
 
-        sql = 'SELECT COUNT(*) as count FROM task WHERE task.state {} and task.type {}'.format(state, type)
+        sql = 'SELECT COUNT(*) as count FROM task WHERE task.state {} and task.type {};'.format(state, type)
+        print(sql)
+        data = Database.execute(sql, response=True)
 
-        return Database.execute(sql, response=True)[0]['count']
+        if isinstance(data, Exception):
+            return False, data
+        else:
+            return True, data[0]['count']
 
     @staticmethod
     def get_tasks(task_type='all', begin=0, end=100):

@@ -44,7 +44,7 @@ class TaskTable(object):
              "audit_administrator_audit_id": '00227'
              })
 
-        sql = "INSERT INTO task(title, type_, publish_id, state, wjx_id, task_intro, max_num, participants_num, money," \
+        sql = "INSERT INTO task(title, type, publish_id, state, wjx_id, task_intro, max_num, participants_num, money," \
               "release_time, sign_start_time, sign_end_time, audit_administrator_audit_id)" \
               "VALUES ({title}, {type_}, {publish_id}, {state}, {wjx_id}, {task_intro}, {max_num}, {participants_num}, " \
               "{money}, {release_time}, {sign_start_time}, {sign_end_time}, {audit_administrator_audit_id});"\

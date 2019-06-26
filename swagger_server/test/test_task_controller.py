@@ -127,7 +127,8 @@ class TestTaskController(BaseTestCase):
 
         Publisher agree the job of the user.
         """
-        query_string = [('userId', 'userId_example')]
+        query_string = [('userId', 'userId_example'),
+                        ('state', 'state_example')]
         response = self.client.open(
             '//task/{taskId}/job'.format(taskId='taskId_example'),
             method='PUT',

@@ -565,6 +565,11 @@ paths:
         in: "query"
         required: true
         type: "string"
+      - name: "state"
+        in: "query"
+        description: "agree, reject"
+        required: true
+        type: "string"
       responses:
         200:
           description: "success"

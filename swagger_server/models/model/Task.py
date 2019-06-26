@@ -49,12 +49,12 @@ class TaskTable(object):
               "VALUES ({title}, {type_}, {publish_id}, {state}, {wjx_id}, {task_intro}, {max_num}, {participants_num}, " \
               "{money}, {release_time}, {sign_start_time}, {sign_end_time}, {audit_administrator_audit_id});"\
             .format(values)
-        Database.execute(sql)
+        Database.execute(sql, response=True)
 
     @staticmethod
     def get_task_info(task_id):
         sql = 'SELECT * FROM task WHERE task.task_id=%d;' % (task_id)
-        result = Database.execute(sql, response=True)
+        result = Database.query(sql, fetchone=True)
         return result
 
     @staticmethod
@@ -63,12 +63,36 @@ class TaskTable(object):
         result = Database.execute(sql, response=True)
         return result
 
+    def get_published_task(self, user_id):
+        sql = "SELECT * FROM user_has_task WHERE user_id = {user_id}".format(user_id=user_id)
+        result = Database.query(sql)
+        return result
 
     def abort_task(self, task_id):
-        return ""
+        sql = "UPDATE task SET state=F WHERE task_id={task_id}".format(task_id=task_id)
+        result = Database.execute(sql)
+        return result
 
-    def add_task_info(self):
-        pass
+    def get_task_participants(self, task_id):
+        """
+        获取某任务的参加用户
+        """
+        sql="SELECT user.user_id, user.photo, user.nickname "\
+            " FROM user, task, user_has_task WHERE task_id='{task_id}' AND "\
+                " task_id=user_has_task.task_task_id AND user_has_task.user_user_id=user_id"\
+                .format(task_id = task_id)
+        return Database.query(sql)
+    def get_task_intro(self, task_id):
+        sql = "SELECT  task_intro From task "\
+            "Where task_id={task_id}".format(task_id=task_id)
+        result = Database.query(sql)
+        return result
+    def update_task_intro(self, task_id, content):
+        sql = "UPDATE task SET task_intro={content} "\
+                    "WHERE task_id={task_id}"\
+                        .format(content=content, task_id = task_id)
+        result = Database.execute(sql, response=True)
+        return result
 
     def commit_job(self, user_id, task_id):
         return ""

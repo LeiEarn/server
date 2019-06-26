@@ -56,6 +56,14 @@ class UserTable(object):
                 intro=row['intro'],
                 create_date=row['create_date'].strftime('%Y-%m-%d %H:%M:%S'),
                 isprove=row['isprove'])
+    
+    def get_user_info(self, user_id):
+        sql =  "SELECT * " \
+                    " FROM user "\
+                    " WHERE user_id = '{id}'".format(id = user_id)
+        row = Database.query(sql=sql, fetchone=True)
+        
+        return row
 
     def load_detail_user_id(self, user_id=None, identity=None):
         """

@@ -117,6 +117,22 @@ def specific_user_count():
     else:
         return bad('use POST')
 
+@app.route('/api/v1/low_credit_count', methods=['POST'])
+def low_credit_count():
+    if request.method == 'POST':
+        data = request.get_data()
+        json_data = json.loads(data.decode('utf-8'))
+        print('data', json_data)
+
+        credit = json_data.get('credit', None)
+
+        if isinstance(credit, int):
+            return bad('bad credit')
+
+        return ok(json.dumps({'count': UMS.low_credit_count(credit)}))
+    else:
+        return bad('use POST')
+
 @app.route('/api/v1/get_company_count', methods=['POST'])
 def get_company_count():
     if request.method == 'POST':

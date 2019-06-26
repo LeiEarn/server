@@ -301,9 +301,9 @@ class UserTable(object):
 
     @staticmethod
     def low_credit_count(credit):
-        sql = 'SELECT COUNT(*) FROM user WHERE credit <= %d;' % credit
-
-        return Database.query(sql)
+        sql = 'SELECT COUNT(*) as count FROM user WHERE credit <= %d;' % credit
+        print(sql)
+        return Database.query(sql)[0]
 """
 
     NU: Unproved 

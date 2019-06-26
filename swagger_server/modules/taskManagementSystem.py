@@ -185,8 +185,8 @@ class taskManagementSystem(object):
         获取信息模块
     """
     @staticmethod
-    def get_task_count(user_type='all'):
-        return Task.taskTable.task_count(user_type)
+    def get_task_count(state='all', type='O'):
+        return Task.taskTable.task_count(state, type)
 
     @staticmethod
     def get_tasks(task_type='all', page=0):

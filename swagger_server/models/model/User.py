@@ -289,16 +289,14 @@ class UserTable(object):
 
     @staticmethod
     def get_school_count():
-        sql = 'SELECT school, COUNT(*) as count'\
-              'FROM stu_identity'\
-               'GROUP BY school'
+        sql = 'SELECT school, COUNT(*) as count FROM stu_identity GROUP BY school;'
+        print(sql)
         return Database.query(sql)
 
     @staticmethod
     def get_company_count():
-        sql = 'SELECT name, COUNT(*) as count'\
-              'FROM com_identity'\
-              'GROUP BY name'
+        sql = 'SELECT name, COUNT(*) as count FROM com_identity GROUP BY name;'
+        print(sql)
         return Database.query(sql)
 
 

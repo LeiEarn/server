@@ -15,7 +15,7 @@ class Task(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, id: str=None, icon: str=None, title: str=None, desc: str=None, money: float=None, max_num: int=None, part_num: int=None):  # noqa: E501
+    def __init__(self, id: str=None, icon: str=None, title: str=None, desc: str=None, money: float=None, max_num: int=None, part_num: int=None, is_commited: bool=None):  # noqa: E501
         """Task - a model defined in Swagger
 
         :param id: The id of this Task.  # noqa: E501
@@ -32,6 +32,8 @@ class Task(Model):
         :type max_num: int
         :param part_num: The part_num of this Task.  # noqa: E501
         :type part_num: int
+        :param is_commited: The is_commited of this Task.  # noqa: E501
+        :type is_commited: bool
         """
         self.swagger_types = {
             'id': str,
@@ -40,7 +42,8 @@ class Task(Model):
             'desc': str,
             'money': float,
             'max_num': int,
-            'part_num': int
+            'part_num': int,
+            'is_commited': bool
         }
 
         self.attribute_map = {
@@ -50,7 +53,8 @@ class Task(Model):
             'desc': 'desc',
             'money': 'money',
             'max_num': 'maxNum',
-            'part_num': 'partNum'
+            'part_num': 'partNum',
+            'is_commited': 'isCommited'
         }
 
         self._id = id
@@ -60,6 +64,7 @@ class Task(Model):
         self._money = money
         self._max_num = max_num
         self._part_num = part_num
+        self._is_commited = is_commited
 
     @classmethod
     def from_dict(cls, dikt) -> 'Task':
@@ -222,3 +227,24 @@ class Task(Model):
         """
 
         self._part_num = part_num
+
+    @property
+    def is_commited(self) -> bool:
+        """Gets the is_commited of this Task.
+
+
+        :return: The is_commited of this Task.
+        :rtype: bool
+        """
+        return self._is_commited
+
+    @is_commited.setter
+    def is_commited(self, is_commited: bool):
+        """Sets the is_commited of this Task.
+
+
+        :param is_commited: The is_commited of this Task.
+        :type is_commited: bool
+        """
+
+        self._is_commited = is_commited

@@ -56,15 +56,11 @@ class taskManagementSystem(object):
         """
         发布者：增加任务说明
         """
-        old_intro = Task.taskTable.get_task_intro(task_id=task_id)
-        if 'task_intro' in old_intro:
-            result = Task.taskTable.update_task_intro(task_id, content+old_intro.get('task_intro'))
-            if not  isinstance(result, Exception):
-                return result
-            else:
-                return ('error', "fail")
+        result = Task.taskTable.append_task_intro(task_id, content)
+        if not  isinstance(result, Exception):
+            return result
         else:
-            return ('error', 'no such task')
+            return ('error', "fail")
 
 
     def get_published_tasks(self, user_id):
@@ -140,9 +136,13 @@ class taskManagementSystem(object):
         return tasks
 
     def get_accepted_tasks(self, user_id):
+        if user_id is not g.user_id:
+            return None
+        tasks = Task.taskTable.get_accepted_task(user_id = g.user_id)
 
-        tasks = Task.taskTable.get_accepted_task(union_id = g.union_id)
-
+    def get_task_jobs(self, task_id):
+        result = Task.taskTable.get_task_jobs(task_id)
+        return result
     def accept_task(self, user_id,  task_id):
         """
         用户：接受任务
@@ -150,8 +150,8 @@ class taskManagementSystem(object):
         if user_id is not g.user_id:
             return None
 
-        result = Task.taskTable.accept_task(user_id, task_id)
-        pass
+        result = Task.taskTable.participate_task(user_id, task_id)
+        return result
 
 
     def abondon_task(self, user_id, task_id):
@@ -162,14 +162,16 @@ class taskManagementSystem(object):
             return None
 
         result = Task.taskTable.abondon_task(user_id, task_id)
+        return result
         pass
 
 
-    def commit_job(self, user_id, task_id):
+    def commit_job(self, user_id, task_id, job):
         """
         接受者：提交任务
         """
-        result = Task.taskTable.commit_job(user_id, task_id)
+        files = job.files
+        result = Task.taskTable.commit_job(user_id=user_id, task_id,=task_id files=files )
         pass
 
 

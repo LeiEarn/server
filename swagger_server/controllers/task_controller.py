@@ -27,6 +27,8 @@ def task_task_id_accepter_delete(taskId, userId):  # noqa: E501
 
     :rtype: None
     """
+    result = task_mangager.abondon_task(user_id=userId, task_id=taskId)
+
     return 'do some magic!'
 
 
@@ -65,6 +67,9 @@ def task_task_id_accepter_post(taskId, userId):  # noqa: E501
 
     :rtype: None
     """
+    result = task_mangager.accept_task(user_id=userId, task_id=taskId)
+    
+
     return 'do some magic!'
 
 
@@ -139,6 +144,8 @@ def task_task_id_job_get(taskId, userId):  # noqa: E501
 
     :rtype: List[Cert]
     """
+    result = task_mangager.get_task_jobs(task_id=taskId)
+
     return 'do some magic!'
 
 
@@ -156,6 +163,9 @@ def task_task_id_job_post(taskId, body):  # noqa: E501
     """
     if connexion.request.is_json:
         body = Cert.from_dict(connexion.request.get_json())  # noqa: E501
+    
+    result = task_mangager.commit_job(user_id=body.user_id,task_id=taskId,job =body )
+    
     return 'do some magic!'
 
 

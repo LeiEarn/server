@@ -18,7 +18,6 @@ from swagger_server.models.prove_state import ProveState
 from swagger_server.models.task import Task
 from swagger_server.models.task_detail import TaskDetail
 from swagger_server.models.task_detail_with_publisher import TaskDetailWithPublisher
-from swagger_server.models.task_detail_with_user_id import TaskDetailWithUserId
 from swagger_server.models.url import Url
 from swagger_server.models.user_info import UserInfo
 from swagger_server.models.user_info_with_tel import UserInfoWithTel

@@ -16,7 +16,7 @@ class TaskDetail(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, type: str=None, wjx_id: str=None, title: str=None, desc: str=None, money: float=None, sum: int=None, part_num: int=None, condition: Condition=None):  # noqa: E501
+    def __init__(self, type: str=None, wjx_id: str=None, title: str=None, desc: str=None, time: str=None, money: float=None, max_num: int=None, part_num: int=None, condition: Condition=None):  # noqa: E501
         """TaskDetail - a model defined in Swagger
 
         :param type: The type of this TaskDetail.  # noqa: E501
@@ -27,10 +27,12 @@ class TaskDetail(Model):
         :type title: str
         :param desc: The desc of this TaskDetail.  # noqa: E501
         :type desc: str
+        :param time: The time of this TaskDetail.  # noqa: E501
+        :type time: str
         :param money: The money of this TaskDetail.  # noqa: E501
         :type money: float
-        :param sum: The sum of this TaskDetail.  # noqa: E501
-        :type sum: int
+        :param max_num: The max_num of this TaskDetail.  # noqa: E501
+        :type max_num: int
         :param part_num: The part_num of this TaskDetail.  # noqa: E501
         :type part_num: int
         :param condition: The condition of this TaskDetail.  # noqa: E501
@@ -41,8 +43,9 @@ class TaskDetail(Model):
             'wjx_id': str,
             'title': str,
             'desc': str,
+            'time': str,
             'money': float,
-            'sum': int,
+            'max_num': int,
             'part_num': int,
             'condition': Condition
         }
@@ -52,8 +55,9 @@ class TaskDetail(Model):
             'wjx_id': 'wjxId',
             'title': 'title',
             'desc': 'desc',
+            'time': 'time',
             'money': 'money',
-            'sum': 'sum',
+            'max_num': 'maxNum',
             'part_num': 'partNum',
             'condition': 'condition'
         }
@@ -62,8 +66,9 @@ class TaskDetail(Model):
         self._wjx_id = wjx_id
         self._title = title
         self._desc = desc
+        self._time = time
         self._money = money
-        self._sum = sum
+        self._max_num = max_num
         self._part_num = part_num
         self._condition = condition
 
@@ -103,7 +108,7 @@ class TaskDetail(Model):
     def wjx_id(self) -> str:
         """Gets the wjx_id of this TaskDetail.
 
-        if the type is '问卷星', return wjxId.  # noqa: E501
+        if the type is 'wjx', return wjxId.  # noqa: E501
 
         :return: The wjx_id of this TaskDetail.
         :rtype: str
@@ -114,7 +119,7 @@ class TaskDetail(Model):
     def wjx_id(self, wjx_id: str):
         """Sets the wjx_id of this TaskDetail.
 
-        if the type is '问卷星', return wjxId.  # noqa: E501
+        if the type is 'wjx', return wjxId.  # noqa: E501
 
         :param wjx_id: The wjx_id of this TaskDetail.
         :type wjx_id: str
@@ -165,6 +170,27 @@ class TaskDetail(Model):
         self._desc = desc
 
     @property
+    def time(self) -> str:
+        """Gets the time of this TaskDetail.
+
+
+        :return: The time of this TaskDetail.
+        :rtype: str
+        """
+        return self._time
+
+    @time.setter
+    def time(self, time: str):
+        """Sets the time of this TaskDetail.
+
+
+        :param time: The time of this TaskDetail.
+        :type time: str
+        """
+
+        self._time = time
+
+    @property
     def money(self) -> float:
         """Gets the money of this TaskDetail.
 
@@ -186,27 +212,25 @@ class TaskDetail(Model):
         self._money = money
 
     @property
-    def sum(self) -> int:
-        """Gets the sum of this TaskDetail.
+    def max_num(self) -> int:
+        """Gets the max_num of this TaskDetail.
 
-        the num of people who have got money.  # noqa: E501
 
-        :return: The sum of this TaskDetail.
+        :return: The max_num of this TaskDetail.
         :rtype: int
         """
-        return self._sum
+        return self._max_num
 
-    @sum.setter
-    def sum(self, sum: int):
-        """Sets the sum of this TaskDetail.
+    @max_num.setter
+    def max_num(self, max_num: int):
+        """Sets the max_num of this TaskDetail.
 
-        the num of people who have got money.  # noqa: E501
 
-        :param sum: The sum of this TaskDetail.
-        :type sum: int
+        :param max_num: The max_num of this TaskDetail.
+        :type max_num: int
         """
 
-        self._sum = sum
+        self._max_num = max_num
 
     @property
     def part_num(self) -> int:

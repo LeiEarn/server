@@ -15,9 +15,11 @@ class UserInfoWithTel(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, avatar_url: str=None, nick_name: str=None, tel: str=None):  # noqa: E501
+    def __init__(self, user_id: str=None, avatar_url: str=None, nick_name: str=None, tel: str=None):  # noqa: E501
         """UserInfoWithTel - a model defined in Swagger
 
+        :param user_id: The user_id of this UserInfoWithTel.  # noqa: E501
+        :type user_id: str
         :param avatar_url: The avatar_url of this UserInfoWithTel.  # noqa: E501
         :type avatar_url: str
         :param nick_name: The nick_name of this UserInfoWithTel.  # noqa: E501
@@ -26,17 +28,20 @@ class UserInfoWithTel(Model):
         :type tel: str
         """
         self.swagger_types = {
+            'user_id': str,
             'avatar_url': str,
             'nick_name': str,
             'tel': str
         }
 
         self.attribute_map = {
+            'user_id': 'userId',
             'avatar_url': 'avatarUrl',
             'nick_name': 'nickName',
             'tel': 'tel'
         }
 
+        self._user_id = user_id
         self._avatar_url = avatar_url
         self._nick_name = nick_name
         self._tel = tel
@@ -51,6 +56,27 @@ class UserInfoWithTel(Model):
         :rtype: UserInfoWithTel
         """
         return util.deserialize_model(dikt, cls)
+
+    @property
+    def user_id(self) -> str:
+        """Gets the user_id of this UserInfoWithTel.
+
+
+        :return: The user_id of this UserInfoWithTel.
+        :rtype: str
+        """
+        return self._user_id
+
+    @user_id.setter
+    def user_id(self, user_id: str):
+        """Sets the user_id of this UserInfoWithTel.
+
+
+        :param user_id: The user_id of this UserInfoWithTel.
+        :type user_id: str
+        """
+
+        self._user_id = user_id
 
     @property
     def avatar_url(self) -> str:

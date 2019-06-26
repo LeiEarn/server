@@ -17,35 +17,30 @@ class TaskDetailWithPublisher(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, user: UserInfoWithTel=None, content: TaskDetail=None, is_publisher: bool=None, has_received: int=None):  # noqa: E501
+    def __init__(self, user: UserInfoWithTel=None, content: TaskDetail=None, has_received: int=None):  # noqa: E501
         """TaskDetailWithPublisher - a model defined in Swagger
 
         :param user: The user of this TaskDetailWithPublisher.  # noqa: E501
         :type user: UserInfoWithTel
         :param content: The content of this TaskDetailWithPublisher.  # noqa: E501
         :type content: TaskDetail
-        :param is_publisher: The is_publisher of this TaskDetailWithPublisher.  # noqa: E501
-        :type is_publisher: bool
         :param has_received: The has_received of this TaskDetailWithPublisher.  # noqa: E501
         :type has_received: int
         """
         self.swagger_types = {
             'user': UserInfoWithTel,
             'content': TaskDetail,
-            'is_publisher': bool,
             'has_received': int
         }
 
         self.attribute_map = {
             'user': 'user',
             'content': 'content',
-            'is_publisher': 'isPublisher',
             'has_received': 'hasReceived'
         }
 
         self._user = user
         self._content = content
-        self._is_publisher = is_publisher
         self._has_received = has_received
 
     @classmethod
@@ -100,27 +95,6 @@ class TaskDetailWithPublisher(Model):
         """
 
         self._content = content
-
-    @property
-    def is_publisher(self) -> bool:
-        """Gets the is_publisher of this TaskDetailWithPublisher.
-
-
-        :return: The is_publisher of this TaskDetailWithPublisher.
-        :rtype: bool
-        """
-        return self._is_publisher
-
-    @is_publisher.setter
-    def is_publisher(self, is_publisher: bool):
-        """Sets the is_publisher of this TaskDetailWithPublisher.
-
-
-        :param is_publisher: The is_publisher of this TaskDetailWithPublisher.
-        :type is_publisher: bool
-        """
-
-        self._is_publisher = is_publisher
 
     @property
     def has_received(self) -> int:

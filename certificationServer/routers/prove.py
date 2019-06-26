@@ -125,7 +125,7 @@ def get_task_count():
 
         task_type = json_data.get('task_type', None)
         task_state = json_data.get('task_state', None)
-        if task_type is None or task_state is None:
+        if task_type is None and task_state is None:
             return bad('task type/state error')
 
         record_num = TMS.get_task_count(state=task_state, type=task_type)

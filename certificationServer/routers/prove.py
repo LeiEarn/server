@@ -260,6 +260,31 @@ def audit_user():
     else:
         return bad('please use POST')
 
+@app.route('/api/v1/audit_task', methods=['POST'])
+def audit_task():
+    if request.method == 'POST':
+        data = request.get_data()
+        json_data = json.loads(data.decode('utf-8'))
+        print('data', json_data)
+
+        task_id = json_data.get('task_id', None)
+        audit = json_data.get('audit', None)
+
+        if not (task_id and audit is not None):
+            print(task_id, audit)
+            return bad('wrong data value')
+
+        resutl = AP.audit_task(task_id, audit)
+
+        if isinstance(resutl, tuple) and resutl[0]:
+            if resutl[0]:
+                return ok(resutl[1])
+            else:
+                return bad('Unknown error: %s' % resutl[1])
+        else:
+            return bad(resutl)
+    else:
+        return bad('please use POST')
 
 
 if __name__ == '__main__':

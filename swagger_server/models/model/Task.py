@@ -299,6 +299,19 @@ class TaskTable(object):
 
         return result
 
+    @staticmethod
+    def audit(task_id, audit):
+        audit = 'S' if audit else 'F'
+        sql = 'UPDATE task SET state= \'%s\'WHERE task_id=%d;'\
+        %(audit, task_id)
+        print(sql)
+
+        result = Database.execute(sql, response=True)
+        if isinstance(result, Exception):
+            print(result)
+            return False, 'Database execute error: %s' % result
+        else:
+            return True, 'success audit'
 
 class Task(object):
     """

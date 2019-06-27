@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 from ..models.model.Task import Task
-from ..models.model.User import User as User
 import datetime
 from flask import g, session
 
-from .AdminPlatform import AdminPlatform
 from .accessControlSystem import AccessControlSystem as access_control
 from swagger_server.utils.utils import load_data, dump_data
-AdminPlatform = AdminPlatform()
+
 class taskManagementSystem(object):
     def __init__(self):
         pass
@@ -66,7 +64,6 @@ class taskManagementSystem(object):
             -> TaskTable 写入database
         """
         #task.taskTable.create_task(task)
-
 
     def add_info(self, task_id, content):
         """
@@ -128,13 +125,14 @@ class taskManagementSystem(object):
         """
         accepters = Task.taskTable.get_task_participants(task_id = task_id)
         return accepters
-
-
-    def get_task_detail(self, task_id):
+    
+    @staticmethod
+    def get_task_detail(task_id):
         """
         获取任务信息以及发布者信息
         """
         task_with_user = Task.taskTable.get_task_detail(task_id)
+
         if task_with_user is None or len(task_with_user) is 0:
             return ('error', 'no such task')
         if task_with_user.get('job') is not None:
@@ -158,7 +156,6 @@ class taskManagementSystem(object):
 
         return task_with_user
 
-
     def get_related_tasks(self, userId, Type):
         if Type =="acceptment":
             result = Task.taskTable.get_accepted_task(user_id=userId)
@@ -167,7 +164,6 @@ class taskManagementSystem(object):
         else:
             result=None
         return result
-
 
     def get_task_list(self, page_id):
         """
@@ -180,14 +176,12 @@ class taskManagementSystem(object):
         tasks = Task.taskTable.get_tasks(task_type = 'succeed',  begin=begin, end =end)
         return tasks
 
-
     @access_control.owner_required(user_args='user_id',identity_error=('error', 'identity error'))
     def get_accepted_tasks(self, user_id):
         """
         接收者：获取接受的任务
         """
         tasks = Task.taskTable.get_accepted_task(user_id = user_id)
-
 
     def get_task_jobs(self, task_id):
         #? 主人判断
@@ -214,7 +208,6 @@ class taskManagementSystem(object):
             return 'error', '参加失败'
         return result
 
-
     @access_control.owner_required(user_args='user_id',identity_error=('error', 'identity error'))
     def abondon_task(self, user_id, task_id):
         """
@@ -225,7 +218,6 @@ class taskManagementSystem(object):
             return 'error', "放弃失败"
         else:
             return 'success', "放弃任务"
-
 
     @access_control.owner_required(user_args='user_id',identity_error=('error', 'identity error'))
     def commit_job(self, user_id, task_id, job):
@@ -245,7 +237,9 @@ class taskManagementSystem(object):
         else:
             return 'success', "提交工作"
 
-
+    @staticmethod
+    def audit_task(task_id, audit):
+        return Task.taskTable.audit(task_id, audit)
 
 
     """

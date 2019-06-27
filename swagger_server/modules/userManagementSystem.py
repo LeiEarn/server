@@ -181,6 +181,7 @@ class ManagementSystem:
         return User.table.get_users(user_type=user_type,
                                     begin=page*100,
                                     end=(page+1)*100)
+
     @staticmethod
     def get_user_info(user_id):
         """
@@ -206,7 +207,8 @@ class ManagementSystem:
             raise KeyError('Wrong identity %s' % identity)
 
 
-    def get_user_detail(self, user_id):
+    @staticmethod
+    def get_user_detail(user_id):
         """
         获取认证信息模块
         """

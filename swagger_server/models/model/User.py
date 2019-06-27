@@ -128,20 +128,26 @@ class UserTable(object):
         example:
             update_user(user_id=1, audit_id=1, type = 1)
         """
-        sql = "UPDATE user \
-            SET "
-        
+
+        updata = []
         for key, value in kwargs.items():
             if key in User.BasicUser.__slots__:
-                sql += " {key} = '{value}',".format(key = key, value= value)
-        sql = sql[:-1]
-        sql += "  WHERE wechat_id = '{unionid}'".format(unionid=unionid)
+                updata.append(" {key}={value}".format(key, value))
+            else:
+                raise KeyError(key)
+
+        sql = "UPDATE user SET" \
+        + ','.join(updata)
+        + "  WHERE wechat_id = '{unionid}'".format(unionid=unionid)
+
         print(sql)
         result = Database.execute(sql, response = True)
+        if isinstance(result, Exception):
+            return False, result
 
-        query_sql = "SELECT * FROM user WHERE wechat_id = '{unionid}'".format(unionid=unionid)
+        query_sql = "SELECT * FROM user WHERE wechat_id='{unionid}'".format(unionid=unionid)
         user = Database.query(query_sql, fetchone=True)
-        return user
+        return True, user
 
     def prove(self, user_id, identity, name,gender,phone_number,prove='no materials', school=None,company=None, id=None ):
         state_prove = 'W'

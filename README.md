@@ -1,6 +1,6 @@
 #Server Frontend
 ## depends
-python 3.7.1
+python 3.5
 
 Flask 1.0.2
 

@@ -37,7 +37,7 @@ class AdminPlatform():
         pass
 
     @staticmethod
-    def get_admin(account):
+    def get_admin(account: str) -> tuple:
         sql = 'SELECT * FROM audit_administrator a WHERE a.account=\'%s\';' % (account)
         return Database.execute(sql, response=True)
 
@@ -75,13 +75,13 @@ class AdminPlatform():
         :param audit: True or False
         :return:
         """
-        
+
         task = TMS.get_task_detail(task_id)
         print(task)
         task = task.get('task')
         if task['state'] != 'W':
             return 'this wask is not in the waiting list'
-       
+
 
         return TMS.audit_task(task_id, audit)
 

@@ -125,7 +125,7 @@ class taskManagementSystem(object):
         """
         accepters = Task.taskTable.get_task_participants(task_id = task_id)
         return accepters
-    
+
     @staticmethod
     def get_task_detail(task_id):
         """
@@ -135,6 +135,7 @@ class taskManagementSystem(object):
 
         if task_with_user is None or len(task_with_user) is 0:
             return ('error', 'no such task')
+
         if task_with_user.get('job') is not None:
             isagree = task_with_user.get('job').get('isagree')
         else:

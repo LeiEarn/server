@@ -75,11 +75,12 @@ class TaskTable(object):
                 ' FROM user as u, (select phone_number, user_com_id as id from com_identity where user_user_id={id}  '\
                                  ' UNION ALL '\
                                  ' select phone_number, user_stu_id as id from stu_identity where user_user_id={id} ) as a '\
-                ' WHERE u.user_id={id};'.format(id = id)
+                ' WHERE u.user_id={id};'.format(id=id)
         
         publisher = Database.query(sql2, fetchone=True)
         if publisher is None:
             return None
+
         user_id = publisher.get('user_id')
 
         sql3 = "SELECT isagree FROM user_has_task as ut  WHERE ut.user_user_id = {user_id} AND ut.task_task_id={task_id} "\

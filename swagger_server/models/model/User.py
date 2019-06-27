@@ -132,13 +132,13 @@ class UserTable(object):
         updata = []
         for key, value in kwargs.items():
             if key in User.BasicUser.__slots__:
-                updata.append(" {key}={value}".format(key, value))
+                updata.append(" {key}=\"{value}\" ".format(key=key, value=value))
             else:
                 raise KeyError(key)
 
         sql = "UPDATE user SET" \
-        + ','.join(updata)
-        + "  WHERE wechat_id = '{unionid}'".format(unionid=unionid)
+        + ','.join(updata) \
+        + "  WHERE wechat_id = \"{unionid}\"".format(unionid=unionid)
 
         print(sql)
         result = Database.execute(sql, response = True)

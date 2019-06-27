@@ -68,6 +68,7 @@ class Database:
             # 开启游标 
             with connection.cursor() as cursor:
                  # 返回响应结果数
+                print(sql)
                 sql_string = cls.sql_args_2_sql(sql, args)
                 effect_row = cursor.execute(sql_string) 
                 if fetchone: 
@@ -97,6 +98,7 @@ class Database:
         try: 
             result = None 
             with connection.cursor() as cursor: 
+                print(sql)
                 effect_row = cursor.execute(cls.sql_args_2_sql(sql, args)) 
                 if response: 
                     result = cursor.fetchall() 

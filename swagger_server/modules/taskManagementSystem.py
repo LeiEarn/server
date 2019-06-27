@@ -29,7 +29,7 @@ class taskManagementSystem(object):
         if user.balance < task.money:
             return ('error', 'no enough money')
 
-        payment = user.table.update_info(user.unionid, balance=user.balance - task.money)
+        payment = user.table.update_info(user.wechat_id, balance=user.balance - task.money)
 
         if not payment[0]:
             return ('error', 'payment error')
@@ -88,8 +88,11 @@ class taskManagementSystem(object):
         """
         发布者：终止任务
         """
-        number = Task.taskTable.get_task_part_num(task_id=task_id)
-        if number ==0:
+        result = Task.taskTable.get_task_part_num(task_id=task_id)
+        if result is None or result.get('number'):
+            return 'error', 'server error'
+        
+        if str(result.get('number')) ==str(0):
             result = Task.taskTable.abort_task(task_id)
             if not isinstance(result, Exception):
                 return ('success')
@@ -104,12 +107,12 @@ class taskManagementSystem(object):
         task = Task.taskTable.get_task_info(task_id=task_id)
         if 'publish_id' not in task:
             return 'error', 'no such task'
-        elif not str(task.get('publish_id')) == str(user_id):
+        elif  str(task.get('publish_id')) == str(user_id):
             return 'error', 'not your task'
 
-        if state is 'agree':
+        if state == 'agree':
             agree=True
-        elif state is 'reject':
+        elif state == 'reject':
             agree=False
         result = Task.taskTable.agree_job(participant_id = user_id, task_id=task_id, agree=agree)
         if isinstance(result, Exception):
@@ -131,7 +134,7 @@ class taskManagementSystem(object):
         """
         获取任务信息以及发布者信息
         """
-        task_with_user = Task.taskTable.get_task_detail(task_id)
+        task_with_user = Task.taskTable.get_task_detail(task_id, user_id=g.user.user_id)
 
         if task_with_user is None or len(task_with_user) is 0:
             return ('error', 'no such task')

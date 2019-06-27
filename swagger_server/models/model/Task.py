@@ -275,7 +275,11 @@ class TaskTable(object):
                   % (end - begin, begin)
         elif task_type == 'succeed':
             # 倒序
-            sql = 'SELECT * FROM task WHERE state=\'S\' ORDER BY task_id DESC LIMIT %d OFFSET %d;' \
+            sql = 'SELECT task.*, user.photo as icon FROM task, user WHERE state=\'S\' AND user.user_id=task.publish_id ORDER BY task.task_id DESC LIMIT %d OFFSET %d;' \
+                  % (end - begin, begin)
+        elif task_type == 'begin':
+            # 倒序
+            sql = 'SELECT task.*, user.photo as icon FROM task, user WHERE state=\'B\' AND user.user_id=task.publish_id ORDER BY task.task_id DESC LIMIT %d OFFSET %d;' \
                   % (end - begin, begin)
         else:
             raise KeyError('task type error')

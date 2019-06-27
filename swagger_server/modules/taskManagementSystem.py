@@ -169,7 +169,10 @@ class taskManagementSystem(object):
         获取所有任务列表
         :param page_id
         """
-        tasks = Task.taskTable.get_task_basic_inverse(page_id=page_id, size=10)
+        page_size =10
+        begin = page_id *page_size
+        end = begin + page_size
+        tasks = Task.taskTable.get_tasks(task_type = 'succeed',  begin=begin, end =end)
         return tasks
 
     @access_control.owner_required(user_args='user_id',identity_error=('error', 'identity error'))

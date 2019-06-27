@@ -26,6 +26,16 @@ class taskManagementSystem(object):
         :param task:
         :return:
         """
+
+        user = g.get('user')
+        if user.balance < task.money:
+            return ('error', 'no enough money')
+
+        payment = user.table.update_info(user.unionid, balance=user.balance - task.money)
+
+        if not payment[0]:
+            return ('error', 'payment error')
+
         start_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         # create new task and write it to db
         result = Task.taskTable.create_task(
@@ -40,7 +50,11 @@ class taskManagementSystem(object):
             sign_start_time=start_time,
             sign_end_time=task.time)
         if  isinstance(result, Exception):
-            return ('error', "create fail")
+
+            #roll back payment
+            print('roll back payment')
+            print(user.table.update_info(user.unionid, balance=user.balance))
+            return ('error', "error while creating ")
         else:
             return ('success', '成功')
         # admin audit this task
@@ -52,7 +66,6 @@ class taskManagementSystem(object):
             -> TaskTable 写入database
         """
         #task.taskTable.create_task(task)
-
 
     def add_info(self, task_id, content):
         """
@@ -132,7 +145,7 @@ class taskManagementSystem(object):
             return ('error', 'no such task')
         isagree = task_with_user.get('job').get('isagree')
 
-        task_with_user['task_job_state'] = 
+        # task_with_user['task_job_state'] =
         return task_with_user
 
 

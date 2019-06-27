@@ -220,7 +220,7 @@ def get_user_info():
         if data is None:
             return bad('nothing found')
 
-        data.update(user.info_dict())
+        data.update(user.info_basic_dict())
         print(data)
         return ok(json.dumps(data))
     return bad('error')

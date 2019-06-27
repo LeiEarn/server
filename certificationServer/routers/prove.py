@@ -158,11 +158,13 @@ def get_task():
         page      = json_data.get('page', None)
         task_type = json_data.get('task_type', None)
 
-        if page is None or task_type is None:
+        if page is None or task_type not in ['waiting', 'succeed', 'all']:
             return bad('key error')
 
         record_num = TMS.get_task_count(task_type)
-        if page > record_num // 100 + 1:
+
+
+        if record_num[0] and page > record_num[1] // 100 + 1:
             return bad('out of user size')
 
         data = TMS.get_tasks(task_type=task_type, page=page)

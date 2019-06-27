@@ -1,17 +1,12 @@
 # -*- coding: utf-8 -*-
+from ...utils.db import Database
+
 __all__ = ['User', 'UnprovedUser',  'Student', 'Company']
-
-
-
 import datetime
 import threading
 import pymysql
 print(__name__)
 
-from ...utils.db import Database
-
-
-        
 
 class UserTable(object):
     _instance_lock = threading.Lock()
@@ -257,6 +252,7 @@ class UserTable(object):
             return False, data
         else:
             return True, data[0]['count']
+
     @staticmethod
     def get_users(user_type='all', begin=0, end=100):
         if user_type == 'all':

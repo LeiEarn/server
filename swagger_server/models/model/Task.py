@@ -7,7 +7,6 @@ from ...utils.db import Database
 print(__name__)
 
 
-
 class TaskTable(object):
     _instance_lock = threading.Lock()
 
@@ -86,13 +85,17 @@ class TaskTable(object):
             'publisher': publisher,
             'job': job}
 
-    #目前的表查询是错的,还要关联task表，以及获得任务发布者的photo， 
+    #目前的表查询是错的,还要关联task表，以及获得任务发布者的photo，
     @staticmethod
     def get_accepted_task(user_id):
         """
         获取已经接受的任务的信息
         """
-        sql = "SELECT * FROM user_has_task WHERE user_user_id = {user_id}".format(user_id=user_id)
+        sql = \
+        'SELECT * FROM user_has_task, task'\
+        'WHERE user_has_task.user_user_id={} '\
+        'AND task.task_id=user_has_task.task_task_id'.format(user_id)
+
         result = Database.query(sql)
         return result
     
@@ -102,7 +105,10 @@ class TaskTable(object):
         """
         获取已发布任务的信息
         """
-        sql = "SELECT * FROM task WHERE publish_id = {user_id}".format(user_id=user_id)
+        sql = \
+            'SELECT * FROM task, user'\
+            'WHERE task.publish_id={user_id} AND user.user_id=task.publish_id'.format(user_id=user_id)
+
         result = Database.query(sql)
         return result
 
@@ -118,8 +124,9 @@ class TaskTable(object):
     #需要获得参与者数量，通过user_has_task
     @classmethod
     def get_task_part_num(task_id):
-        pass
-    
+        sql = 'SELECT COUNT(*) FROM user_has_task WHERE task_task_id={task_id};'.format(task_id)
+        return Database.query(sql)
+
     @staticmethod
     def get_task_participants(task_id):
         """
@@ -176,6 +183,8 @@ class TaskTable(object):
             agree='S' if agree else 'F', user_id=participant_id, task_id=task_id
         )
         return Database.execute(sql, response=True)
+
+    @staticmethod
     def update_task(self, task_id,  **kwargs):
         """
         根据参数的属性，更改 task_id 对应的task 的属性
@@ -259,9 +268,15 @@ class TaskTable(object):
     @staticmethod
     def get_tasks(task_type='all', begin=0, end=100):
         if task_type == 'all':
-            sql = 'SELECT * FROM task LIMIT %d OFFSET %d;' % (end - begin, begin)
+            sql = 'SELECT * FROM task LIMIT %d OFFSET %d;' \
+                  % (end - begin, begin)
         elif task_type == 'waiting':
-            sql = 'SELECT * FROM task WHERE task.state=W LIMIT %d OFFSET %d;' % (end - begin, begin)
+            sql = 'SELECT * FROM task WHERE task.state=\'W\' LIMIT %d OFFSET %d;' \
+                  % (end - begin, begin)
+        elif task_type == 'succeed':
+            # 倒序
+            sql = 'SELECT * FROM task WHERE state=\'S\' ORDER BY task_id DESC LIMIT %d OFFSET %d;' \
+                  % (end - begin, begin)
         else:
             raise KeyError('task type error')
 
@@ -272,21 +287,6 @@ class TaskTable(object):
             user['sign_end_time'] = str(user['sign_end_time'])
 
         return result
-
-    #不显示未审核通过的任务
-    def get_task_basic_inverse(self, page_id, size):
-        start = page_id * size
-        end = start + size
-        
-        sql = " SELECT task.money,task.task_id,task.title, task_intro,task.max_num, participants_num, user.photo as icon "\
-            " FROM task,user "\
-            " WHERE  user.user_id = task.publish_id ORDER BY task.task_id DESC limit {start}, {end} "\
-                .format(start = start, end=end)
-        
-        result = Database.query(sql)
-
-        return result
-
 
 
 class Task(object):

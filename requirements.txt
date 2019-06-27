@@ -7,3 +7,5 @@ bson
  jsonschema 
 flask_cors
 flask_uploads
+connxion
+pillow

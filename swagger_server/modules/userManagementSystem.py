@@ -42,7 +42,10 @@ class ManagementSystem:
 
         """
         
-        wechatresult = code2session(js_code=js_code, app_id=app_id, app_secret=app_secret)
+        #wechatresult = code2session(js_code=js_code, app_id=app_id, app_secret=app_secret)
+        wechatresult = {
+            'unionid':'ofAUV5mo9AjSRLiowX6i4PPVhTzw'
+        }
         print(wechatresult)
         if 'error' in wechatresult:
            return None
@@ -99,7 +102,7 @@ class ManagementSystem:
             return ('error', 'hasproved')
         elif user.isprove is 'W':
             return ('error', 'in auditing')
-        elif user.isprove is 'F' and user.isprove is not ident_info.iden_type :
+        elif user.isprove is 'F' and user.identity is not ident_info.iden_type :
             return ('error', 'identity type error, please certificaate another type ')
 
         print(user_id) 
@@ -114,14 +117,18 @@ class ManagementSystem:
                 school = ident_info.school,
                 id = ident_info.id,
                 prove = ident_info.cert)
-            User.table.update_info(
+            if  isinstance(result, Exception):
+                return 'error', 'fail'
+            result=User.table.update_info(
                 unionid=unionid, 
                 identity='S',
                 isprove='W' )
-            if result is None:
+            if not isinstance(result, Exception):
                 return ('success', "changed")
+            else:
+                return ('error', 'fail')
         elif ident_info.iden_type is 'C':
-            result = User.table.prove(
+            result= User.table.prove(
                 user_id = user_id, 
                 name=ident_info.name,
                 gender = ident_info.sex,
@@ -130,12 +137,16 @@ class ManagementSystem:
                 company = ident_info.company,
                 id = ident_info.id,
                 prove = ident_info.cert)
-            User.table.update_info(
+            if  isinstance(result, Exception):
+                return 'error', 'fail'
+            result=User.table.update_info(
                 unionid=unionid, 
                 identity='C',
                 isprove='W' )
-            if result is None:
+            if not isinstance(result, Exception):
                 return ('success', "changed")
+            else:
+                return ('error', 'fail')
         else:
             return ('error', 'no such user')
 

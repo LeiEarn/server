@@ -1,11 +1,28 @@
 # -*- coding: utf-8 -*-
 import requests
 import urllib3
+import uuid
+import json
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 APP_ID = 'wx72ce1b28ca748994'
 APP_SECRET = '8a0807fa2c5abe9db6473cba7b1eb600'
 AUTHORIZATION_CODE = 'authorization_code'
 WX_API_URL = 'https://api.weixin.qq.com/sns/jscode2session' 
+
+
+def dump_data(file):
+    file_name =str(uuid.uuid4())
+    with open("./static/{file_name}.json".format(file_name=file_name),"w") as f:
+        json.dump(file,f)
+        return file_name
+    return None
+def load_data(file_name):
+    with open("./static/{file_name}.json".format(file_name=file_name),"r") as f:
+        data = json.load(f)
+        return data
+    return None
+
+
 
 
 def code2session(js_code, app_id, app_secret):

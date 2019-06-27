@@ -155,7 +155,7 @@ class UserTable(object):
             student_num = id
 
             info = self.load_detail_user_id(user_id = user_id, identity = identity)
-            if info is None:
+            if info is None or len(info) is 0:
                 sql = "INSERT INTO {stu_identity}(college, school,  name, phone_number,student_num, email, gender,prove, state_prove, user_user_id)\
                     VALUES ('{college}', '{school}', '{name}', '{phone_number}', '{student_num}', '{email}', '{gender}', '{prove}', '{state_prove}', '{user_user_id}')"\
                         "".format(
@@ -176,7 +176,7 @@ class UserTable(object):
         elif identity is 'C':
             job_num = id
             info = self.load_detail_user_id(user_id = user_id, identity = identity)
-            if info is None:
+            if info is None or len(info) is 0:
                 sql = "INSERT INTO {com_identity}(company,  name, phone_number,job_num, email, gender,prove, state_prove, user_user_id)"\
                     " VALUES ('{company}', '{name}', '{phone_number}', '{job_num}', '{email}', '{gender}', '{prove}', '{state_prove}', '{user_user_id}')"\
                          "".format(
@@ -194,6 +194,7 @@ class UserTable(object):
                                 company=company,  name=name, 
                                 phone_number=phone_number, job_num=job_num, 
                                 email=email, gender=gender, prove=prove, state_prove=state_prove, user_user_id=user_user_id)
+        print(sql)
         result = Database.execute(sql)
         return result
 

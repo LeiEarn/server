@@ -53,20 +53,20 @@ class AccessControlSystem(object):
 
     # 拥有者身份需求装饰器
     @classmethod
-    def owner_required(view, user_args='user_id', identity_error=('error', 400)):
+    def owner_required(view, user_args='user_id', identity_error=('error', 'identity error')):
         """
             尚未完成
         """
         def dec(view):
             def wrapped_view(**kwargs):
-                if g.get('user_id') is None or g.user.user_id is not kwargs.get(user_args):
+                if g.user.get('user_id') is None or not str(g.user.user_id) ==  str(kwargs.get(user_args)):
                     return identity_error
                 return view(**kwargs)
         return dec
     
     # 身份需求装饰器
     @classmethod
-    def identity_required(view, identity_required = set('U'), identity_error='needprove'):
+    def identity_required(view, identity_required = set('U'), identity_error=('error', 'identity error')):
         """
         example: identity_required(set('U', 'S'))
         """

@@ -38,25 +38,25 @@ class TaskTable(object):
                  'audit_administrator_audit_id'
         }
         """
-        values = kwargs.update(
+        kwargs.update(
             {"release_time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
              "state": "W",  # waiting
              "audit_administrator_audit_id": '00227'
              })
 
-        sql = "INSERT INTO task(title, type, publish_id, state, wjx_id, task_intro, max_num, participants_num, money," \
-              "release_time, sign_start_time, sign_end_time, audit_administrator_audit_id)" \
-              "VALUES ({title}, {type_}, {publish_id}, {state}, {wjx_id}, {task_intro}, {max_num}, {participants_num}, " \
-              "{money}, {release_time}, {sign_start_time}, {sign_end_time}, {audit_administrator_audit_id});"\
-            .format(values)
-        Database.execute(sql, response=True)
+        sql = "INSERT INTO task(title, type, publish_id, state, wjx_id, task_intro, max_num, participants_num, money,"\
+              "release_time, sign_start_time, sign_end_time, audit_administrator_audit_id)"\
+              "VALUES ('{title}', '{type_}', '{publish_id}', '{state}', '{wjx_id}', '{task_intro}', '{max_num}', '{participants_num}', "\
+              "'{money}', '{release_time}', '{sign_start_time}', '{sign_end_time}', '{audit_administrator_audit_id}');"\
+            .format(**kwargs)
+        return Database.execute(sql, response=True)
 
     @staticmethod
     def get_task_info(task_id):
         """
         获取任务的基本信息
         """
-        sql = 'SELECT * FROM task WHERE task.task_id=%d;' % (task_id)
+        sql = 'SELECT * FROM task WHERE task.task_id=%d;' % (int(task_id))
         result = Database.query(sql, fetchone=True)
         return result
 
@@ -65,7 +65,7 @@ class TaskTable(object):
         """
         获取任务的基本信息task表　以及其创建者的photo, nickname, phone, userid
         """
-        sql = 'SELECT * FROM task WHERE task_id=%d;' % task_id
+        sql = 'SELECT * FROM task WHERE task_id=%d;' % int(task_id)
         task = Database.query(sql, fetchone=True)
 
         sql2 = 'SELECT *'\
@@ -77,21 +77,23 @@ class TaskTable(object):
         return {'task': task,
                 'publisher': Database.query(sql2, fetchone=True)}
 
+    #目前的表查询是错的,还要关联task表，以及获得任务发布者的photo， 
     @staticmethod
     def get_accepted_task(user_id):
         """
         获取已经接受的任务的信息
         """
         sql = "SELECT * FROM user_has_task WHERE user_user_id = {user_id}".format(user_id=user_id)
-        result = Database.execute(sql, response=True)
+        result = Database.query(sql)
         return result
-
+    
+    #获得任务发布者的photo， 
     @staticmethod
     def get_published_task(user_id):
         """
         获取已发布任务的信息
         """
-        sql = "SELECT * FROM task WHERE user_id = {user_id}".format(user_id=user_id)
+        sql = "SELECT * FROM task WHERE publish_id = {user_id}".format(user_id=user_id)
         result = Database.query(sql)
         return result
 
@@ -104,19 +106,23 @@ class TaskTable(object):
         result = Database.execute(sql)
         return result
 
+    #需要获得参与者数量，通过user_has_task
+    @classmethod
+    def get_task_part_num(task_id):
+        pass
     @staticmethod
     def get_task_participants(task_id):
         """
         获取某任务的参加用户的信息包括　photo, nickname, phone, userid
         """
-        sql='SELECT user.user_id, user.photo, user.nickname, cs.phone as phone'\
-            'FROM (SELECT user_user_id FROM user_has_task WHERE task_task_id={id}) as u,'\
-                 '(SELECT phone_number as phone, user_user_id as id FROM stu_identity'\
-                 'UNION ALL'\
-                 'SELECT phone_number as phone, user_user_id as id FROM com_identity'\
-                 ') as cs,'\
-                 'user'\
-            'WHERE u.user_user_id=user.user_id and cs.id=user.user_id;'.format(id=task_id)
+        sql="SELECT user.user_id, user.photo, user.nickname, cs.phone as phone"\
+            " FROM (SELECT user_user_id FROM user_has_task WHERE task_task_id={id}) as u,"\
+                 " (SELECT phone_number as phone, user_user_id as id FROM stu_identity"\
+                 " UNION ALL "\
+                 " SELECT phone_number as phone, user_user_id as id FROM com_identity"\
+                 ") as cs,"\
+                 "user"\
+            " WHERE u.user_user_id=user.user_id and cs.id=user.user_id;".format(id=task_id)
 
         return Database.query(sql)
 
@@ -130,7 +136,7 @@ class TaskTable(object):
     @staticmethod
     def append_task_intro(task_id, content):
         content = "\n"+content
-        sql = "UPDATE task SET task_intro=CONCAT(task_intro,{content}) "\
+        sql = "UPDATE task SET task_intro=CONCAT(task_intro,'{content}') "\
                     "WHERE task_id={task_id}"\
                         .format(content=content, task_id = task_id)
         result = Database.execute(sql, response=True)
@@ -141,8 +147,8 @@ class TaskTable(object):
         """
             任务参与者上传其工作证明 file xml
         """
-        sql = 'INSERT INTO user_task_job(task_task_id, user_user_id, job_path, unload_time) '\
-              'VALUES({task_id},{user_id},{job_path},{unload_time})'\
+        sql = "INSERT INTO user_task_job(task_task_id, user_user_id, job_path, unload_time) "\
+              " VALUES('{task_id}','{user_id}','{job_path}','{unload_time}')"\
             .format(task_id=task_id,
                     user_id=user_id,
                     job_path=file,
@@ -181,9 +187,14 @@ class TaskTable(object):
         user pariticipate a task
         用户参加任务
         isagree: U W S F Q
+            Q:QUIT
+            U:UN AGREE
+            W: WATING
+            S: SUCCESS
+            F: FAIL
         """
         sql = 'INSERT INTO user_has_task(user_user_id, task_task_id, task_audit_administrator_audit_id, isagree)'\
-              'VALUES({user_id}, {task_id}, \'227\', \'U\')'.format(user_id, task_id)
+              'VALUES({user_id}, {task_id}, \'227\', \'U\')'.format(user_id=user_id,task_id= task_id)
         return Database.execute(sql, response=True)
 
     @staticmethod
@@ -193,7 +204,7 @@ class TaskTable(object):
         参与者放弃其参加的任务
         """
         sql = 'UPDATE user_has_task SET isagree=\'Q\' WHERE user_user_id={user_id} and task_task_id={task_id}'.format(
-            user_id, task_id
+            user_id=user_id, task_id=task_id
         )
         return Database.execute(sql, response=True)
 
@@ -204,9 +215,9 @@ class TaskTable(object):
         获取某个任务的所有参与者提交的工作信息
         """
 
-        sql = 'SELECT jobs.user_user_id as user_id ,jobs.job_path as job'\
-              'FROM user_has_task AS task, user_task_job AS jobs'\
-              'WHERE task.task_task_id=%d;' % task_id
+        sql = 'SELECT jobs.user_user_id as user_id ,jobs.job_path as job '\
+              ' FROM user_has_task AS task, user_task_job AS jobs '\
+              ' WHERE task.task_task_id=%d;' % int(task_id)
 
         return Database.query(sql)
 
@@ -238,6 +249,7 @@ class TaskTable(object):
 
         return result
 
+    #不显示未审核通过的任务
     def get_task_basic_inverse(self, page_id, size):
         start = page_id * size
         end = start + size
@@ -248,8 +260,6 @@ class TaskTable(object):
                 .format(start = start, end=end)
         
         result = Database.query(sql)
-        for user in result:
-            user['create_data'] = str(user['create_data'])
 
         return result
 

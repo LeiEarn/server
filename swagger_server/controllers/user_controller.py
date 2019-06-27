@@ -16,7 +16,9 @@ from swagger_server.modules.accessControlSystem import AccessControlSystem as ac
 user_manager = ManagementSystem()
 access_control = accessControlSystem()
 
-@access_control.login_required(ErrorResponse(message="login"))
+login_response = (ErrorResponse(message="login"), 400)
+
+@access_control.login_required(login_response)
 def user_info_put(body):  # noqa: E501
     """User modify his basic info.
 
@@ -41,9 +43,9 @@ def user_info_put(body):  # noqa: E501
             avatar_url=result.photo,
             prove_state=result.isprove)
     else:
-        return ErrorResponse(message="error")
+        return ErrorResponse(message="error"), 400
 
-@access_control.login_required(ErrorResponse(message="login"))
+@access_control.login_required(login_response)
 def user_proof_get(userId):  # noqa: E501
     """get user&#39;s indentity info
 
@@ -66,10 +68,10 @@ def user_proof_get(userId):  # noqa: E501
                 company=info.get('company'),
                 id = info.get('id'),
                 cert = info.get('prove')),
-        credit_score=0)
+        credit_score=info.get('credit'))
 
 
-@access_control.login_required(ErrorResponse(message="login"))
+@access_control.login_required(login_response)
 def user_proof_post(body):  # noqa: E501
     """User provide his prove identity.
 
@@ -84,7 +86,7 @@ def user_proof_post(body):  # noqa: E501
         body = IdenInfo.from_dict(connexion.request.get_json())  # noqa: E501
     result = user_manager.prove(body)
     if 'error' in result:
-        return ErrorResponse(result[1])
+        return ErrorResponse(result[1]), 400
     else:
         return "成功", 200
 
@@ -116,7 +118,7 @@ def user_session_post(body):  # noqa: E501
     return 'do some magic!'
 
 
-@access_control.login_required(ErrorResponse(message="login"))
+@access_control.login_required(login_response)
 def user_user_id_balance_get(userId):  # noqa: E501
     """User get the balance.
 
@@ -130,7 +132,7 @@ def user_user_id_balance_get(userId):  # noqa: E501
     return 'do some magic!'
 
 
-@access_control.login_required(ErrorResponse(message="login"))
+@access_control.login_required(login_response)
 def user_user_id_balance_put(userId, money):  # noqa: E501
     """User recharge.
 
@@ -146,7 +148,7 @@ def user_user_id_balance_put(userId, money):  # noqa: E501
     return 'do some magic!'
 
 
-@access_control.login_required(ErrorResponse(message="login"))
+@access_control.login_required(login_response)
 def user_user_id_proof_state_get(userId):  # noqa: E501
     """User get his authState.
 

@@ -6,15 +6,16 @@ from flask import g, session
 
 from .AdminPlatform import AdminPlatform
 from .accessControlSystem import AccessControlSystem as access_control
-
+from swagger_server.utils.utils import load_data, dump_data
 AdminPlatform = AdminPlatform()
 class taskManagementSystem(object):
     def __init__(self):
         pass
 
     """
-    
+    发布者
     """
+    #{ '0':"未接受", '1':"已经接受", '2': '已经提交证明', '3'：'拒绝', 4:'同意'}
     def commit_task(self, task):
         """
         发布者：提交任务 -> 
@@ -30,18 +31,20 @@ class taskManagementSystem(object):
         result = Task.taskTable.create_task(
             publish_id = g.get('persistent').get('user_id'),
             title = task.title,
-            type_ =task.task_type,
+            type_ =task.type,
             wjx_id=task.wjx_id,
-            task_intro=task.task_intro,
+            task_intro=task.desc,
             max_num=task.max_num,
-            participants_num=task.participants_num,
+            participants_num=task.part_num,
             money=task.money,
             sign_start_time=start_time,
-            sign_end_time=task.sign_end_time)
+            sign_end_time=task.time)
         if  isinstance(result, Exception):
             return ('error', "create fail")
+        else:
+            return ('success', '成功')
         # admin audit this task
-        AdminPlatform.commit_new_task(task)
+        #AdminPlatform.commit_new_task(task)
 
     def publish_task(self, task):
         """任务审核成功-> 进行中
@@ -61,49 +64,62 @@ class taskManagementSystem(object):
         else:
             return ('error', "fail")
 
-    @access_control.owner_required(user_args='user_id')
+    @access_control.owner_required(user_args='user_id',identity_error=('error', 'identity error'))
     def get_published_tasks(self, user_id):
         """
         发布者：获取发布的任务
         """
-        if user_id is not g.user.user_id:
-            return 'error', 'not your tasks'
-        else:
-            task = Task.taskTable.get_published_task(user_id)
+        task = Task.taskTable.get_published_task(user_id)
         return task
-        pass
 
-    @access_control.owner_required(user_args='user_id')
+    @access_control.owner_required(user_args='user_id',identity_error=('error', 'identity error'))
     def abort_task(self, task_id, user_id):
         """
         发布者：终止任务
         """
-        if user_id is not g.user.user_id:
-            return ('error', 'user identity error')
-        else:
-            task = Task.taskTable.get_task_info(task_id=task_id)
-            
-            if task is not None and 'participants_num' in task:
-                number = task['participants_num']
-                if number ==0:
+        #?get_task_part_num
+        task = Task.taskTable.get_task_info(task_id=task_id)
+        
+        if task is not None and 'participants_num' in task:
+            number = task['participants_num']
+            if number ==0:
                     result = Task.taskTable.abort_task(task['task_id'])
                     if not isinstance(result, Exception):
                         return ('success')
                     else:
                         return ('error', 'unknown error')
-                else:
-                    return ('error', 'participants is not zero')
             else:
-                return ('error', 'task not exist')
+                print(number)
+                return ('error', 'participants is not zero')
+        else:
+            return ('error', 'task not exist')
     
-    @access_control.owner_required(user_args='user_id')
+
+    def agree_job(self, task_id, user_id, state):
+
+        task = Task.taskTable.get_task_info(task_id=task_id)
+        if 'publish_id' not in task:
+            return 'error', 'no such task'
+        elif not str(task.get('publish_id')) == str(user_id):
+            return 'error', 'not your task'
+
+        if state is 'agree':
+            agree=True
+        elif state is 'reject':
+            agree=False
+        result = Task.taskTable.agree_job(participant_id = user_id, task_id=task_id, agree=agree)
+        if isinstance(result, Exception):
+            return 'error', 'fail'
+        else:
+            return result
+    
+    @access_control.owner_required(user_args='user_id',identity_error=('error', 'identity error'))
     def get_task_accepter(self, task_id, user_id):
         """
         获取任务的参与者信息
 
         """
-        if user_id ==  g.user.user_id:
-            return ('error', 'identity error')
+
         accepters = Task.taskTable.get_task_participants(task_id = task_id)
         return accepters
 
@@ -124,6 +140,8 @@ class taskManagementSystem(object):
             result = Task.taskTable.get_accepted_task(user_id=userId)
         elif Type == "publishment":
             result = Task.taskTable.get_published_task(user_id = userId)
+        else:
+            result=None
         return result
 
 
@@ -135,30 +153,34 @@ class taskManagementSystem(object):
         tasks = Task.taskTable.get_task_basic_inverse(page_id=page_id, size=10)
         return tasks
 
-    @access_control.owner_required(user_args='user_id')
+
+    @access_control.owner_required(user_args='user_id',identity_error=('error', 'identity error'))
     def get_accepted_tasks(self, user_id):
         """
         接收者：获取接受的任务
         """
-        if user_id is not g.user.user_id:
-            return None
         tasks = Task.taskTable.get_accepted_task(user_id = user_id)
 
+
     def get_task_jobs(self, task_id):
+        #? 主人判断
         """
         get a task' s all participants' job
         获取某个任务的所有参与者提交的工作信息
         """
         result = Task.taskTable.get_task_jobs(task_id)
+        for item in result:
+            materials = load_data(item['job'])
+            if materials is not None:
+                item['remarks'] = materials.get('remarks')
+                item['files'] = materials.get('pics')
         return result
     
-    @access_control.owner_required(user_args='user_id')
+    @access_control.owner_required(user_args='user_id',identity_error=('error', 'identity error'))
     def accept_task(self, user_id,  task_id):
         """
         用户：接受任务
         """
-        if user_id is not g.user.user_id:
-            return None
 
         result = Task.taskTable.participate_task(user_id, task_id)
         if isinstance(result, Exception):
@@ -166,13 +188,11 @@ class taskManagementSystem(object):
         return result
 
 
+    @access_control.owner_required(user_args='user_id',identity_error=('error', 'identity error'))
     def abondon_task(self, user_id, task_id):
         """
         接收者：放弃任务
         """
-        if user_id is not g.user.user_id:
-            return None
-
         result = Task.taskTable.abondon_task(user_id, task_id)
         if isinstance(result, Exception):
             return 'error', "放弃失败"
@@ -180,17 +200,26 @@ class taskManagementSystem(object):
             return 'success', "放弃任务"
 
 
+    @access_control.owner_required(user_args='user_id',identity_error=('error', 'identity error'))
     def commit_job(self, user_id, task_id, job):
         """
         接受者：提交工作
         """
-        files = job.files
-        result = Task.taskTable.commit_job(user_id=user_id, task_id=task_id, file=files )
+        pics = job.files
+        materials = {
+            'remarks': job.remarks,
+            'pics':pics
+        }
+        file_name = dump_data(materials)
+
+        result = Task.taskTable.commit_job(user_id=user_id, task_id=task_id, file=file_name )
         if isinstance(result, Exception):
             return 'error', "提交工作失败"
         else:
             return 'success', "提交工作"
         
+
+
 
     """
         获取信息模块

@@ -133,8 +133,8 @@ class PersistentSystem(object):
                 ———暂时每次请求都刷新
                 ————可以另起刷新队列
             """
-            cls.flash_user_type()
-            return None
+            result = cls.flash_user_type()
+            return result
 
     @classmethod
     def save(cls,wechat_server_reply, user):
@@ -172,10 +172,15 @@ class PersistentSystem(object):
         if persistent_info is not None:
             unionid =  persistent_info.get('unionid')
             g.user = User.table.query_user(unionid= unionid)
-            persistent_info['user_type'] =g. user.get_type()
-            session['persistent_info'] = persistent_info
-        
-            g.persistent = persistent_info
+            if g.user is not None:
+                persistent_info['user_type'] =g. user.get_type()
+                session['persistent_info'] = persistent_info
+                g.persistent = persistent_info
+                return None
+            else:
+                session.clear()
+                return 'error', 'login'
+
         
     
     def get_user(self):

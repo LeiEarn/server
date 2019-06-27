@@ -5,7 +5,7 @@ import uuid
 import json
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 APP_ID = 'wx72ce1b28ca748994'
-APP_SECRET = '8a0807fa2c5abe9db6473cba7b1eb600'
+APP_SECRET = '733540bdf3bf7aef48fa1e1ccd157db9'
 AUTHORIZATION_CODE = 'authorization_code'
 WX_API_URL = 'https://api.weixin.qq.com/sns/jscode2session' 
 
@@ -60,8 +60,8 @@ def code2session(js_code, app_id, app_secret):
 #  返回json格式
 def get_user_info(js_code, app_id, app_secret ):
     req_params = {
-        "appid": app_id,  # 小程序的 ID
-        "secret": app_secret,  # 小程序的 secret
+        "appid": APP_ID,  # 小程序的 ID
+        "secret": APP_SECRET,  # 小程序的 secret
         "js_code": js_code,
         "grant_type": AUTHORIZATION_CODE
     }

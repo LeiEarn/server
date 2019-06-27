@@ -42,10 +42,11 @@ class ManagementSystem:
 
         """
         
-        #wechatresult = code2session(js_code=js_code, app_id=app_id, app_secret=app_secret)
-        wechatresult = {
-            'unionid':'ofAUV5mo9AjSRLiowX6i4PPVhTzw'
-        }
+        wechatresult = code2session(js_code=js_code, app_id=app_id, app_secret=app_secret)
+        
+        #wechatresult = {
+        #   'unionid':'ofAUV5mo9AjSRLiowX6i4PPVhTzw'
+        #}
         print(wechatresult)
         if 'error' in wechatresult:
            return None

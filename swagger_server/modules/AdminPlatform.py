@@ -75,11 +75,13 @@ class AdminPlatform():
         :param audit: True or False
         :return:
         """
-
-        task = TMS.get_task_detail(task_id)['task']
+        
+        task = TMS.get_task_detail(task_id)
+        print(task)
+        task = task.get('task')
         if task['state'] != 'W':
             return 'this wask is not in the waiting list'
-
+       
 
         return TMS.audit_task(task_id, audit)
 

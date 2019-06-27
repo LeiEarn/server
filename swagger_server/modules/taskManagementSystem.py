@@ -137,7 +137,10 @@ class taskManagementSystem(object):
         task_with_user = Task.taskTable.get_task_detail(task_id)
         if task_with_user is None or len(task_with_user) is 0:
             return ('error', 'no such task')
-        isagree = task_with_user.get('job').get('isagree')
+        if task_with_user.get('job') is not None:
+            isagree = task_with_user.get('job').get('isagree')
+        else:
+            isagree =None
         if isagree is None:
             task_with_user['task_job_state'] = 0
         else:

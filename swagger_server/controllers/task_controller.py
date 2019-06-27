@@ -124,6 +124,7 @@ def task_task_id_info_get(taskId):  # noqa: E501
         if "publisher" in task_with_publisher and task_with_publisher['publisher'] is not None :
             user =UserInfoWithTel(
                 user_id= task_with_publisher['publisher']['user_id'],
+                nick_name= task_with_publisher['publisher']['nickname'],
                 avatar_url=task_with_publisher['publisher']['photo'],
                 tel=task_with_publisher['publisher']['phone_number']
             )

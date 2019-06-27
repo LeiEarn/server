@@ -222,15 +222,29 @@ class TaskTable(object):
         return Database.query(sql)
 
     @staticmethod
-    def task_count(task_type='all'):
-        if task_type == 'all':
-            sql = 'SELECT COUNT(*) as count FROM task;'
-        elif task_type == 'waiting':
-            sql = 'SELECT COUNT(*) as count FROM task WHERE task.state=W;'
-        else:
-            raise KeyError('task type error')
+    def task_count(state='all', type='all'):
+        if state == 'all':
+            state = 'IS NOT NULL'
+        elif state == 'waiting':
+            state = '= \'W\''
 
-        return Database.execute(sql, response=True)[0]['count']
+        if type == 'all':
+            type = 'IS NOT NULL'
+        elif type == 'W':
+            type = '= \'W\''
+        elif type == 'O':
+            type = '= \'O\''
+
+
+
+        sql = 'SELECT COUNT(*) as count FROM task WHERE task.state {} and task.type {};'.format(state, type)
+        print(sql)
+        data = Database.execute(sql, response=True)
+
+        if isinstance(data, Exception):
+            return False, data
+        else:
+            return True, data[0]['count']
 
     @staticmethod
     def get_tasks(task_type='all', begin=0, end=100):

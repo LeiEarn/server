@@ -119,7 +119,6 @@ class taskManagementSystem(object):
         获取任务的参与者信息
 
         """
-
         accepters = Task.taskTable.get_task_participants(task_id = task_id)
         return accepters
 
@@ -217,7 +216,7 @@ class taskManagementSystem(object):
             return 'error', "提交工作失败"
         else:
             return 'success', "提交工作"
-        
+
 
 
 
@@ -225,8 +224,8 @@ class taskManagementSystem(object):
         获取信息模块
     """
     @staticmethod
-    def get_task_count(user_type='all'):
-        return Task.taskTable.task_count(user_type)
+    def get_task_count(state='all', type='all'):
+        return Task.taskTable.task_count(state, type)
 
     @staticmethod
     def get_tasks(task_type='all', page=0):

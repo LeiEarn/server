@@ -93,6 +93,60 @@ def get_user_count():
         return ok(json.dumps({'count': record_num}))
     return bad('please user POST!')
 
+@app.route('/api/v1/specific_user_count', methods=['POST'])
+def specific_user_count():
+    if request.method == 'POST':
+        data = request.get_data()
+        json_data = json.loads(data.decode('utf-8'))
+        print('data', json_data)
+
+        gender = json_data.get('gender', None)
+        identity = json_data.get('identity', None)
+
+        if gender not in ['W', 'M'] or identity not in ['S', 'C']:
+            return bad('bad gender/identity')
+
+        record_num = UMS.specific_user_count(gender, identity)
+
+        print('record_num', record_num)
+
+        if record_num[0]:
+            return ok(json.dumps({'count': record_num[1]}))
+        else:
+            return bad(json.dumps(record_num[1]))
+    else:
+        return bad('use POST')
+
+@app.route('/api/v1/low_credit_count', methods=['POST'])
+def low_credit_count():
+    if request.method == 'POST':
+        data = request.get_data()
+        json_data = json.loads(data.decode('utf-8'))
+        print('data', json_data)
+
+        credit = json_data.get('credit', None)
+
+        if not isinstance(credit, int):
+            return bad('bad credit')
+
+        return ok(json.dumps({'count': UMS.low_credit_count(credit)}))
+    else:
+        return bad('use POST')
+
+@app.route('/api/v1/get_company_count', methods=['POST'])
+def get_company_count():
+    if request.method == 'POST':
+        data = request.get_data()
+        json_data = json.loads(data.decode('utf-8'))
+        print('data', json_data)
+
+        type = json_data.get('type', None)
+        if type not in ['company', 'college']:
+            return bad('wrong type')
+
+        return ok(json.dumps(UMS.get_company_count(type)))
+    else:
+        return bad('use POST')
 
 @app.route('/api/v1/get_task', methods=['POST'])
 def get_task():
@@ -124,14 +178,20 @@ def get_task_count():
         print('data', json_data)
 
         task_type = json_data.get('task_type', None)
-        if task_type is None:
-            return bad('key error')
+        task_state = json_data.get('task_state', None)
 
-        record_num = TMS.get_task_count(task_type)
+        if task_type not in ['O', 'W', 'all'] or task_state not in ['all', 'waiting']:
+            return bad('task type/state error')
+
+        record_num = TMS.get_task_count(state=task_state, type=task_type)
 
         print('record_num', record_num)
 
-        return ok(json.dumps({'count': record_num}))
+        if record_num[0]:
+            return ok(json.dumps({'count': record_num[1]}))
+        else:
+            return bad(json.dumps(record_num[1]))
+
     return bad('please user POST!')
 
 

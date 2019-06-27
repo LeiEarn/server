@@ -244,6 +244,18 @@ class UserTable(object):
         return Database.execute(sql, response=True)[0]['count']
 
     @staticmethod
+    def specific_user_count(gender='all', identity='S'):
+        sql = 'SELECT COUNT(*) as count '\
+            + 'FROM {} as user '.format('stu_identity' if identity=='S' else 'com_identity') \
+            + 'WHERE user.gender=\'{}\''.format(gender)
+        print(sql)
+
+        data = Database.query(sql)
+        if isinstance(data, Exception):
+            return False, data
+        else:
+            return True, data[0]['count']
+    @staticmethod
     def get_users(user_type='all', begin=0, end=100):
         if user_type == 'all':
             sql = 'SELECT * FROM user LIMIT %d OFFSET %d;' % (end - begin, begin)
@@ -276,8 +288,23 @@ class UserTable(object):
             connect.rollback()
             return (False, 'Database execute error : %s' %e)
 
+    @staticmethod
+    def get_school_count():
+        sql = 'SELECT school, COUNT(*) as count FROM stu_identity GROUP BY school;'
+        print(sql)
+        return Database.query(sql)
 
+    @staticmethod
+    def get_company_count():
+        sql = 'SELECT company, COUNT(*) as count FROM com_identity GROUP BY company;'
+        print(sql)
+        return Database.query(sql)
 
+    @staticmethod
+    def low_credit_count(credit):
+        sql = 'SELECT COUNT(*) as count FROM user WHERE credit <= %d;' % credit
+        print(sql)
+        return Database.query(sql)[0]
 """
 
     NU: Unproved 

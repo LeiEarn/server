@@ -162,6 +162,21 @@ class ManagementSystem:
         return User.table.user_count(user_type)
 
     @staticmethod
+    def specific_user_count(gender='all', identity='U'):
+        return User.table.specific_user_count(gender, identity)
+
+    @staticmethod
+    def get_company_count(type='company'):
+        if type=='company':
+            return User.table.get_company_count()
+        else:
+            return User.table.get_school_count()
+
+    @staticmethod
+    def low_credit_count(credit):
+        return User.table.low_credit_count(credit)
+
+    @staticmethod
     def get_users(user_type='all', page=0):
         return User.table.get_users(user_type=user_type,
                                     begin=page*100,
@@ -189,6 +204,7 @@ class ManagementSystem:
             return User.table.load_detail_user_id(user_id, identity)
         else:
             raise KeyError('Wrong identity %s' % identity)
+
 
     def get_user_detail(self, user_id):
         """

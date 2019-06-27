@@ -3,8 +3,8 @@ flask-session
 redis
 pymysql
 bson
- flask_restful 
- jsonschema 
+flask_restful 
+jsonschema 
 flask_cors
 flask_uploads
 connxion

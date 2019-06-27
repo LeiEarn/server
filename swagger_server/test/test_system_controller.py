@@ -18,16 +18,14 @@ class TestSystemController(BaseTestCase):
 
         upload image
         """
-        data = dict(image=(BytesIO(b'some file data'), 'file.txt'))
+        data = dict(image=(BytesIO(b"some file data"), "file.txt"))
         response = self.client.open(
-            '//image',
-            method='POST',
-            data=data,
-            content_type='multipart/form-data')
-        self.assert200(response,
-                       'Response body is : ' + response.data.decode('utf-8'))
+            "//image", method="POST", data=data, content_type="multipart/form-data"
+        )
+        self.assert200(response, "Response body is : " + response.data.decode("utf-8"))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import unittest
+
     unittest.main()

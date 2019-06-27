@@ -1,7 +1,0 @@
-{
-    "python.pythonPath": "/usr/local/anaconda/anaconda3/envs/flask_py3.5/bin/python",
-    "python.formatting.provider": "yapf",
-    "python.formatting.yapfArgs": [
-        "--sytle=yapf_style.cfg"
-    ],
-}

@@ -15,7 +15,7 @@ class ExtraTaskInfo(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, user_id: str=None, content: str=None):  # noqa: E501
+    def __init__(self, user_id: str = None, content: str = None):  # noqa: E501
         """ExtraTaskInfo - a model defined in Swagger
 
         :param user_id: The user_id of this ExtraTaskInfo.  # noqa: E501
@@ -23,21 +23,15 @@ class ExtraTaskInfo(Model):
         :param content: The content of this ExtraTaskInfo.  # noqa: E501
         :type content: str
         """
-        self.swagger_types = {
-            'user_id': str,
-            'content': str
-        }
+        self.swagger_types = {"user_id": str, "content": str}
 
-        self.attribute_map = {
-            'user_id': 'userId',
-            'content': 'content'
-        }
+        self.attribute_map = {"user_id": "userId", "content": "content"}
 
         self._user_id = user_id
         self._content = content
 
     @classmethod
-    def from_dict(cls, dikt) -> 'ExtraTaskInfo':
+    def from_dict(cls, dikt) -> "ExtraTaskInfo":
         """Returns the dict as a model
 
         :param dikt: A dict.

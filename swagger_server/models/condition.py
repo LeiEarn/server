@@ -15,7 +15,9 @@ class Condition(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, groups: List[str]=None, sex: str=None, credit_score: int=None):  # noqa: E501
+    def __init__(
+        self, groups: List[str] = None, sex: str = None, credit_score: int = None
+    ):  # noqa: E501
         """Condition - a model defined in Swagger
 
         :param groups: The groups of this Condition.  # noqa: E501
@@ -25,16 +27,12 @@ class Condition(Model):
         :param credit_score: The credit_score of this Condition.  # noqa: E501
         :type credit_score: int
         """
-        self.swagger_types = {
-            'groups': List[str],
-            'sex': str,
-            'credit_score': int
-        }
+        self.swagger_types = {"groups": List[str], "sex": str, "credit_score": int}
 
         self.attribute_map = {
-            'groups': 'groups',
-            'sex': 'sex',
-            'credit_score': 'creditScore'
+            "groups": "groups",
+            "sex": "sex",
+            "credit_score": "creditScore",
         }
 
         self._groups = groups
@@ -42,7 +40,7 @@ class Condition(Model):
         self._credit_score = credit_score
 
     @classmethod
-    def from_dict(cls, dikt) -> 'Condition':
+    def from_dict(cls, dikt) -> "Condition":
         """Returns the dict as a model
 
         :param dikt: A dict.

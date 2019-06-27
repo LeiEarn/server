@@ -16,7 +16,9 @@ class IdenInfoWithCredit(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, iden_info: IdenInfo=None, credit_score: int=None):  # noqa: E501
+    def __init__(
+        self, iden_info: IdenInfo = None, credit_score: int = None
+    ):  # noqa: E501
         """IdenInfoWithCredit - a model defined in Swagger
 
         :param iden_info: The iden_info of this IdenInfoWithCredit.  # noqa: E501
@@ -24,21 +26,15 @@ class IdenInfoWithCredit(Model):
         :param credit_score: The credit_score of this IdenInfoWithCredit.  # noqa: E501
         :type credit_score: int
         """
-        self.swagger_types = {
-            'iden_info': IdenInfo,
-            'credit_score': int
-        }
+        self.swagger_types = {"iden_info": IdenInfo, "credit_score": int}
 
-        self.attribute_map = {
-            'iden_info': 'idenInfo',
-            'credit_score': 'creditScore'
-        }
+        self.attribute_map = {"iden_info": "idenInfo", "credit_score": "creditScore"}
 
         self._iden_info = iden_info
         self._credit_score = credit_score
 
     @classmethod
-    def from_dict(cls, dikt) -> 'IdenInfoWithCredit':
+    def from_dict(cls, dikt) -> "IdenInfoWithCredit":
         """Returns the dict as a model
 
         :param dikt: A dict.

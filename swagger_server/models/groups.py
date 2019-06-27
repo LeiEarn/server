@@ -20,14 +20,12 @@ class Groups(Model):
         """Groups - a model defined in Swagger
 
         """
-        self.swagger_types = {
-        }
+        self.swagger_types = {}
 
-        self.attribute_map = {
-        }
+        self.attribute_map = {}
 
     @classmethod
-    def from_dict(cls, dikt) -> 'Groups':
+    def from_dict(cls, dikt) -> "Groups":
         """Returns the dict as a model
 
         :param dikt: A dict.

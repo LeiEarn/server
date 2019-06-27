@@ -16,7 +16,7 @@ class MyGroup(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, created: Groups=None, joined: Groups=None):  # noqa: E501
+    def __init__(self, created: Groups = None, joined: Groups = None):  # noqa: E501
         """MyGroup - a model defined in Swagger
 
         :param created: The created of this MyGroup.  # noqa: E501
@@ -24,21 +24,15 @@ class MyGroup(Model):
         :param joined: The joined of this MyGroup.  # noqa: E501
         :type joined: Groups
         """
-        self.swagger_types = {
-            'created': Groups,
-            'joined': Groups
-        }
+        self.swagger_types = {"created": Groups, "joined": Groups}
 
-        self.attribute_map = {
-            'created': 'created',
-            'joined': 'joined'
-        }
+        self.attribute_map = {"created": "created", "joined": "joined"}
 
         self._created = created
         self._joined = joined
 
     @classmethod
-    def from_dict(cls, dikt) -> 'MyGroup':
+    def from_dict(cls, dikt) -> "MyGroup":
         """Returns the dict as a model
 
         :param dikt: A dict.

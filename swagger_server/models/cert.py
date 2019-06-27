@@ -15,7 +15,9 @@ class Cert(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, user_id: str=None, files: List[str]=None, remarks: str=None):  # noqa: E501
+    def __init__(
+        self, user_id: str = None, files: List[str] = None, remarks: str = None
+    ):  # noqa: E501
         """Cert - a model defined in Swagger
 
         :param user_id: The user_id of this Cert.  # noqa: E501
@@ -25,16 +27,12 @@ class Cert(Model):
         :param remarks: The remarks of this Cert.  # noqa: E501
         :type remarks: str
         """
-        self.swagger_types = {
-            'user_id': str,
-            'files': List[str],
-            'remarks': str
-        }
+        self.swagger_types = {"user_id": str, "files": List[str], "remarks": str}
 
         self.attribute_map = {
-            'user_id': 'userId',
-            'files': 'files',
-            'remarks': 'remarks'
+            "user_id": "userId",
+            "files": "files",
+            "remarks": "remarks",
         }
 
         self._user_id = user_id
@@ -42,7 +40,7 @@ class Cert(Model):
         self._remarks = remarks
 
     @classmethod
-    def from_dict(cls, dikt) -> 'Cert':
+    def from_dict(cls, dikt) -> "Cert":
         """Returns the dict as a model
 
         :param dikt: A dict.

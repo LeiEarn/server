@@ -4,7 +4,7 @@ from flask import session, Flask, jsonify, request
 from flask_cors import CORS
 
 from swagger_server.modules.userManagementSystem import ManagementSystem as UserManagementSystem
-from swagger_server.modules.taskManagementSystem import taskManagementSystem as TaskManagementSystem
+from swagger_server.modules.TaskManagementSystem import TaskManagementSystem as TaskManagementSystem
 from swagger_server.modules.AdminPlatform import AdminPlatform as AdminPlatform
 app = Flask(__name__)
 app.secret_key = "nQnk2n8moN=GLNmE.wL6PTZD"

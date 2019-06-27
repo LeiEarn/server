@@ -17,7 +17,12 @@ class TaskDetailWithPublisher(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, user: UserInfoWithTel=None, content: TaskDetail=None, has_received: int=None):  # noqa: E501
+    def __init__(
+        self,
+        user: UserInfoWithTel = None,
+        content: TaskDetail = None,
+        has_received: int = None,
+    ):  # noqa: E501
         """TaskDetailWithPublisher - a model defined in Swagger
 
         :param user: The user of this TaskDetailWithPublisher.  # noqa: E501
@@ -28,15 +33,15 @@ class TaskDetailWithPublisher(Model):
         :type has_received: int
         """
         self.swagger_types = {
-            'user': UserInfoWithTel,
-            'content': TaskDetail,
-            'has_received': int
+            "user": UserInfoWithTel,
+            "content": TaskDetail,
+            "has_received": int,
         }
 
         self.attribute_map = {
-            'user': 'user',
-            'content': 'content',
-            'has_received': 'hasReceived'
+            "user": "user",
+            "content": "content",
+            "has_received": "hasReceived",
         }
 
         self._user = user
@@ -44,7 +49,7 @@ class TaskDetailWithPublisher(Model):
         self._has_received = has_received
 
     @classmethod
-    def from_dict(cls, dikt) -> 'TaskDetailWithPublisher':
+    def from_dict(cls, dikt) -> "TaskDetailWithPublisher":
         """Returns the dict as a model
 
         :param dikt: A dict.

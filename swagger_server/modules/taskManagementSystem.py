@@ -15,7 +15,7 @@ class taskManagementSystem(object):
     """
     发布者
     """
-    #{ '0':"未接受", '1':"已经接受", '2': '已经提交证明', '3'：'拒绝', 4:'同意'}
+    #{ '0':"未接受", '1':"已经接受", '2': '已经提交证明', '3'：'拒绝', 4:'同意', 5:'已放弃'}
     def commit_task(self, task):
         """
         发布者：提交任务 -> 
@@ -77,22 +77,15 @@ class taskManagementSystem(object):
         """
         发布者：终止任务
         """
-        #?get_task_part_num
-        task = Task.taskTable.get_task_info(task_id=task_id)
-        
-        if task is not None and 'participants_num' in task:
-            number = task['participants_num']
-            if number ==0:
-                    result = Task.taskTable.abort_task(task['task_id'])
-                    if not isinstance(result, Exception):
-                        return ('success')
-                    else:
-                        return ('error', 'unknown error')
+        number = Task.taskTable.get_task_part_num(task_id=task_id)
+        if number ==0:
+            result = Task.taskTable.abort_task(task_id)
+            if not isinstance(result, Exception):
+                return ('success')
             else:
-                print(number)
-                return ('error', 'participants is not zero')
+                return ('error', 'unknown error')
         else:
-            return ('error', 'task not exist')
+            return ('error', 'no such task or participants is not zero')
     
 
     def agree_job(self, task_id, user_id, state):
@@ -131,8 +124,21 @@ class taskManagementSystem(object):
         if task_with_user is None or len(task_with_user) is 0:
             return ('error', 'no such task')
         isagree = task_with_user.get('job').get('isagree')
+        if isagree is None:
+            task_with_user['task_job_state'] = 0
+        else:
+            if isagree  == 'U':
+                task_with_user['task_job_state'] = 1
+            elif isagree == 'W':
+                task_with_user['task_job_state'] = 2
+            elif isagree == 'F':
+                task_with_user['task_job_state'] = 3
+            elif isagree == 'S':
+                task_with_user['task_job_state'] = 4
+            else :
+                task_with_user['task_job_state'] = 5
 
-        task_with_user['task_job_state'] = 
+            
         return task_with_user
 
 

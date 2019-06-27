@@ -262,7 +262,7 @@ def task_user_id_get(userId, type):  # noqa: E501
             Task(
                 id = item['task_id'],
                 money= item['money'],
-                icon= item['icon'],
+                icon= item['photo'],
                 title=item['title'],
                 max_num=item['max_num'],
                 desc=item['task_intro'],

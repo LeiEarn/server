@@ -11,5 +11,8 @@ git clone https://github.com/sysu-gfs-3/server.git
 
 pip3 install -r requirements.txt
 
-python3 main.py 
+python3 swagger_server
 ```
+## docker
+cd DockerFile/
+docker-compose up --build 

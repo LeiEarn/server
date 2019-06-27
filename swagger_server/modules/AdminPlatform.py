@@ -2,6 +2,7 @@
 import threading
 from ..utils.db import Database
 from swagger_server.modules.userManagementSystem import ManagementSystem as UMS
+from swagger_server.modules.taskManagementSystem import taskManagementSystem as TMS
 
 
 class AdminPlatform():
@@ -66,3 +67,19 @@ class AdminPlatform():
 
 
         return UMS.audit_user(user_id, identity, audit)
+
+    @staticmethod
+    def audit_task(task_id, audit):
+        """
+        :param task_id:  task id
+        :param audit: True or False
+        :return:
+        """
+
+        task = TMS.get_task_detail(task_id)['task']
+        if task['state'] != 'W':
+            return 'this wask is not in the waiting list'
+
+
+        return TMS.audit_task(task_id, audit)
+

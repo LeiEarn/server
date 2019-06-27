@@ -67,7 +67,6 @@ class taskManagementSystem(object):
         """
         #task.taskTable.create_task(task)
 
-
     def add_info(self, task_id, content):
         """
         发布者：增加任务说明
@@ -129,14 +128,15 @@ class taskManagementSystem(object):
         accepters = Task.taskTable.get_task_participants(task_id = task_id)
         return accepters
 
-
     def get_task_detail(self, task_id):
         """
         获取任务信息以及发布者信息
         """
         task_with_user = Task.taskTable.get_task_detail(task_id)
+
         if task_with_user is None or len(task_with_user) is 0:
             return ('error', 'no such task')
+
         isagree = task_with_user.get('job').get('isagree')
         if isagree is None:
             task_with_user['task_job_state'] = 0
@@ -155,7 +155,6 @@ class taskManagementSystem(object):
 
         return task_with_user
 
-
     def get_related_tasks(self, userId, Type):
         if Type =="acceptment":
             result = Task.taskTable.get_accepted_task(user_id=userId)
@@ -165,7 +164,6 @@ class taskManagementSystem(object):
             result=None
         return result
 
-
     def get_task_list(self, page_id):
         """
         获取所有任务列表
@@ -174,14 +172,12 @@ class taskManagementSystem(object):
         tasks = Task.taskTable.get_task_basic_inverse(page_id=page_id, size=10)
         return tasks
 
-
     @access_control.owner_required(user_args='user_id',identity_error=('error', 'identity error'))
     def get_accepted_tasks(self, user_id):
         """
         接收者：获取接受的任务
         """
         tasks = Task.taskTable.get_accepted_task(user_id = user_id)
-
 
     def get_task_jobs(self, task_id):
         #? 主人判断
@@ -208,7 +204,6 @@ class taskManagementSystem(object):
             return 'error', '参加失败'
         return result
 
-
     @access_control.owner_required(user_args='user_id',identity_error=('error', 'identity error'))
     def abondon_task(self, user_id, task_id):
         """
@@ -219,7 +214,6 @@ class taskManagementSystem(object):
             return 'error', "放弃失败"
         else:
             return 'success', "放弃任务"
-
 
     @access_control.owner_required(user_args='user_id',identity_error=('error', 'identity error'))
     def commit_job(self, user_id, task_id, job):
@@ -239,7 +233,9 @@ class taskManagementSystem(object):
         else:
             return 'success', "提交工作"
 
-
+    @staticmethod
+    def audit_task(task_id, audit):
+        return Task.taskTable.audit(task_id, audit)
 
 
     """

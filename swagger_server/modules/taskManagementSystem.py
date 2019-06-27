@@ -125,8 +125,9 @@ class taskManagementSystem(object):
         """
         accepters = Task.taskTable.get_task_participants(task_id = task_id)
         return accepters
-
-    def get_task_detail(self, task_id):
+    
+    @staticmethod
+    def get_task_detail(task_id):
         """
         获取任务信息以及发布者信息
         """

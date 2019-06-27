@@ -143,7 +143,7 @@ def task_task_id_info_get(taskId):  # noqa: E501
         return TaskDetailWithPublisher(
             user = user,
             content= content,
-            has_received=1
+            has_received=task_with_publisher.get('task_job_state')
         )
     return 'do some magic!'
 

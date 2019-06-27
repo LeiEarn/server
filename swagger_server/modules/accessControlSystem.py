@@ -42,7 +42,6 @@ class AccessControlSystem(object):
         """
         
         """
-        print(redirect_to_login)
         def decp(view):
             def wrapped_view(*args, **kwargs):
                 if g.get('accesscontrol') is  None or  g.get('accesscontrol').get('identity') is None:

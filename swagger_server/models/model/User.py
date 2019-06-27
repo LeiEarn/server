@@ -55,7 +55,9 @@ class UserTable(object):
                 identity=row['identity'],
                 intro=row['intro'],
                 create_date=row['create_date'].strftime('%Y-%m-%d %H:%M:%S'),
-                isprove=row['isprove'])
+                isprove=row['isprove'],
+                balance=row['balance'],
+                credit=row['credit'])
     
     def get_user_info(self, user_id):
         sql =  "SELECT * " \

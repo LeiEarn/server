@@ -86,8 +86,6 @@ from flask_session import Session
 from redis import Redis
 
 
-
-
 import os
 from flask import session, g, current_app
 from ..models.model.User import  User
@@ -107,15 +105,6 @@ class PersistentSystem(object):
         if  self.app  is not None or app is  None:
             return 
         self.app = app
-        app.config['SESSION_TYPE'] = 'redis'   #session存储格式为redis
-        app.config['SESSION_REDIS'] = Redis(    #redis的服务器参数
-            host='localhost',                 #服务器地址
-            port=6379)                           #服务器端口
-
-        app.config['SESSION_USE_SIGNER'] = True   #是否强制加盐，混淆session
-        app.config['SECRET_KEY'] = os.urandom(24)  #如果加盐，那么必须设置的安全码，盐
-        app.config['SESSION_PERMANENT'] = False  #sessons是否长期有效，false，则关闭浏览器，session失效
-        app.config['PERMANENT_SESSION_LIFETIME'] = 3600   #session长期有效，则设定session生命周期，整数秒，默认大概不到3小时。
         Session(app)
         self.add_func(app)
 

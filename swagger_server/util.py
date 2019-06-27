@@ -14,7 +14,6 @@ def _deserialize(data, klass):
     """
     if data is None:
         return None
-    print(type(klass))
     if klass in six.integer_types or klass in (float, str, bool):
         return _deserialize_primitive(data, klass)
     elif klass == object:

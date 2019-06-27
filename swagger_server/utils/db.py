@@ -1,9 +1,9 @@
 import sqlite3
 
-from ..constants import CONST
+from flask import current_app
 import pymysql
 
-
+from ..config import CONST
 
 class Database: 
     host=CONST.HOST

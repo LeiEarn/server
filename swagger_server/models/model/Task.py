@@ -63,7 +63,7 @@ class TaskTable(object):
     @staticmethod
     def get_task_detail(task_id):
         """
-        获取任务的基本信息task表　以及其创建者的photo, nickname, phone, userid
+        获取任务的基本信息task表　以及其创建者的photo, nickname, phone, userid, 还有job state
         """
         sql = 'SELECT * FROM task WHERE task_id=%d;' % int(task_id)
         task = Database.query(sql, fetchone=True)
@@ -72,10 +72,19 @@ class TaskTable(object):
                 'FROM user as u, (select phone_number, user_com_id as id from com_identity where user_user_id={id}'\
                                  'UNION ALL'\
                                  'select phone_number, user_stu_id as id from stu_identity where user_user_id={id}) as a'\
-                'WHERE u.user_id= a.id AND  a.id ={id};' .format(id = task['publish_id'])
+                'WHERE u.user_id= a.id AND  a.id ={id};'.format(id = task['publish_id'])
+        
+        publisher = Database.query(sql2, fetchone=True)
+        
+        sql3 = "SELECT isagree FROM user_has_task as ut  WHERE ut.user_user_id = {user_id} AND ut.task_task_id={task_id}"\
+            .format(user_id=publisher.get('user_id'), task_id=task_id)
+        
+        job = Database.query(sql3, fetchone=True)
 
-        return {'task': task,
-                'publisher': Database.query(sql2, fetchone=True)}
+        return {
+            'task': task,
+            'publisher': publisher,
+            'job': job}
 
     #目前的表查询是错的,还要关联task表，以及获得任务发布者的photo， 
     @staticmethod
@@ -110,6 +119,7 @@ class TaskTable(object):
     @classmethod
     def get_task_part_num(task_id):
         pass
+    
     @staticmethod
     def get_task_participants(task_id):
         """

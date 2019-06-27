@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 from ..models.model.Task import Task
-from ..models.model.User import User as User
 import datetime
 from flask import g, session
 
-from .AdminPlatform import AdminPlatform
 from .accessControlSystem import AccessControlSystem as access_control
 from swagger_server.utils.utils import load_data, dump_data
-AdminPlatform = AdminPlatform()
+
 class taskManagementSystem(object):
     def __init__(self):
         pass

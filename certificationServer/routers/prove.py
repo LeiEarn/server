@@ -260,8 +260,8 @@ def audit_user():
     else:
         return bad('please use POST')
 
-@app.route('/api/v1/audit_user', methods=['POST'])
-def audit_user():
+@app.route('/api/v1/audit_task', methods=['POST'])
+def audit_task():
     if request.method == 'POST':
         data = request.get_data()
         json_data = json.loads(data.decode('utf-8'))

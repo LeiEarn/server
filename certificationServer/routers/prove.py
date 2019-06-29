@@ -217,7 +217,7 @@ def get_user_info():
         identity = json_data.get('identity', None)
 
         if identity is not None:
-            if identity != user['identity']:
+            if identity != user.identity:
                 return bad('wrong identity')
         else:
             identity = user.identity

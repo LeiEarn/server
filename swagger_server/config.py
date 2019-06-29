@@ -31,7 +31,7 @@ PERMANENT_SESSION_LIFETIME = 3600   #session长期有效，则设定session生�
 
 class CONST:
     # remote
-    HOST = 'mysql'
+    HOST = 'localhost'
     USER = 'yunquan'
     PASSWD = '12345678'
     PORT=3306

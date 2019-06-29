@@ -20,9 +20,11 @@
 --
 
 create user 'yunquan'@'%' identified by '12345678';
+create database ZXQ;
 
-grant all privileges on `ZXQ`.* to 'yunquan'@'%';
-USE ZXQ
+grant all privileges on `ZXQ`.* to 'yunquan'@'%' ;
+use ZXQ;
+
 DROP TABLE IF EXISTS `audit_administrator`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;

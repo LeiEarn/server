@@ -103,7 +103,8 @@ class TaskManagementSystem(object):
         """
         获取任务信息以及发布者信息
         """
-        task_with_user = Task.taskTable.get_task_detail(task_id, user_id=g.user.user_id)
+        task_with_user = Task.taskTable.get_task_detail(task_id,
+                                                        user_id=g.user.user_id if hasattr(g, 'user') else None)
 
         if task_with_user is None or len(task_with_user) is 0:
             return "error", "no such task"
@@ -112,6 +113,7 @@ class TaskManagementSystem(object):
             is_agree = task_with_user.get("job").get("isagree")
         else:
             is_agree = None
+
         if is_agree is None:
             task_with_user["task_job_state"] = 0
         else:

@@ -68,7 +68,12 @@ class TaskTable(object):
         task = Database.query(sql, fetchone=True)
 
         if task is None:
+            print('find no task')
             return None
+
+        if user_id is None:
+            return {'task': task}
+
         id = task['publish_id']
 
         sql2 = 'SELECT * '\

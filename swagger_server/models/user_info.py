@@ -15,7 +15,13 @@ class UserInfo(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, user_id: str=None, nick_name: str=None, avatar_url: str=None, prove_state: str=None):  # noqa: E501
+    def __init__(
+        self,
+        user_id: str = None,
+        nick_name: str = None,
+        avatar_url: str = None,
+        prove_state: str = None,
+    ):  # noqa: E501
         """UserInfo - a model defined in Swagger
 
         :param user_id: The user_id of this UserInfo.  # noqa: E501
@@ -28,17 +34,17 @@ class UserInfo(Model):
         :type prove_state: str
         """
         self.swagger_types = {
-            'user_id': str,
-            'nick_name': str,
-            'avatar_url': str,
-            'prove_state': str
+            "user_id": str,
+            "nick_name": str,
+            "avatar_url": str,
+            "prove_state": str,
         }
 
         self.attribute_map = {
-            'user_id': 'userId',
-            'nick_name': 'nickName',
-            'avatar_url': 'avatarUrl',
-            'prove_state': 'proveState'
+            "user_id": "userId",
+            "nick_name": "nickName",
+            "avatar_url": "avatarUrl",
+            "prove_state": "proveState",
         }
 
         self._user_id = user_id
@@ -47,7 +53,7 @@ class UserInfo(Model):
         self._prove_state = prove_state
 
     @classmethod
-    def from_dict(cls, dikt) -> 'UserInfo':
+    def from_dict(cls, dikt) -> "UserInfo":
         """Returns the dict as a model
 
         :param dikt: A dict.

@@ -1,11 +1,11 @@
 # -*- encoding:utf-8 -*-
 import json
-from flask import session, Flask, jsonify, request, send_from_directory
+from flask import session, Flask, jsonify, request
 from flask_cors import CORS
 
-from swagger_server.modules.userManagementSystem import ManagementSystem as UMS
-from swagger_server.modules.taskManagementSystem import taskManagementSystem as TMS
-from swagger_server.modules.AdminPlatform import AdminPlatform as AP
+from swagger_server.modules.userManagementSystem import ManagementSystem as UserManagementSystem
+from swagger_server.modules.TaskManagementSystem import TaskManagementSystem as TaskManagementSystem
+from swagger_server.modules.AdminPlatform import AdminPlatform as AdminPlatform
 app = Flask(__name__)
 app.secret_key = "nQnk2n8moN=GLNmE.wL6PTZD"
 
@@ -25,6 +25,7 @@ def bad(msg=""):
         "message": msg
     })
 
+
 # Login Part:
 @app.route("/api/v1/login", methods=['POST'])
 def login():
@@ -36,7 +37,7 @@ def login():
         account = json_data.get('account', None)
         password = json_data.get('password', None)
 
-        admin = AP.get_admin(account) # search for admin by account
+        admin = AdminPlatform.get_admin(account)  # search for admin by account
         if admin is None:
             return bad('wrong account')
         print(admin[0])
@@ -53,27 +54,28 @@ def login():
 # Query Part:
 @app.route('/api/v1/get_users', methods=['POST'])
 def get_users():
-    if request.method =='POST':
+    if request.method == 'POST':
         data = request.get_data()
         json_data = json.loads(data.decode('utf-8'))
         print('data', json_data)
 
-        page      = json_data.get('page', None)
+        page = json_data.get('page', None)
         user_type = json_data.get('user_type', None)
 
         if page is None or user_type is None:
             return bad('key error')
 
-        record_num = UMS.get_user_count(user_type)
+        record_num = UserManagementSystem.get_user_count(user_type)
 
         if page > record_num // 100 + 1:
             return bad('out of user size')
 
-        data = UMS.get_users(user_type=user_type, page=page)
+        data = UserManagementSystem.get_users(user_type=user_type, page=page)
         print(data)
 
         return ok(json.dumps(data))
     return bad('error')
+
 
 @app.route('/api/v1/get_user_count', methods=['POST'])
 def get_user_count():
@@ -86,12 +88,13 @@ def get_user_count():
         if user_type is None:
             return bad('key error')
 
-        record_num = UMS.get_user_count(user_type)
+        record_num = UserManagementSystem.get_user_count(user_type)
 
         print('record_num', record_num)
 
         return ok(json.dumps({'count': record_num}))
     return bad('please user POST!')
+
 
 @app.route('/api/v1/specific_user_count', methods=['POST'])
 def specific_user_count():
@@ -106,7 +109,7 @@ def specific_user_count():
         if gender not in ['W', 'M'] or identity not in ['S', 'C']:
             return bad('bad gender/identity')
 
-        record_num = UMS.specific_user_count(gender, identity)
+        record_num = UserManagementSystem.specific_user_count(gender, identity)
 
         print('record_num', record_num)
 
@@ -116,6 +119,7 @@ def specific_user_count():
             return bad(json.dumps(record_num[1]))
     else:
         return bad('use POST')
+
 
 @app.route('/api/v1/low_credit_count', methods=['POST'])
 def low_credit_count():
@@ -129,9 +133,10 @@ def low_credit_count():
         if not isinstance(credit, int):
             return bad('bad credit')
 
-        return ok(json.dumps({'count': UMS.low_credit_count(credit)}))
+        return ok(json.dumps({'count': UserManagementSystem.low_credit_count(credit)}))
     else:
         return bad('use POST')
+
 
 @app.route('/api/v1/get_company_count', methods=['POST'])
 def get_company_count():
@@ -140,13 +145,14 @@ def get_company_count():
         json_data = json.loads(data.decode('utf-8'))
         print('data', json_data)
 
-        type = json_data.get('type', None)
-        if type not in ['company', 'college']:
+        type_ = json_data.get('type', None)
+        if type_ not in ['company', 'college']:
             return bad('wrong type')
 
-        return ok(json.dumps(UMS.get_company_count(type)))
+        return ok(json.dumps(UserManagementSystem.get_company_count(type_)))
     else:
         return bad('use POST')
+
 
 @app.route('/api/v1/get_task', methods=['POST'])
 def get_task():
@@ -155,22 +161,22 @@ def get_task():
         json_data = json.loads(data.decode('utf-8'))
         print('data', json_data)
 
-        page      = json_data.get('page', None)
+        page = json_data.get('page', None)
         task_type = json_data.get('task_type', None)
 
         if page is None or task_type not in ['waiting', 'succeed', 'all']:
             return bad('key error')
 
-        record_num = TMS.get_task_count(task_type)
-
+        record_num = TaskManagementSystem.get_task_count(task_type)
 
         if record_num[0] and page > record_num[1] // 100 + 1:
             return bad('out of user size')
 
-        data = TMS.get_tasks(task_type=task_type, page=page)
+        data = TaskManagementSystem.get_tasks(task_type=task_type, page=page)
         print(data)
         return ok(json.dumps(data))
     return bad('error')
+
 
 @app.route('/api/v1/get_task_count', methods=['POST'])
 def get_task_count():
@@ -185,7 +191,7 @@ def get_task_count():
         if task_type not in ['O', 'W', 'all'] or task_state not in ['all', 'waiting']:
             return bad('task type/state error')
 
-        record_num = TMS.get_task_count(state=task_state, type=task_type)
+        record_num = TaskManagementSystem.get_task_count(state=task_state, type=task_type)
 
         print('record_num', record_num)
 
@@ -204,10 +210,10 @@ def get_user_info():
         json_data = json.loads(data.decode('utf-8'))
         print('data', json_data)
 
-        user_id      = json_data.get('user_id', None)
+        user_id = json_data.get('user_id', None)
         if user_id is None:
             return bad('user id is None')
-        user = UMS.get_user_info(user_id)
+        user = UserManagementSystem.get_user_info(user_id)
         identity = json_data.get('identity', None)
 
         if identity is not None:
@@ -216,7 +222,7 @@ def get_user_info():
         else:
             identity = user.identity
 
-        data = UMS.get_indentity_info(user_id, identity)
+        data = UserManagementSystem.get_indentity_info(user_id, identity)
         if data is None:
             return bad('nothing found')
 
@@ -227,12 +233,14 @@ def get_user_info():
 
 
 ###################
-## Auditing Part ##
+# Auditing Part   #
 ###################
 
 """
 N W F P
 """
+
+
 @app.route('/api/v1/audit_user', methods=['POST'])
 def audit_user():
     if request.method == 'POST':
@@ -248,7 +256,7 @@ def audit_user():
             print(user_id, identity, audit)
             return bad('wrong data value')
 
-        resutl = AP.audit_user(user_id, identity, audit)
+        resutl = AdminPlatform.audit_user(user_id, identity, audit)
 
         if isinstance(resutl, tuple) and resutl[0]:
             if resutl[0]:
@@ -259,6 +267,7 @@ def audit_user():
             return bad(resutl)
     else:
         return bad('please use POST')
+
 
 @app.route('/api/v1/audit_task', methods=['POST'])
 def audit_task():
@@ -274,15 +283,15 @@ def audit_task():
             print(task_id, audit)
             return bad('wrong data value')
 
-        resutl = AP.audit_task(task_id, audit)
+        result = AdminPlatform.audit_task(task_id, audit)
 
-        if isinstance(resutl, tuple) and resutl[0]:
-            if resutl[0]:
-                return ok(resutl[1])
+        if isinstance(result, tuple) and result[0]:
+            if result[0]:
+                return ok(result[1])
             else:
-                return bad('Unknown error: %s' % resutl[1])
+                return bad('Unknown error: %s' % result[1])
         else:
-            return bad(resutl)
+            return bad(result)
     else:
         return bad('please use POST')
 

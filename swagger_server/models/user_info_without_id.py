@@ -15,7 +15,7 @@ class UserInfoWithoutId(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, nick_name: str=None, avatar_url: str=None):  # noqa: E501
+    def __init__(self, nick_name: str = None, avatar_url: str = None):  # noqa: E501
         """UserInfoWithoutId - a model defined in Swagger
 
         :param nick_name: The nick_name of this UserInfoWithoutId.  # noqa: E501
@@ -23,21 +23,15 @@ class UserInfoWithoutId(Model):
         :param avatar_url: The avatar_url of this UserInfoWithoutId.  # noqa: E501
         :type avatar_url: str
         """
-        self.swagger_types = {
-            'nick_name': str,
-            'avatar_url': str
-        }
+        self.swagger_types = {"nick_name": str, "avatar_url": str}
 
-        self.attribute_map = {
-            'nick_name': 'nickName',
-            'avatar_url': 'avatarUrl'
-        }
+        self.attribute_map = {"nick_name": "nickName", "avatar_url": "avatarUrl"}
 
         self._nick_name = nick_name
         self._avatar_url = avatar_url
 
     @classmethod
-    def from_dict(cls, dikt) -> 'UserInfoWithoutId':
+    def from_dict(cls, dikt) -> "UserInfoWithoutId":
         """Returns the dict as a model
 
         :param dikt: A dict.

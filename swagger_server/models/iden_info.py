@@ -15,7 +15,17 @@ class IdenInfo(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, name: str=None, sex: str=None, iden_type: str=None, tel: str=None, school: str=None, company: str=None, id: str=None, cert: str=None):  # noqa: E501
+    def __init__(
+        self,
+        name: str = None,
+        sex: str = None,
+        iden_type: str = None,
+        tel: str = None,
+        school: str = None,
+        company: str = None,
+        id: str = None,
+        cert: str = None,
+    ):  # noqa: E501
         """IdenInfo - a model defined in Swagger
 
         :param name: The name of this IdenInfo.  # noqa: E501
@@ -36,25 +46,25 @@ class IdenInfo(Model):
         :type cert: str
         """
         self.swagger_types = {
-            'name': str,
-            'sex': str,
-            'iden_type': str,
-            'tel': str,
-            'school': str,
-            'company': str,
-            'id': str,
-            'cert': str
+            "name": str,
+            "sex": str,
+            "iden_type": str,
+            "tel": str,
+            "school": str,
+            "company": str,
+            "id": str,
+            "cert": str,
         }
 
         self.attribute_map = {
-            'name': 'name',
-            'sex': 'sex',
-            'iden_type': 'idenType',
-            'tel': 'tel',
-            'school': 'school',
-            'company': 'company',
-            'id': 'id',
-            'cert': 'cert'
+            "name": "name",
+            "sex": "sex",
+            "iden_type": "idenType",
+            "tel": "tel",
+            "school": "school",
+            "company": "company",
+            "id": "id",
+            "cert": "cert",
         }
 
         self._name = name
@@ -67,7 +77,7 @@ class IdenInfo(Model):
         self._cert = cert
 
     @classmethod
-    def from_dict(cls, dikt) -> 'IdenInfo':
+    def from_dict(cls, dikt) -> "IdenInfo":
         """Returns the dict as a model
 
         :param dikt: A dict.

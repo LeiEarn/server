@@ -15,7 +15,13 @@ class GroupsInner(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, group_id: str=None, group_name: str=None, group_desc: str=None, group_icon: str=None):  # noqa: E501
+    def __init__(
+        self,
+        group_id: str = None,
+        group_name: str = None,
+        group_desc: str = None,
+        group_icon: str = None,
+    ):  # noqa: E501
         """GroupsInner - a model defined in Swagger
 
         :param group_id: The group_id of this GroupsInner.  # noqa: E501
@@ -28,17 +34,17 @@ class GroupsInner(Model):
         :type group_icon: str
         """
         self.swagger_types = {
-            'group_id': str,
-            'group_name': str,
-            'group_desc': str,
-            'group_icon': str
+            "group_id": str,
+            "group_name": str,
+            "group_desc": str,
+            "group_icon": str,
         }
 
         self.attribute_map = {
-            'group_id': 'groupId',
-            'group_name': 'groupName',
-            'group_desc': 'groupDesc',
-            'group_icon': 'groupIcon'
+            "group_id": "groupId",
+            "group_name": "groupName",
+            "group_desc": "groupDesc",
+            "group_icon": "groupIcon",
         }
 
         self._group_id = group_id
@@ -47,7 +53,7 @@ class GroupsInner(Model):
         self._group_icon = group_icon
 
     @classmethod
-    def from_dict(cls, dikt) -> 'GroupsInner':
+    def from_dict(cls, dikt) -> "GroupsInner":
         """Returns the dict as a model
 
         :param dikt: A dict.

@@ -15,7 +15,13 @@ class UserInfoWithTel(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, user_id: str=None, avatar_url: str=None, nick_name: str=None, tel: str=None):  # noqa: E501
+    def __init__(
+        self,
+        user_id: str = None,
+        avatar_url: str = None,
+        nick_name: str = None,
+        tel: str = None,
+    ):  # noqa: E501
         """UserInfoWithTel - a model defined in Swagger
 
         :param user_id: The user_id of this UserInfoWithTel.  # noqa: E501
@@ -28,17 +34,17 @@ class UserInfoWithTel(Model):
         :type tel: str
         """
         self.swagger_types = {
-            'user_id': str,
-            'avatar_url': str,
-            'nick_name': str,
-            'tel': str
+            "user_id": str,
+            "avatar_url": str,
+            "nick_name": str,
+            "tel": str,
         }
 
         self.attribute_map = {
-            'user_id': 'userId',
-            'avatar_url': 'avatarUrl',
-            'nick_name': 'nickName',
-            'tel': 'tel'
+            "user_id": "userId",
+            "avatar_url": "avatarUrl",
+            "nick_name": "nickName",
+            "tel": "tel",
         }
 
         self._user_id = user_id
@@ -47,7 +53,7 @@ class UserInfoWithTel(Model):
         self._tel = tel
 
     @classmethod
-    def from_dict(cls, dikt) -> 'UserInfoWithTel':
+    def from_dict(cls, dikt) -> "UserInfoWithTel":
         """Returns the dict as a model
 
         :param dikt: A dict.

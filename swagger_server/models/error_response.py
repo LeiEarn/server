@@ -15,24 +15,20 @@ class ErrorResponse(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, message: str=None):  # noqa: E501
+    def __init__(self, message: str = None):  # noqa: E501
         """ErrorResponse - a model defined in Swagger
 
         :param message: The message of this ErrorResponse.  # noqa: E501
         :type message: str
         """
-        self.swagger_types = {
-            'message': str
-        }
+        self.swagger_types = {"message": str}
 
-        self.attribute_map = {
-            'message': 'message'
-        }
+        self.attribute_map = {"message": "message"}
 
         self._message = message
 
     @classmethod
-    def from_dict(cls, dikt) -> 'ErrorResponse':
+    def from_dict(cls, dikt) -> "ErrorResponse":
         """Returns the dict as a model
 
         :param dikt: A dict.

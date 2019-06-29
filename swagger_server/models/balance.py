@@ -15,24 +15,20 @@ class Balance(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, balance: float=None):  # noqa: E501
+    def __init__(self, balance: float = None):  # noqa: E501
         """Balance - a model defined in Swagger
 
         :param balance: The balance of this Balance.  # noqa: E501
         :type balance: float
         """
-        self.swagger_types = {
-            'balance': float
-        }
+        self.swagger_types = {"balance": float}
 
-        self.attribute_map = {
-            'balance': 'balance'
-        }
+        self.attribute_map = {"balance": "balance"}
 
         self._balance = balance
 
     @classmethod
-    def from_dict(cls, dikt) -> 'Balance':
+    def from_dict(cls, dikt) -> "Balance":
         """Returns the dict as a model
 
         :param dikt: A dict.

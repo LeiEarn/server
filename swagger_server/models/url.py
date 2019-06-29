@@ -15,24 +15,20 @@ class Url(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, url: str=None):  # noqa: E501
+    def __init__(self, url: str = None):  # noqa: E501
         """Url - a model defined in Swagger
 
         :param url: The url of this Url.  # noqa: E501
         :type url: str
         """
-        self.swagger_types = {
-            'url': str
-        }
+        self.swagger_types = {"url": str}
 
-        self.attribute_map = {
-            'url': 'url'
-        }
+        self.attribute_map = {"url": "url"}
 
         self._url = url
 
     @classmethod
-    def from_dict(cls, dikt) -> 'Url':
+    def from_dict(cls, dikt) -> "Url":
         """Returns the dict as a model
 
         :param dikt: A dict.

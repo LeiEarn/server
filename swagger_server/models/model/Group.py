@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-from .User import *
-
-__all__ = ['Group']
+__all__ = ["Group"]
 
 
 class Group(object):
@@ -11,13 +9,21 @@ class Group(object):
         intro:
         members:
     """
-    __slots__ = ['creater_date', 'creater', 'group_photo', 'members', 'intro', 'managers']
+
+    __slots__ = [
+        "creater_date",
+        "creater",
+        "group_photo",
+        "members",
+        "intro",
+        "managers",
+    ]
 
     def __init__(self):
         pass
-        self.creater_date = ''
+        self.creater_date = ""
         self.creater = None
         self.group_photo = None
         self.members = []
-        self.intro = ''
+        self.intro = ""
         self.managers = []

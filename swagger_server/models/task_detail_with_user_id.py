@@ -16,7 +16,7 @@ class TaskDetailWithUserId(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, user_id: str=None, content: TaskDetail=None):  # noqa: E501
+    def __init__(self, user_id: str = None, content: TaskDetail = None):  # noqa: E501
         """TaskDetailWithUserId - a model defined in Swagger
 
         :param user_id: The user_id of this TaskDetailWithUserId.  # noqa: E501
@@ -24,21 +24,15 @@ class TaskDetailWithUserId(Model):
         :param content: The content of this TaskDetailWithUserId.  # noqa: E501
         :type content: TaskDetail
         """
-        self.swagger_types = {
-            'user_id': str,
-            'content': TaskDetail
-        }
+        self.swagger_types = {"user_id": str, "content": TaskDetail}
 
-        self.attribute_map = {
-            'user_id': 'userId',
-            'content': 'content'
-        }
+        self.attribute_map = {"user_id": "userId", "content": "content"}
 
         self._user_id = user_id
         self._content = content
 
     @classmethod
-    def from_dict(cls, dikt) -> 'TaskDetailWithUserId':
+    def from_dict(cls, dikt) -> "TaskDetailWithUserId":
         """Returns the dict as a model
 
         :param dikt: A dict.

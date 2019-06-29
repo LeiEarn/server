@@ -1,0 +1,27 @@
+version: '3'
+services:
+  mysql:
+    build: ./mysql
+    command: --default-authentication-plugin=mysql_native_password #这行代码解决无法访问的问题
+    ports: 
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+    restart: always
+  redis:
+    image: redis:3.2
+    restart: always
+  flask:
+    build: ./flask
+    ports:
+     - "5000:8080"
+    links: 
+     - mysql:mysql  
+     - redis:redis-server 
+    restart: always
+  nginx: 
+    build: ./nginx 
+    ports: 
+      - "80:80" 
+    links: 
+     - flask 

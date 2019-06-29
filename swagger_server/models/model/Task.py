@@ -326,29 +326,30 @@ class TaskTable(object):
             return True, "success audit"
 
 
-def task_count(state="all", type_="all"):
-    if state == "all":
-        state = "IS NOT NULL"
-    elif state == "waiting":
-        state = "= 'W'"
+    @staticmethod
+    def task_count(state="all", type_="all"):
+        if state == "all":
+            state = "IS NOT NULL"
+        elif state == "waiting":
+            state = "= 'W'"
 
-    if type_ == "all":
-        type_ = "IS NOT NULL"
-    elif type_ == "W":
-        type_ = "= 'W'"
-    elif type_ == "O":
-        type_ = "= 'O'"
+        if type_ == "all":
+            type_ = "IS NOT NULL"
+        elif type_ == "W":
+            type_ = "= 'W'"
+        elif type_ == "O":
+            type_ = "= 'O'"
 
-    sql = "SELECT COUNT(*) as count FROM task WHERE task.state {} and task.type {};".format(
-        state, type_
-    )
-    print(sql)
-    data = Database.execute(sql, response=True)
+        sql = "SELECT COUNT(*) as count FROM task WHERE task.state {} and task.type {};".format(
+            state, type_
+        )
+        print(sql)
+        data = Database.execute(sql, response=True)
 
-    if isinstance(data, Exception):
-        return False, data
-    else:
-        return True, data[0]["count"]
+        if isinstance(data, Exception):
+            return False, data
+        else:
+            return True, data[0]["count"]
 
 
 def get_task_detail(task_id, user_id=None):
@@ -503,4 +504,4 @@ class Task(object):
 
 
 if __name__ == "__main__":
-    print(task_count())
+    print(Task.taskTable.task_count())

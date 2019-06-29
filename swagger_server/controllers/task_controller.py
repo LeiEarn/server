@@ -12,7 +12,7 @@ from swagger_server import util
 from swagger_server.modules.taskManagementSystem import taskManagementSystem
 from swagger_server.modules.accessControlSystem import AccessControlSystem as accessControlSystem
 
-task_mangager = taskManagementSystem()
+task_manager = taskManagementSystem()
 access_control = accessControlSystem()
 
 login_response=(ErrorResponse('login'),400)
@@ -30,7 +30,7 @@ def task_task_id_accepter_delete(taskId, userId):  # noqa: E501
 
     :rtype: None
     """
-    result = task_mangager.abondon_task(user_id=userId, task_id=taskId)
+    result =  task_manager.abondon_task(user_id=userId, task_id=taskId)
     if 'error' in result:
         return ErrorResponse(result[1]), 400
     else:
@@ -50,7 +50,7 @@ def task_task_id_accepter_get(taskId, userId):  # noqa: E501
 
     :rtype: List[UserInfoWithTel]
     """
-    results = task_mangager.get_task_accepter(task_id=taskId, user_id = userId)
+    results =  task_manager.get_task_accepter(task_id=taskId, user_id = userId)
     if len(results) is not 0 and results[0] is 'error':
         return []
     else:
@@ -77,7 +77,7 @@ def task_task_id_accepter_post(taskId, userId):  # noqa: E501
 
     :rtype: None
     """
-    result = task_mangager.accept_task(user_id=userId, task_id=taskId)
+    result =  task_manager.accept_task(user_id=userId, task_id=taskId)
     if 'error' in result:
         return ErrorResponse(result[1]), 400
     else:
@@ -99,7 +99,7 @@ def task_task_id_info_delete(taskId, userId):  # noqa: E501
 
     :rtype: None
     """
-    result = task_mangager.abort_task(task_id=taskId, user_id = userId)
+    result =  task_manager.abort_task(task_id=taskId, user_id = userId)
     if 'error' in result:
         return ErrorResponse(result[1]), 400
     else:
@@ -116,7 +116,7 @@ def task_task_id_info_get(taskId):  # noqa: E501
 
     :rtype: TaskDetailWithPublisher
     """
-    task_with_publisher = task_mangager.get_task_detail(task_id=taskId)
+    task_with_publisher =  task_manager.get_task_detail(task_id=taskId)
     if 'error' in task_with_publisher:
         return ErrorResponse(task_with_publisher[1]), 400
     else:
@@ -137,7 +137,10 @@ def task_task_id_info_get(taskId):  # noqa: E501
                 title=task_with_publisher['task']["title"],
                 time=task_with_publisher['task']["sign_end_time"],
                 max_num=task_with_publisher['task']["max_num"],
-                money=task_with_publisher['task']["money"]
+                money=task_with_publisher['task']["money"],
+                part_num=task_with_publisher['task']['participants_num'],
+                desc=task_with_publisher['task']['task_intro'],
+                condition=None,
             )
         else:
             content =None
@@ -164,7 +167,7 @@ def task_task_id_info_put(taskId, body):  # noqa: E501
     """
     if connexion.request.is_json:
         body = ExtraTaskInfo.from_dict(connexion.request.get_json())  # noqa: E501
-    result= task_mangager.add_info(task_id=taskId, content = body.content)
+    result=  task_manager.add_info(task_id=taskId, content = body.content)
     if result is  None or 'error' in result:
         return ErrorResponse('add fail'), 400
     else:
@@ -183,7 +186,7 @@ def task_task_id_job_get(taskId, userId):  # noqa: E501
 
     :rtype: List[Cert]
     """
-    result = task_mangager.get_task_jobs(task_id=taskId)
+    result =  task_manager.get_task_jobs(task_id=taskId)
     if len(result) > 0 and 'error' is result[0]:
         return ErrorResponse(result[1]), 400
     else:
@@ -213,7 +216,7 @@ def task_task_id_job_post(taskId, body):  # noqa: E501
     if connexion.request.is_json:
         body = Cert.from_dict(connexion.request.get_json())  # noqa: E501
     
-    result = task_mangager.commit_job(user_id=body.user_id,task_id=taskId,job =body )
+    result =  task_manager.commit_job(user_id=body.user_id,task_id=taskId,job =body )
     if result is  None or 'error' in result:
         return ErrorResponse('post fail'), 400
     else:
@@ -235,7 +238,7 @@ def task_task_id_job_put(taskId, userId, state):  # noqa: E501
 
     :rtype: None
     """
-    result = task_mangager.agree_job(task_id=taskId, user_id=userId, state=state)
+    result =  task_manager.agree_job(task_id=taskId, user_id=userId, state=state)
     if 'error' in result:
         return ErrorResponse(result[1]), 400
     else:
@@ -255,7 +258,7 @@ def task_user_id_get(userId, type):  # noqa: E501
 
     :rtype: List[Task]
     """
-    tasks = task_mangager.get_related_tasks(userId=userId, Type=type)
+    tasks =  task_manager.get_related_tasks(userId=userId, Type=type)
     if tasks is None:
         return ErrorResponse("error"), 400
     else:
@@ -289,7 +292,7 @@ def task_user_id_post(userId, body):  # noqa: E501
     """
     if connexion.request.is_json:
         body = TaskDetail.from_dict(connexion.request.get_json())  # noqa: E501
-    result = task_mangager.commit_task(body)
+    result =  task_manager.commit_task(body)
     if 'error' in result:
         return ErrorResponse(result[1]), 400
     else:
@@ -309,7 +312,7 @@ def tasks_get(pageId, type=None):  # noqa: E501
 
     :rtype: List[Task]
     """
-    tasks = task_mangager.get_task_list(page_id = pageId)
+    tasks =  task_manager.get_task_list(page_id = pageId)
     if tasks is None:
         return ErrorResponse("error"), 400
     else:

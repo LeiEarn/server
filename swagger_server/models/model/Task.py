@@ -25,7 +25,7 @@ class TaskTable(object):
         """
         :param kwargs: {
                  'title',
-                 'type_',
+                 'type',
                  'publish_id',
                  'wjx_id',
                  'task_intro',
@@ -60,7 +60,7 @@ class TaskTable(object):
         return result
 
     @staticmethod
-    def get_task_detail(task_id):
+    def get_task_detail(task_id, user_id=None):
         """
         获取任务的基本信息task表　以及其创建者的photo, nickname, phone, userid, 还有job state
         """
@@ -80,7 +80,6 @@ class TaskTable(object):
         publisher = Database.query(sql2, fetchone=True)
         if publisher is None:
             return None
-        user_id = publisher.get('user_id')
 
         sql3 = "SELECT isagree FROM user_has_task as ut  WHERE ut.user_user_id = {user_id} AND ut.task_task_id={task_id} "\
             .format(user_id=user_id, task_id=task_id)
@@ -124,15 +123,15 @@ class TaskTable(object):
         """
         放弃任务
         """
-        sql = "UPDATE task SET state=F WHERE task_id={task_id}".format(task_id=task_id)
+        sql = "UPDATE task SET state='F' WHERE task_id='{task_id}' ".format(task_id=task_id)
         result = Database.execute(sql)
         return result
 
     ##需要获得参与者数量，通过user_has_task
-    @classmethod
+    @staticmethod
     def get_task_part_num(task_id):
-        sql = 'SELECT COUNT(*) FROM user_has_task WHERE task_task_id={task_id};'.format(task_id)
-        return Database.query(sql)
+        sql = 'SELECT COUNT(*) as number FROM user_has_task WHERE task_task_id={task_id};'.format(task_id=task_id)
+        return Database.query(sql, fetchone=True)
 
     @staticmethod
     def get_task_participants(task_id):
@@ -177,7 +176,11 @@ class TaskTable(object):
                     user_id=user_id,
                     job_path=file,
                     unload_time=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-
+        result = Database.execute(sql, response=True)
+        if isinstance(result, Exception):
+            return result
+        sql = "UPDATE user_has_task as ut SET ut.isagree='W' WHERE  ut.task_task_id="\
+            "{task_id} AND ut.user_user_id={user_id}".format(task_id=task_id,user_id=user_id)
         return Database.execute(sql, response=True)
 
     @staticmethod
@@ -192,7 +195,7 @@ class TaskTable(object):
         return Database.execute(sql, response=True)
 
     @staticmethod
-    def update_task(self, task_id,  **kwargs):
+    def update_task(task_id,  **kwargs):
         """
         根据参数的属性，更改 task_id 对应的task 的属性
         example:

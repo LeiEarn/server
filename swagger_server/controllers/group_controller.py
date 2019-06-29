@@ -19,7 +19,7 @@ def group_user_id_delete(userId, groupName):  # noqa: E501
 
     :rtype: None
     """
-    return 'do some magic!'
+    return "do some magic!"
 
 
 def group_user_id_get(userId):  # noqa: E501
@@ -32,7 +32,7 @@ def group_user_id_get(userId):  # noqa: E501
 
     :rtype: MyGroup
     """
-    return 'do some magic!'
+    return "do some magic!"
 
 
 def group_user_id_post(userId, groupName):  # noqa: E501
@@ -47,7 +47,7 @@ def group_user_id_post(userId, groupName):  # noqa: E501
 
     :rtype: None
     """
-    return 'do some magic!'
+    return "do some magic!"
 
 
 def group_user_id_put(userId, groupName):  # noqa: E501
@@ -62,7 +62,7 @@ def group_user_id_put(userId, groupName):  # noqa: E501
 
     :rtype: None
     """
-    return 'do some magic!'
+    return "do some magic!"
 
 
 def groups_get():  # noqa: E501
@@ -73,4 +73,4 @@ def groups_get():  # noqa: E501
 
     :rtype: Groups
     """
-    return 'do some magic!'
+    return "do some magic!"

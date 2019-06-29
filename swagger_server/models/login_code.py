@@ -15,7 +15,13 @@ class LoginCode(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, js_code: str=None, app_id: str=None, app_secret: str=None, encrypted_data: str=None):  # noqa: E501
+    def __init__(
+        self,
+        js_code: str = None,
+        app_id: str = None,
+        app_secret: str = None,
+        encrypted_data: str = None,
+    ):  # noqa: E501
         """LoginCode - a model defined in Swagger
 
         :param js_code: The js_code of this LoginCode.  # noqa: E501
@@ -28,17 +34,17 @@ class LoginCode(Model):
         :type encrypted_data: str
         """
         self.swagger_types = {
-            'js_code': str,
-            'app_id': str,
-            'app_secret': str,
-            'encrypted_data': str
+            "js_code": str,
+            "app_id": str,
+            "app_secret": str,
+            "encrypted_data": str,
         }
 
         self.attribute_map = {
-            'js_code': 'js_code',
-            'app_id': 'app_id',
-            'app_secret': 'app_secret',
-            'encrypted_data': 'encryptedData'
+            "js_code": "js_code",
+            "app_id": "app_id",
+            "app_secret": "app_secret",
+            "encrypted_data": "encryptedData",
         }
 
         self._js_code = js_code
@@ -47,7 +53,7 @@ class LoginCode(Model):
         self._encrypted_data = encrypted_data
 
     @classmethod
-    def from_dict(cls, dikt) -> 'LoginCode':
+    def from_dict(cls, dikt) -> "LoginCode":
         """Returns the dict as a model
 
         :param dikt: A dict.

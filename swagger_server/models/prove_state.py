@@ -15,24 +15,20 @@ class ProveState(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, prove_state: str=None):  # noqa: E501
+    def __init__(self, prove_state: str = None):  # noqa: E501
         """ProveState - a model defined in Swagger
 
         :param prove_state: The prove_state of this ProveState.  # noqa: E501
         :type prove_state: str
         """
-        self.swagger_types = {
-            'prove_state': str
-        }
+        self.swagger_types = {"prove_state": str}
 
-        self.attribute_map = {
-            'prove_state': 'proveState'
-        }
+        self.attribute_map = {"prove_state": "proveState"}
 
         self._prove_state = prove_state
 
     @classmethod
-    def from_dict(cls, dikt) -> 'ProveState':
+    def from_dict(cls, dikt) -> "ProveState":
         """Returns the dict as a model
 
         :param dikt: A dict.

@@ -16,7 +16,18 @@ class TaskDetail(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, type: str=None, wjx_id: str=None, title: str=None, desc: str=None, time: str=None, money: float=None, max_num: int=None, part_num: int=None, condition: Condition=None):  # noqa: E501
+    def __init__(
+        self,
+        type: str = None,
+        wjx_id: str = None,
+        title: str = None,
+        desc: str = None,
+        time: str = None,
+        money: float = None,
+        max_num: int = None,
+        part_num: int = None,
+        condition: Condition = None,
+    ):  # noqa: E501
         """TaskDetail - a model defined in Swagger
 
         :param type: The type of this TaskDetail.  # noqa: E501
@@ -39,27 +50,27 @@ class TaskDetail(Model):
         :type condition: Condition
         """
         self.swagger_types = {
-            'type': str,
-            'wjx_id': str,
-            'title': str,
-            'desc': str,
-            'time': str,
-            'money': float,
-            'max_num': int,
-            'part_num': int,
-            'condition': Condition
+            "type": str,
+            "wjx_id": str,
+            "title": str,
+            "desc": str,
+            "time": str,
+            "money": float,
+            "max_num": int,
+            "part_num": int,
+            "condition": Condition,
         }
 
         self.attribute_map = {
-            'type': 'type',
-            'wjx_id': 'wjxId',
-            'title': 'title',
-            'desc': 'desc',
-            'time': 'time',
-            'money': 'money',
-            'max_num': 'maxNum',
-            'part_num': 'partNum',
-            'condition': 'condition'
+            "type": "type",
+            "wjx_id": "wjxId",
+            "title": "title",
+            "desc": "desc",
+            "time": "time",
+            "money": "money",
+            "max_num": "maxNum",
+            "part_num": "partNum",
+            "condition": "condition",
         }
 
         self._type = type
@@ -73,7 +84,7 @@ class TaskDetail(Model):
         self._condition = condition
 
     @classmethod
-    def from_dict(cls, dikt) -> 'TaskDetail':
+    def from_dict(cls, dikt) -> "TaskDetail":
         """Returns the dict as a model
 
         :param dikt: A dict.

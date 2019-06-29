@@ -26,25 +26,23 @@ class TestUserController(BaseTestCase):
         """
         body = UserInfoWithoutId()
         response = self.client.open(
-            '//user/info',
-            method='PUT',
+            "//user/info",
+            method="PUT",
             data=json.dumps(body),
-            content_type='application/json')
-        self.assert200(response,
-                       'Response body is : ' + response.data.decode('utf-8'))
+            content_type="application/json",
+        )
+        self.assert200(response, "Response body is : " + response.data.decode("utf-8"))
 
     def test_user_proof_get(self):
         """Test case for user_proof_get
 
         get user's indentity info
         """
-        query_string = [('userId', 'userId_example')]
+        query_string = [("userId", "userId_example")]
         response = self.client.open(
-            '//user/proof',
-            method='GET',
-            query_string=query_string)
-        self.assert200(response,
-                       'Response body is : ' + response.data.decode('utf-8'))
+            "//user/proof", method="GET", query_string=query_string
+        )
+        self.assert200(response, "Response body is : " + response.data.decode("utf-8"))
 
     def test_user_proof_post(self):
         """Test case for user_proof_post
@@ -53,12 +51,12 @@ class TestUserController(BaseTestCase):
         """
         body = IdenInfo()
         response = self.client.open(
-            '//user/proof',
-            method='POST',
+            "//user/proof",
+            method="POST",
             data=json.dumps(body),
-            content_type='application/json')
-        self.assert200(response,
-                       'Response body is : ' + response.data.decode('utf-8'))
+            content_type="application/json",
+        )
+        self.assert200(response, "Response body is : " + response.data.decode("utf-8"))
 
     def test_user_session_post(self):
         """Test case for user_session_post
@@ -67,12 +65,12 @@ class TestUserController(BaseTestCase):
         """
         body = LoginCode()
         response = self.client.open(
-            '//user/session',
-            method='POST',
+            "//user/session",
+            method="POST",
             data=json.dumps(body),
-            content_type='application/json')
-        self.assert200(response,
-                       'Response body is : ' + response.data.decode('utf-8'))
+            content_type="application/json",
+        )
+        self.assert200(response, "Response body is : " + response.data.decode("utf-8"))
 
     def test_user_user_id_balance_get(self):
         """Test case for user_user_id_balance_get
@@ -80,23 +78,22 @@ class TestUserController(BaseTestCase):
         User get the balance.
         """
         response = self.client.open(
-            '//user/{userId}/balance'.format(userId='userId_example'),
-            method='GET')
-        self.assert200(response,
-                       'Response body is : ' + response.data.decode('utf-8'))
+            "//user/{userId}/balance".format(userId="userId_example"), method="GET"
+        )
+        self.assert200(response, "Response body is : " + response.data.decode("utf-8"))
 
     def test_user_user_id_balance_put(self):
         """Test case for user_user_id_balance_put
 
         User recharge.
         """
-        query_string = [('money', 'money_example')]
+        query_string = [("money", "money_example")]
         response = self.client.open(
-            '//user/{userId}/balance'.format(userId='userId_example'),
-            method='PUT',
-            query_string=query_string)
-        self.assert200(response,
-                       'Response body is : ' + response.data.decode('utf-8'))
+            "//user/{userId}/balance".format(userId="userId_example"),
+            method="PUT",
+            query_string=query_string,
+        )
+        self.assert200(response, "Response body is : " + response.data.decode("utf-8"))
 
     def test_user_user_id_proof_state_get(self):
         """Test case for user_user_id_proof_state_get
@@ -104,12 +101,12 @@ class TestUserController(BaseTestCase):
         User get his proveState.
         """
         response = self.client.open(
-            '//user/{userId}/proof/state'.format(userId='userId_example'),
-            method='GET')
-        self.assert200(response,
-                       'Response body is : ' + response.data.decode('utf-8'))
+            "//user/{userId}/proof/state".format(userId="userId_example"), method="GET"
+        )
+        self.assert200(response, "Response body is : " + response.data.decode("utf-8"))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import unittest
+
     unittest.main()

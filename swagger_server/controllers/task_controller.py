@@ -1,22 +1,24 @@
 import connexion
-import six
 
+import swagger_server.modules.accessControlSystem
 from swagger_server.models.cert import Cert  # noqa: E501
 from swagger_server.models.error_response import ErrorResponse  # noqa: E501
 from swagger_server.models.extra_task_info import ExtraTaskInfo  # noqa: E501
 from swagger_server.models.task import Task  # noqa: E501
 from swagger_server.models.task_detail import TaskDetail  # noqa: E501
-from swagger_server.models.task_detail_with_publisher import TaskDetailWithPublisher  # noqa: E501
+from swagger_server.models.task_detail_with_publisher import (
+    TaskDetailWithPublisher,
+)  # noqa: E501
 from swagger_server.models.user_info_with_tel import UserInfoWithTel  # noqa: E501
-from swagger_server import util
-from swagger_server.modules.taskManagementSystem import taskManagementSystem
-from swagger_server.modules.accessControlSystem import AccessControlSystem as accessControlSystem
+from swagger_server.modules.TaskManagementSystem import TaskManagementSystem
 
-task_manager = taskManagementSystem()
-access_control = accessControlSystem()
+task_manager = TaskManagementSystem()
+access_control = swagger_server.modules.accessControlSystem.AccessControlSystem()
 
-login_response=(ErrorResponse('login'),400)
-error_response = (ErrorResponse('error'), 400)
+login_response = (ErrorResponse("login"), 400)
+error_response = (ErrorResponse("error"), 400)
+
+
 @access_control.login_required(login_response)
 def task_task_id_accepter_delete(taskId, userId):  # noqa: E501
     """Accepter abandon the task.
@@ -30,8 +32,8 @@ def task_task_id_accepter_delete(taskId, userId):  # noqa: E501
 
     :rtype: None
     """
-    result =  task_manager.abondon_task(user_id=userId, task_id=taskId)
-    if 'error' in result:
+    result = task_manager.abondon_task(user_id=userId, task_id=taskId)
+    if "error" in result:
         return ErrorResponse(result[1]), 400
     else:
         return result[1], 200
@@ -50,17 +52,18 @@ def task_task_id_accepter_get(taskId, userId):  # noqa: E501
 
     :rtype: List[UserInfoWithTel]
     """
-    results =  task_manager.get_task_accepter(task_id=taskId, user_id = userId)
-    if len(results) is not 0 and results[0] is 'error':
+    results = task_manager.get_task_accepter(task_id=taskId, user_id=userId)
+    if len(results) is not 0 and results[0] is "error":
         return []
     else:
         return [
             UserInfoWithTel(
-                avatar_url= results['photo'],
-                nick_name=results['nickname'],
-                tel=results['phone'],
-                user_id=results['user_id']) 
-            for item in results
+                avatar_url=results["photo"],
+                nick_name=results["nickname"],
+                tel=results["phone"],
+                user_id=results["user_id"],
+            )
+            for _ in results
         ]
 
 
@@ -77,13 +80,11 @@ def task_task_id_accepter_post(taskId, userId):  # noqa: E501
 
     :rtype: None
     """
-    result =  task_manager.accept_task(user_id=userId, task_id=taskId)
-    if 'error' in result:
+    result = task_manager.accept_task(user_id=userId, task_id=taskId)
+    if "error" in result:
         return ErrorResponse(result[1]), 400
     else:
-        return 'success', 200
-
-    return 'do some magic!'
+        return "success", 200
 
 
 @access_control.login_required(login_response)
@@ -99,11 +100,11 @@ def task_task_id_info_delete(taskId, userId):  # noqa: E501
 
     :rtype: None
     """
-    result =  task_manager.abort_task(task_id=taskId, user_id = userId)
-    if 'error' in result:
+    result = task_manager.abort_task(task_id=taskId, user_id=userId)
+    if "error" in result:
         return ErrorResponse(result[1]), 400
     else:
-        return 'success', 200
+        return "success", 200
 
 
 def task_task_id_info_get(taskId):  # noqa: E501
@@ -116,40 +117,42 @@ def task_task_id_info_get(taskId):  # noqa: E501
 
     :rtype: TaskDetailWithPublisher
     """
-    task_with_publisher =  task_manager.get_task_detail(task_id=taskId)
-    if 'error' in task_with_publisher:
+    task_with_publisher = task_manager.get_task_detail(task_id=taskId)
+    if "error" in task_with_publisher:
         return ErrorResponse(task_with_publisher[1]), 400
     else:
-        #?需要做处理
-        if "publisher" in task_with_publisher and task_with_publisher['publisher'] is not None :
-            user =UserInfoWithTel(
-                user_id= task_with_publisher['publisher']['user_id'],
-                nick_name= task_with_publisher['publisher']['nickname'],
-                avatar_url=task_with_publisher['publisher']['photo'],
-                tel=task_with_publisher['publisher']['phone_number']
+        # ?需要做处理
+        if (
+            "publisher" in task_with_publisher
+            and task_with_publisher["publisher"] is not None
+        ):
+            user = UserInfoWithTel(
+                user_id=task_with_publisher["publisher"]["user_id"],
+                nick_name=task_with_publisher["publisher"]["nickname"],
+                avatar_url=task_with_publisher["publisher"]["photo"],
+                tel=task_with_publisher["publisher"]["phone_number"],
             )
         else:
-            user =None
-        if "task" in task_with_publisher and task_with_publisher['task'] is not None :
-            content=TaskDetail(
-                type=task_with_publisher['task']["type"],
-                wjx_id=task_with_publisher['task']["wjx_id"],
-                title=task_with_publisher['task']["title"],
-                time=task_with_publisher['task']["sign_end_time"],
-                max_num=task_with_publisher['task']["max_num"],
-                money=task_with_publisher['task']["money"],
-                part_num=task_with_publisher['task']['participants_num'],
-                desc=task_with_publisher['task']['task_intro'],
+            user = None
+        if "task" in task_with_publisher and task_with_publisher["task"] is not None:
+            content = TaskDetail(
+                type=task_with_publisher["task"]["type"],
+                wjx_id=task_with_publisher["task"]["wjx_id"],
+                title=task_with_publisher["task"]["title"],
+                time=task_with_publisher["task"]["sign_end_time"],
+                max_num=task_with_publisher["task"]["max_num"],
+                money=task_with_publisher["task"]["money"],
+                part_num=task_with_publisher["task"]["participants_num"],
+                desc=task_with_publisher["task"]["task_intro"],
                 condition=None,
             )
         else:
-            content =None
+            content = None
         return TaskDetailWithPublisher(
-            user = user,
-            content= content,
-            has_received=task_with_publisher.get('task_job_state')
+            user=user,
+            content=content,
+            has_received=task_with_publisher.get("task_job_state"),
         )
-    return 'do some magic!'
 
 
 @access_control.login_required(login_response)
@@ -167,35 +170,28 @@ def task_task_id_info_put(taskId, body):  # noqa: E501
     """
     if connexion.request.is_json:
         body = ExtraTaskInfo.from_dict(connexion.request.get_json())  # noqa: E501
-    result=  task_manager.add_info(task_id=taskId, content = body.content)
-    if result is  None or 'error' in result:
-        return ErrorResponse('add fail'), 400
+    result = add_info(task_id=taskId, content=body.content)
+    if result is None or "error" in result:
+        return ErrorResponse("add fail"), 400
     else:
-        return 'success', 200
+        return "success", 200
 
 
-def task_task_id_job_get(taskId, userId):  # noqa: E501
+def task_task_id_job_get(taskId):  # noqa: E501
     """User get all the Job.
 
      # noqa: E501
 
     :param taskId: 
     :type taskId: str
-    :param userId: 
-    :type userId: str
-
     :rtype: List[Cert]
     """
-    result =  task_manager.get_task_jobs(task_id=taskId)
-    if len(result) > 0 and 'error' is result[0]:
+    result = task_manager.get_task_jobs(task_id=taskId)
+    if len(result) > 0 and "error" is result[0]:
         return ErrorResponse(result[1]), 400
     else:
         return [
-            Cert(
-                user_id= item['user_id'],
-                files=item['files'],
-                remarks=item['remarks']
-            )
+            Cert(user_id=item["user_id"], files=item["files"], remarks=item["remarks"])
             for item in result
         ]
 
@@ -215,12 +211,12 @@ def task_task_id_job_post(taskId, body):  # noqa: E501
     """
     if connexion.request.is_json:
         body = Cert.from_dict(connexion.request.get_json())  # noqa: E501
-    
-    result =  task_manager.commit_job(user_id=body.user_id,task_id=taskId,job =body )
-    if result is  None or 'error' in result:
-        return ErrorResponse('post fail'), 400
+
+    result = task_manager.commit_job(user_id=body.user_id, task_id=taskId, job=body)
+    if result is None or "error" in result:
+        return ErrorResponse("post fail"), 400
     else:
-        return 'success', 200
+        return "success", 200
 
 
 @access_control.login_required(login_response)
@@ -238,93 +234,87 @@ def task_task_id_job_put(taskId, userId, state):  # noqa: E501
 
     :rtype: None
     """
-    result =  task_manager.agree_job(task_id=taskId, user_id=userId, state=state)
+    result = task_manager.agree_job(task_id=taskId, user_id=userId, state=state)
     if 'error' in result:
         return ErrorResponse(result[1]), 400
     else:
-        return 'success', 200
+        return "success", 200
 
 
 @access_control.login_required(login_response)
-def task_user_id_get(userId, type):  # noqa: E501
+def task_user_id_get(userId, type_):  # noqa: E501
     """Returns all his own published or accepted tasks in the page.
 
     Returns the published tasks, the max number is 10. If the page is the last page, the return all left. # noqa: E501
 
     :param userId: 
     :type userId: str
-    :param type: acceptment or publishment
-    :type type: str
+    :param type_: acceptment or publishment
+    :type type_: str
 
     :rtype: List[Task]
     """
-    tasks =  task_manager.get_related_tasks(userId=userId, Type=type)
+    tasks = task_manager.get_related_tasks(userId=userId, Type=type_)
     if tasks is None:
         return ErrorResponse("error"), 400
     else:
-        return [ 
+        return [
             Task(
-                id = item['task_id'],
-                money= item['money'],
-                icon= item['photo'],
-                title=item['title'],
-                max_num=item['max_num'],
-                desc=item['task_intro'],
-                part_num=item['participants_num']
+                id=item["task_id"],
+                money=item["money"],
+                icon=item["photo"],
+                title=item["title"],
+                max_num=item["max_num"],
+                desc=item["task_intro"],
+                part_num=item["participants_num"],
             )
             for item in tasks
-         ]   
-    return 'do some magic!'
+        ]
 
 
 @access_control.login_required(login_response)
-def task_user_id_post(userId, body):  # noqa: E501
+def task_user_id_post(body):  # noqa: E501
     """User publish the task.
 
      # noqa: E501
 
-    :param userId: 
-    :type userId: str
-    :param body: 
+    :param body:
     :type body: dict | bytes
 
     :rtype: None
     """
     if connexion.request.is_json:
         body = TaskDetail.from_dict(connexion.request.get_json())  # noqa: E501
-    result =  task_manager.commit_task(body)
+    result = task_manager.commit_task(body)
     if 'error' in result:
         return ErrorResponse(result[1]), 400
     else:
-        return 'success', 200
+        return "success", 200
 
 
 @access_control.login_required(login_response)
-def tasks_get(pageId, type=None):  # noqa: E501
+def tasks_get(pageId):  # noqa: E501
     """Returns all related tasks according to the pageId.
 
     Returns the published tasks, the max number is 10. If the page is the last page, the return all left. # noqa: E501
 
     :param pageId: Page number
     :type pageId: int
-    :param type: default, recommend, easy
-    :type type: str
-
     :rtype: List[Task]
     """
-    tasks =  task_manager.get_task_list(page_id = pageId)
+    tasks = task_manager.get_task_list(page_id=pageId)
     if tasks is None:
         return ErrorResponse("error"), 400
     else:
-        return [ 
+        return [
             Task(
-                id = item['task_id'],
-                money= item['money'],
-                icon= item['icon'],
-                title=item['title'],
-                max_num=item['max_num'],
-                desc=item['task_intro'],
-                part_num=item['participants_num']
+                id=item["task_id"],
+                money=item["money"],
+                icon=item["icon"],
+                title=item["title"],
+                max_num=item["max_num"],
+                desc=item["task_intro"],
+                part_num=item["participants_num"],
             )
             for item in tasks
-         ]
+        ]

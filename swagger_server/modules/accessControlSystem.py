@@ -70,13 +70,6 @@ class AccessControlSystem(object):
         """
 
         def dec(view):
-<<<<<<< HEAD
-            def wrapped_view(*args,**kwargs):
-                if g.user.user_id is None or not str(g.user.user_id) ==  str(kwargs.get(user_args)):
-                    return identity_error
-                return view(*args,**kwargs)
-            return wrapped_view
-=======
             def wrapped_view(*args, **kwargs):
                 if g.user.user_id is None or not str(g.user.user_id) == str(
                     kwargs.get(user_args)
@@ -86,7 +79,6 @@ class AccessControlSystem(object):
 
             return wrapped_view
 
->>>>>>> cea6dab4bcc3629ed0977a503d61c57ac64776c1
         return dec
 
     # 身份需求装饰器
@@ -97,16 +89,6 @@ class AccessControlSystem(object):
         """
         example: identity_required(set('U', 'S'))
         """
-<<<<<<< HEAD
-        @functools.wraps(view)
-        def wrapped_view(*args,**kwargs):
-            identity = g.get('identity')
-            if 'U' in  identity_required :
-                return view(*args,**kwargs)
-            elif identity['isprove'] is 'P' and identity['identity'] in identity_required:
-                return view(*args,**kwargs)
-            
-=======
 
         if identity_required is None:
             identity_required = set("U")
@@ -121,7 +103,6 @@ class AccessControlSystem(object):
             ):
                 return cls(*args, **kwargs)
 
->>>>>>> cea6dab4bcc3629ed0977a503d61c57ac64776c1
             return identity_error
 
         return wrapped_view
